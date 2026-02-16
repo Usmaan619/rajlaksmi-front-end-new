@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Design system for Organic Food Website - Natural, Earthy, Traditional */
+
+@layer base {
+  :root {
+    /* Core Colors - Organic & Natural Theme */
+    --background: 45 30% 97%;
+    --foreground: 30 10% 20%;
+    
+    --card: 45 40% 95%;
+    --card-foreground: 30 10% 20%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 10% 20%;
+    
+    /* Primary - Forest Green */
+    --primary: 142 72% 24%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary - Golden/Amber */
+    --secondary: 43 96% 50%;
+    --secondary-foreground: 30 10% 15%;
+    
+    /* Muted - Cream/Beige */
+    --muted: 40 30% 92%;
+    --muted-foreground: 30 15% 40%;
+    
+    /* Accent - Light Green */
+    --accent: 90 40% 90%;
+    --accent-foreground: 142 72% 24%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 40 20% 85%;
+    --input: 40 20% 85%;
+    --ring: 142 72% 24%;
+    
+    --radius: 0.5rem;
+    
+    /* Custom tokens */
+    --cream: 40 40% 96%;
+    --cream-dark: 40 30% 90%;
+    --forest: 142 72% 24%;
+    --forest-light: 142 50% 35%;
+    --golden: 43 96% 50%;
+    --golden-light: 45 90% 60%;
+    --brown: 30 40% 25%;
+    --brown-light: 30 30% 45%;
+    
+    /* Typography */
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Poppins', system-ui, sans-serif;
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -2px hsl(30 20% 20% / 0.08);
+    --shadow-card: 0 8px 30px -4px hsl(30 20% 20% / 0.12);
+    --shadow-elevated: 0 20px 50px -10px hsl(30 20% 20% / 0.15);
+    
+    /* Sidebar */
+    --sidebar-background: 40 40% 96%;
+    --sidebar-foreground: 30 10% 20%;
+    --sidebar-primary: 142 72% 24%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 90 40% 90%;
+    --sidebar-accent-foreground: 142 72% 24%;
+    --sidebar-border: 40 20% 85%;
+    --sidebar-ring: 142 72% 24%;
+  }
+
+  .dark {
+    --background: 30 15% 10%;
+    --foreground: 40 30% 92%;
+    
+    --card: 30 15% 15%;
+    --card-foreground: 40 30% 92%;
+    
+    --popover: 30 15% 12%;
+    --popover-foreground: 40 30% 92%;
+    
+    --primary: 142 60% 40%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 43 80% 45%;
+    --secondary-foreground: 30 10% 10%;
+    
+    --muted: 30 15% 20%;
+    --muted-foreground: 40 20% 65%;
+    
+    --accent: 90 30% 25%;
+    --accent-foreground: 90 40% 80%;
+    
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 30 15% 25%;
+    --input: 30 15% 25%;
+    --ring: 142 60% 40%;
+    
+    --cream: 30 15% 15%;
+    --cream-dark: 30 15% 20%;
+    --forest: 142 60% 40%;
+    --forest-light: 142 50% 50%;
+    --golden: 43 80% 45%;
+    --golden-light: 45 70% 55%;
+    --brown: 30 20% 70%;
+    --brown-light: 30 15% 50%;
+    
+    --shadow-soft: 0 4px 20px -2px hsl(0 0% 0% / 0.3);
+    --shadow-card: 0 8px 30px -4px hsl(0 0% 0% / 0.4);
+    --shadow-elevated: 0 20px 50px -10px hsl(0 0% 0% / 0.5);
+    
+    --sidebar-background: 30 15% 12%;
+    --sidebar-foreground: 40 30% 92%;
+    --sidebar-primary: 142 60% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 90 30% 25%;
+    --sidebar-accent-foreground: 90 40% 80%;
+    --sidebar-border: 30 15% 25%;
+    --sidebar-ring: 142 60% 40%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--forest)) 0%, hsl(var(--forest-light)) 100%);
+  }
+  
+  .bg-hero-gradient {
+    background: linear-gradient(180deg, hsl(90 40% 85%) 0%, hsl(45 40% 92%) 50%, hsl(40 40% 96%) 100%);
+  }
+  
+  .bg-section-gradient {
+    background: linear-gradient(180deg, #EBF4EE00 0%, #EBF4EE00 100%);
+  }
+  
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+}
+
+/* Hide scrollbar but keep scroll working */
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
