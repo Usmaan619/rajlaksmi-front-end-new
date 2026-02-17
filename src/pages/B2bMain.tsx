@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
-// import axios from "axios";
-// import { toast } from "react-toastify";
 import {
   Building2,
   Globe,
@@ -18,8 +16,6 @@ import {
   Mail,
   Clock,
 } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 const B2BMainPage = () => {
   const formRef = useRef(null);
@@ -74,7 +70,6 @@ const B2BMainPage = () => {
 
   return (
     <>
-      <Header />
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-green-50 to-white py-16 px-4">
@@ -88,7 +83,7 @@ const B2BMainPage = () => {
             </p>
             <button
               onClick={scrollToForm}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="bg-[#01722C] hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               Get a Free Quote
             </button>
@@ -174,7 +169,7 @@ const B2BMainPage = () => {
 
                 <button
                   onClick={scrollToForm}
-                  className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl mt-6"
+                  className="bg-[#01722C] hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl mt-6"
                 >
                   Get a Free Quote
                 </button>
@@ -280,9 +275,7 @@ const B2BMainPage = () => {
                   <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mb-4 text-green-600">
                     {feature.icon}
                   </div>
-                  <div className="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center mb-3 text-sm font-bold">
-                    {index + 1}
-                  </div>
+
                   <h3 className="text-xl font-bold text-gray-800 mb-3">
                     {feature.title}
                   </h3>
@@ -444,7 +437,7 @@ const B2BMainPage = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[#01722C] hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Inquiry"}
                 </button>
@@ -454,7 +447,7 @@ const B2BMainPage = () => {
         </section>
 
         {/* Contact Section */}
-        <section className="py-16 px-4 bg-white">
+        <section className="py-16 px-4 bg-white mb-10">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-green-800 text-center mb-12">
               Contact Us
@@ -544,7 +537,6 @@ const B2BMainPage = () => {
           </div>
         </section>
       </div>
-      <Footer />
     </>
   );
 };

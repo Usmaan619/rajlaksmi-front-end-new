@@ -243,8 +243,7 @@ const Blogs = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <AnnouncementBar />
-      <Header />
+     
       <main className="flex-1 ">
         {/* Hero Section */}
         <section className="py-10 md:py-14 mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
@@ -431,7 +430,6 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   );
 };

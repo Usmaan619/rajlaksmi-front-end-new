@@ -19,9 +19,8 @@ import { Truck, HelpCircle, ArrowLeftRight } from "lucide-react";
 const ContactMainPage = () => {
   return (
     <>
-      <Header />
       <ContactBanner />
-      <section className="py-12 lg:py-20 bg-gradient-to-r from-accent/50 to-accent overflow-hidden">
+      <section className="py-12 lg:py-20 bg-[#F0FFF0] overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
             {/* Left Side - Contact Info */}
@@ -202,7 +201,6 @@ const ContactMainPage = () => {
         ></iframe>
       </div>
       <QuickHelpSection />
-      <Footer />
     </>
   );
 };

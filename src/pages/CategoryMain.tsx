@@ -416,7 +416,6 @@ const CategoryMain = () => {
 
   return (
     <>
-      <Header />
       <div className="min-h-screen">
         {/* Header */}
         <section className="px-4 md:px-16 lg:px-24 pt-8 pb-4">
@@ -557,7 +556,6 @@ const CategoryMain = () => {
       </div>
       <ContactSection />
       <CertificationsBottomSection className="bg-white" />
-      <Footer />
     </>
   );
 };

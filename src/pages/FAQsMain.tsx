@@ -1,5 +1,3 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import {
   Accordion,
   AccordionItem,
@@ -140,7 +138,6 @@ const faqSections = [
 export default function FAQMainPage() {
   return (
     <>
-      <Header />
       <section className="w-full max-w-5xl mx-auto px-4 py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-[hsl(120,60%,30%)]">
@@ -180,7 +177,6 @@ export default function FAQMainPage() {
           </div>
         ))}
       </section>
-      <Footer />
     </>
   );
 }

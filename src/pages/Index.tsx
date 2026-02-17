@@ -1,5 +1,3 @@
-import AnnouncementBar from "@/components/AnnouncementBar";
-import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import CertificationsSection from "@/components/CertificationsSection";
 import CategoriesSection from "@/components/CategoriesSection";
@@ -7,7 +5,6 @@ import BestSellersSection from "@/components/BestSellersSection";
 import OurProductsSection from "@/components/OurProductsSection";
 import ExclusiveDealsSection from "@/components/ExclusiveDealsSection";
 import BlogsSection from "@/components/BlogsSection";
-import Footer from "@/components/Footer";
 import FarmerDivider from "@/components/FarmerDivider";
 import FarmerDividerExclusive from "@/components/FarmerDividerExclusive";
 import OurProductsSectionSimple from "@/components/OurProductsSectionSimple";
@@ -22,8 +19,6 @@ import CertificationsBottomSection from "@/components/CertificationsBottomSectio
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <AnnouncementBar />
-      <Header />
       <main className="flex-1">
         <HeroSection />
         <CertificationsSection />
@@ -33,7 +28,6 @@ const Index = () => {
         <FarmerDividerExclusive />
         <ExclusiveDealsSection />
         <VideoSection />
-
         <OurProductsSectionSimple />
         <BlogsSection />
         <OurProductsSection />
@@ -42,10 +36,8 @@ const Index = () => {
         <AboutSection />
         <ContactSection />
         <TestimonialSection />
-        <CertificationsBottomSection />
-
+        <CertificationsBottomSection className="bg-[#F0FFF0]" />
       </main>
-      <Footer />
     </div>
   );
 };

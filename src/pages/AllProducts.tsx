@@ -261,7 +261,7 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
           <Button
             size="sm"
             variant="outline"
-            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9"
+            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white border-border"
             onClick={(e) => e.stopPropagation()}
           >
             Buy Now
@@ -288,7 +288,7 @@ const AllProducts = () => {
       <div className="relative">
         <Input
           placeholder="Find your products"
-          className="pr-10 bg-popover border-border"
+          className="pr-10 bg-white border-border"
         />
         <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       </div>
@@ -356,7 +356,7 @@ const AllProducts = () => {
       <div className="flex gap-3">
         <Button
           variant="outline"
-          className="flex-1 border-border text-muted-foreground"
+          className="bg-white flex-1 border-border text-muted-foreground"
         >
           Clear
         </Button>
@@ -368,9 +368,8 @@ const AllProducts = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <AnnouncementBar />
-      <Header />
+    <div className="min-h-screen flex flex-col bg-white">
+    
 
       <main className="flex-1 mt-5">
         <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
@@ -483,7 +482,6 @@ const AllProducts = () => {
       <ContactSection />
       <TestimonialSection />
       <CertificationsBottomSection className="bg-[#F0FFF0]" />
-      <Footer />
     </div>
   );
 };

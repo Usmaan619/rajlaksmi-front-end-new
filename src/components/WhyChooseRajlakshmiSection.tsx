@@ -82,7 +82,7 @@ const WhyChooseRajlakshmiSection = () => {
             <div className="pt-2">
               <Button
                 variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
+                className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
               >
                 Read more
               </Button>

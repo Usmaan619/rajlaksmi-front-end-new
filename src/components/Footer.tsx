@@ -16,8 +16,8 @@ const Footer = () => {
   return (
     <footer className="relative ">
       {/* Floating Newsletter */}
-      <div className="container absolute -top-16 left-0 right-0 mx-auto px-4">
-        <div className="bg-[#f4b42b] rounded-2xl px-6 py-6 md:py-8 flex flex-col md:flex-row items-center justify-between gap-4 relative z-20 shadow-lg">
+      <div className="absolute -top-16 left-0 right-0 max-w-6xl mx-auto px-4 z-20">
+        <div className="bg-[#f4b42b] rounded-2xl px-6 py-6 md:py-8 flex flex-col md:flex-row items-center justify-between gap-4 shadow-lg">
           <div className="text-center md:text-left">
             <p className="text-white/90 text-sm font-medium">Newsletter</p>
             <h3 className="text-white text-xl md:text-3xl font-semibold">
@@ -43,7 +43,7 @@ const Footer = () => {
         className="
           relative
           text-white
-          pt-32 md:pt-36
+          pt-28 md:pt-32 
           bg-slate-900
           bg-no-repeat
           bg-bottom
@@ -56,7 +56,7 @@ const Footer = () => {
         {/* dark overlay */}
         <div className="absolute inset-0 bg-black/75" />
 
-        <div className="container mx-auto px-4 py-12 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 py-12 relative z-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             {/* Logo */}
             <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
@@ -99,15 +99,13 @@ const Footer = () => {
               </ul>
             </div>
 
-            {/* Our Site + Categories (side by side on mobile) */}
+            {/* Our Site + Categories */}
             <div className="col-span-1 sm:col-span-2 lg:col-span-2">
               <div className="grid grid-cols-2 gap-8">
                 {/* Our Site */}
                 <div>
-                  <h4 className="text-xl font-semibold mb-6 text-left">
-                    Our Site
-                  </h4>
-                  <ul className="space-y-3 text-sm text-white/80 text-left">
+                  <h4 className="text-xl font-semibold mb-6">Our Site</h4>
+                  <ul className="space-y-3 text-sm text-white/80">
                     <li>
                       <Link to="/about">About Us</Link>
                     </li>
@@ -131,10 +129,8 @@ const Footer = () => {
 
                 {/* Categories */}
                 <div>
-                  <h4 className="text-xl font-semibold mb-6 text-left">
-                    Categories
-                  </h4>
-                  <ul className="space-y-3 text-sm text-white/80 text-left">
+                  <h4 className="text-xl font-semibold mb-6">Categories</h4>
+                  <ul className="space-y-3 text-sm text-white/80">
                     <li>
                       <Link to="/category/ghee-oil">Ghee & Oil</Link>
                     </li>
@@ -160,7 +156,7 @@ const Footer = () => {
           </div>
 
           {/* Divider */}
-          <div className="border-t border-white/20 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/70 text-center md:text-left">
+          <div className="border-t border-white/20 mt-10 pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/70">
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
               <Link to="/privacy">Privacy Policy</Link>
               <Link to="/terms">Terms & Conditions</Link>

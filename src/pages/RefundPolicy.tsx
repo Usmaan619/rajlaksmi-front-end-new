@@ -1,10 +1,8 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+
 
 const RefundPolicy = () => {
   return (
     <>
-      <Header />
       <div className="min-h-screen px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-8 md:py-10 bg-white mb-10">
         {/* Header */}
 
@@ -179,7 +177,6 @@ const RefundPolicy = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

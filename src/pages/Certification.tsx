@@ -48,8 +48,7 @@ const Certifications = () => {
 
   return (
     <>
-      <Header />
-      <div className="min-h-screen ">
+      <div className="min-h-screen bg-white ">
         {/* Header */}
         <section className="px-6 py-10 md:px-16 lg:px-24">
           <h1 className="text-2xl md:text-3xl font-bold text-[hsl(140,60%,30%)]">
@@ -66,7 +65,7 @@ const Certifications = () => {
             {visibleCerts.map((cert, index) => (
               <div
                 key={index}
-                className="border border-[hsl(140,40%,80%)] rounded-2xl p-6 hover:shadow-lg transition-shadow bg-background"
+                className="border border-[hsl(140,40%,80%)] rounded-2xl p-6 hover:shadow-lg transition-shadow bg-white"
               >
                 <div className="w-16 h-16 rounded-full bg-[hsl(140,40%,92%)] flex items-center justify-center mb-4 overflow-hidden">
                   <img
@@ -157,8 +156,6 @@ const Certifications = () => {
           </div>
         </section>
       </div>
-
-      <Footer />
     </>
   );
 };

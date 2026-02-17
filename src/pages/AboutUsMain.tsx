@@ -30,7 +30,6 @@ const AboutUsPage = () => {
 
   return (
     <>
-      <Header />
       <div className="min-h-screen bg-gradient-to-b from-green-50/30 to-white">
         {/* Header Section with decorative elements */}
         <section className="text-center py-12 px-4 relative overflow-hidden">
@@ -62,7 +61,7 @@ const AboutUsPage = () => {
                   all our products are carefully sourced from organic farms,
                   free from preservatives, chemicals, and artificial additives.
                 </p>
-                <Button className="bg-green-600 hover:bg-green-700 text-white rounded-md px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all">
+                <Button className="bg-[#01722C] hover:bg-green-700 text-white rounded-md px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all">
                   Explore Our Products
                 </Button>
               </div>
@@ -351,14 +350,13 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
           </div>
         </section>
       </div>
-      <Footer />
     </>
   );
 };
 
 const TransparencySection = () => {
   return (
-    <section className="py-12 lg:py-20 bg-background relative overflow-hidden">
+    <section className="py-12 lg:py-20 bg-white relative overflow-hidden">
       {/* Background decorative image */}
       <img
         src={farmerBgImg}
@@ -396,7 +394,7 @@ const TransparencySection = () => {
             <div className="pt-2">
               <Button
                 variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
+                className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
               >
                 Contact Us
               </Button>

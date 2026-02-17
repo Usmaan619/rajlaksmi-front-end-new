@@ -1,10 +1,7 @@
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 
 const ShippingPolicy = () => {
   return (
     <>
-      <Header />
       <div className="min-h-screen px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-8 md:py-10 bg-white mb-10">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 md:p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-green-300">
           
@@ -144,7 +141,6 @@ const ShippingPolicy = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

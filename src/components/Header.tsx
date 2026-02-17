@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Search,
   Heart,
@@ -36,7 +36,7 @@ const navigation = [
       { name: "Superfoods", href: "/categories" },
     ],
   },
-  { name: "A2 Ghee", href: "/a2-ghee" },
+  { name: "B2B", href: "/b2b" },
   { name: "Certifications", href: "/certifications" },
   { name: "Track Order", href: "/track-order" },
   { name: "Contact Us", href: "/contact" },
@@ -44,6 +44,7 @@ const navigation = [
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <header className="bg-popover shadow-soft sticky top-0 z-50">
@@ -86,7 +87,7 @@ const Header = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`text-foreground hover:text-primary transition-colors font-medium text-sm ${item.name === "Home" ? "text-primary border-b-2 border-primary" : ""}`}
+                  className={`text-foreground hover:text-primary transition-colors font-medium text-sm ${location.pathname === item.href ? "text-primary border-b-2 border-primary" : ""}`}
                 >
                   {item.name}
                 </Link>
@@ -120,7 +121,7 @@ const Header = () => {
                 0
               </span>
             </Button>
-            <Button className="hidden sm:flex bg-primary hover:bg-forest-light text-primary-foreground gap-2">
+            <Button className="hidden sm:flex bg-primary hover:bg-forest-light text-primary-foreground gap-2 bg-[#01722C">
               <User className="h-4 w-4" />
               <span>Login</span>
             </Button>
