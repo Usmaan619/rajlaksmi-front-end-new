@@ -16,6 +16,10 @@ import {
   Mail,
   Clock,
 } from "lucide-react";
+import { B2BFormData, createB2BInquiryAPI } from "@/api/contact.service";
+import { toast } from "@/hooks/use-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { b2bInquirySchema } from "@/validations/contact.validation";
 
 const B2BMainPage = () => {
   const formRef = useRef(null);
@@ -24,7 +28,9 @@ const B2BMainPage = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm<B2BFormData>({
+    resolver: zodResolver(b2bInquirySchema),
+  });
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({
@@ -33,39 +39,28 @@ const B2BMainPage = () => {
     });
   };
 
-  const onSubmit = async (data) => {
-    // try {
-    //   const payload = {
-    //     full_name: data.fullName,
-    //     business_name: data.businessName,
-    //     phone: data.phone,
-    //     email: data.email,
-    //     business_type: data.businessType,
-    //     monthly_requirement: data.bulkRequirement,
-    //     message: data.message,
-    //   };
-    //   const response = await axios.post(
-    //     `YOUR_API_ENDPOINT/createb2bInquiry`,
-    //     payload,
-    //   );
-    //   if (response?.data?.success) {
-    //     toast.success("Form submitted successfully!", {
-    //       position: "top-center",
-    //       autoClose: 3000,
-    //     });
-    //     reset();
-    //   } else {
-    //     toast.error("Something went wrong", {
-    //       position: "top-center",
-    //       autoClose: 3000,
-    //     });
-    //   }
-    // } catch (error) {
-    //   toast.error("Failed to submit the form. Please try again.", {
-    //     position: "top-center",
-    //     autoClose: 3000,
-    //   });
-    // }
+  const onSubmit = async (data: B2BFormData) => {
+    try {
+      const response = await createB2BInquiryAPI(data);
+
+      if (response?.success) {
+        toast({
+          title: "Message Sent Successfully",
+          description: "We'll get back to you soon.",
+        });
+        reset();
+      } else {
+        toast({
+          title: "Submission Failed",
+          description: "Please try again.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong!",
+      });
+    }
   };
 
   return (
@@ -392,7 +387,7 @@ const B2BMainPage = () => {
                       Business Type*
                     </label>
                     <select
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                      className="w-full px-4 py-3 border bg-white border-gray-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
                       {...register("businessType", {
                         required: "Business Type is required",
                       })}

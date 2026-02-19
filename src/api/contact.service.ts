@@ -25,6 +25,16 @@ export interface NewsletterPayload {
   email: string;
 }
 
+export interface B2BFormData {
+  fullName: string;
+  businessName: string;
+  phone: string;
+  email: string;
+  businessType: string;
+  bulkRequirement?: string;
+  message?: string;
+}
+
 /* COMMON ERROR HANDLER */
 const handleApiError = (error: unknown) => {
   if (axios.isAxiosError(error)) {
@@ -82,5 +92,35 @@ export const createNewsletterAPI = async (data: NewsletterPayload) => {
     return res.data;
   } catch (error) {
     handleApiError(error);
+  }
+};
+
+export const getHomeBannerAPI = async () => {
+  try {
+    const res = await api.get(`/admin/home-banners`);
+    return res.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const createB2BInquiryAPI = async (data: B2BFormData) => {
+  try {
+    const payload = {
+      full_name: data.fullName,
+      business_name: data.businessName,
+      phone: data.phone,
+      email: data.email,
+      business_type: data.businessType,
+      monthly_requirement: data.bulkRequirement || null,
+      message: data.message || null,
+    };
+
+    const res = await api.post("/users/createb2bInquiry", payload);
+
+    return res.data;
+  } catch (error) {
+    handleApiError(error);
+    throw error;
   }
 };

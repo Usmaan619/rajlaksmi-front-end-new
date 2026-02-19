@@ -44,32 +44,4 @@ const Index = () => {
 
 export default Index;
 
-type ImageBoxProps = {
-  imageUrl: string;
-};
 
-const ImageBox: React.FC<ImageBoxProps> = ({ imageUrl }) => {
-  return (
-    <div
-      style={{
-        width: "210px",
-        height: "140px",
-        background: "black",
-        overflow: "hidden",
-        perspective: "600px",
-        transform: "rotateY(-15deg)",
-        boxShadow: "-10px 0 0 #111",
-      }}
-    >
-      <img
-        src={imageUrl}
-        alt="box"
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-        }}
-      />
-    </div>
-  );
-};
