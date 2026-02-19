@@ -21,6 +21,10 @@ export interface ContactPayload {
   select_query_type: string;
 }
 
+export interface NewsletterPayload {
+  email: string;
+}
+
 /* COMMON ERROR HANDLER */
 const handleApiError = (error: unknown) => {
   if (axios.isAxiosError(error)) {
@@ -66,6 +70,15 @@ export const getAllContactsAPI = async () => {
 export const deleteContactAPI = async (id: string) => {
   try {
     const res = await api.delete(`/contact/delete/${id}`);
+    return res.data;
+  } catch (error) {
+    handleApiError(error);
+  }
+};
+
+export const createNewsletterAPI = async (data: NewsletterPayload) => {
+  try {
+    const res = await api.post(`/admin/createNewsletter`, data);
     return res.data;
   } catch (error) {
     handleApiError(error);

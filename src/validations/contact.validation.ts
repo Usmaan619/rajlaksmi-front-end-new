@@ -18,3 +18,9 @@ export const contactSchema = z.object({
 });
 
 export type ContactFormData = z.infer<typeof contactSchema>;
+
+export const newsLatterSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+
+export type newsLatterFormData = z.infer<typeof newsLatterSchema>;

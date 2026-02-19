@@ -11,8 +11,49 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import footerBg from "@/assets/ourproductwithcategory/ourProductWithCategory.png";
 import logo from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
+import {
+  newsLatterFormData,
+  newsLatterSchema,
+} from "@/validations/contact.validation";
+import { createNewsletterAPI, NewsletterPayload } from "@/api/contact.service";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { toast } from "@/hooks/use-toast";
 
 const Footer = () => {
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    reset,
+  } = useForm<newsLatterFormData>({
+    resolver: zodResolver(newsLatterSchema),
+  });
+
+  const onSubmit = async (data: NewsletterPayload) => {
+    try {
+      setLoading(true);
+      await createNewsletterAPI(data);
+
+      toast({
+        title: "Message Sent Successfully",
+        description: "We'll get back to you soon.",
+      });
+      reset();
+    } catch (error: any) {
+      toast({
+        title: error.message || "Failed to send message",
+        description: "We'll get back to you soon.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <footer className="relative ">
       {/* Floating Newsletter */}
@@ -24,37 +65,41 @@ const Footer = () => {
               Subscribe to our newsletter
             </h3>
           </div>
-
-          <div className="flex w-full md:w-auto items-center overflow-hidden rounded-full border border-gray-300 bg-white">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex w-full md:w-auto items-center overflow-hidden rounded-full border border-gray-300 bg-white"
+          >
             <Input
               type="email"
               placeholder="Your E-mail"
+              {...register("email")}
               className="
-      h-12
-      w-full
-      md:w-72
-      border-0
-      rounded-none
-      focus-visible:ring-0
-      focus-visible:ring-offset-0
-    "
+    h-12
+    w-full
+    md:w-72
+    border-0
+    rounded-none
+    focus-visible:ring-0
+    focus-visible:ring-offset-0
+  "
             />
 
             <Button
-              type="button"
+              type="submit"
+              disabled={loading}
               className="
-      h-12
-      px-6
-      md:px-8
-      bg-gray-200
-      text-gray-800
-      hover:bg-gray-300
-      rounded-none
-    "
+    h-12
+    px-6
+    md:px-8
+    bg-gray-200
+    text-gray-800
+    hover:bg-gray-300
+    rounded-none
+  "
             >
-              Send
+              {loading ? "Sending..." : "Send"}
             </Button>
-          </div>
+          </form>
         </div>
       </div>
 
