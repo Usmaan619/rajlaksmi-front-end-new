@@ -25,13 +25,33 @@ const Footer = () => {
             </h3>
           </div>
 
-          <div className="flex w-full md:w-auto">
+          <div className="flex w-full md:w-auto items-center overflow-hidden rounded-full border border-gray-300 bg-white">
             <Input
               type="email"
               placeholder="Your E-mail"
-              className="rounded-l-full rounded-r-none h-12 w-full md:w-72 border-0 bg-white"
+              className="
+      h-12
+      w-full
+      md:w-72
+      border-0
+      rounded-none
+      focus-visible:ring-0
+      focus-visible:ring-offset-0
+    "
             />
-            <Button className="rounded-l-none rounded-r-full h-12 px-6 md:px-8 bg-gray-200 text-gray-800 hover:bg-gray-300">
+
+            <Button
+              type="button"
+              className="
+      h-12
+      px-6
+      md:px-8
+      bg-gray-200
+      text-gray-800
+      hover:bg-gray-300
+      rounded-none
+    "
+            >
               Send
             </Button>
           </div>
