@@ -112,6 +112,7 @@ const HeroSection: React.FC = () => {
         <Carousel
           showThumbs={false}
           showStatus={false}
+          showArrows={false}
           infiniteLoop
           autoPlay
           interval={6500}
