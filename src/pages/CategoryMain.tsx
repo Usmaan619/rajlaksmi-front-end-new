@@ -305,7 +305,10 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     // <div className="w-[290px] h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col">
     // <div className="w-full lg:w-[290px] h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col">
-    <div className="w-full lg:w-[290px] h-auto lg:h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col gap-2">
+    <div
+      className="w-full lg:w-[290px] overflow-visible
+ h-auto lg:h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col gap-2"
+    >
       {/* Badge */}
       <div className="relative mb-2">
         <span className="absolute top-1 left-1 bg-[hsl(0,80%,50%)] text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10">

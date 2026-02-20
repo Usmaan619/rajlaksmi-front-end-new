@@ -6,6 +6,7 @@ import {
   Facebook,
   Instagram,
   Youtube,
+  MailCheck,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -143,10 +144,10 @@ const Footer = () => {
                 </li>
 
                 <li className="flex gap-3">
-                  <Mail className="w-5 h-5 text-yellow-400" />
+                  <MailCheck className="w-5 h-5 text-yellow-400" />
                   <div>
-                    <p className="font-medium">Email us at</p>
-                    <p className="text-white/80">
+                    <p className="font-medium ">Email us at</p>
+                    <p className="text-white/80 ">
                       rajlaxmiorganicfoods@gmail.com
                     </p>
                   </div>

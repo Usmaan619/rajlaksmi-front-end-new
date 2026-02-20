@@ -125,7 +125,8 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
   return (
     <Card
       onClick={() => navigate(`/product/${product.id}`)}
-      className="w-[290px] h-[448px] cursor-pointer bg-popover border border-border rounded-[20px] overflow-hidden group hover:shadow-card transition-all duration-300 p-[20px] flex flex-col gap-[10px]"
+      className="w-[290px] h-[448px] cursor-pointer bg-popover border border-border rounded-[20px] overflow-visible
+ group hover:shadow-card transition-all duration-300 p-[20px] flex flex-col gap-[10px]"
     >
       <div className="relative">
         <div className="aspect-square rounded-xl overflow-hidden bg-muted">

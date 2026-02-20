@@ -74,7 +74,8 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
         flex
         flex-col
         gap-2
-        overflow-hidden
+        overflow-visible
+
         group
         hover:shadow-lg
         transition-shadow
@@ -136,7 +137,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
             </button>
 
             {showUnits && (
-              <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow z-10">
+              <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow z-30">
                 {product.units.map((unit) => (
                   <button
                     key={unit}

@@ -179,7 +179,8 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
         border
         border-border
         rounded-[20px]
-        overflow-hidden
+        overflow-visible
+
         group
         hover:shadow-card
         transition-all
