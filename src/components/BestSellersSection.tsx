@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Heart, Star, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { toast } from "sonner";
 
 import productOil from "@/assets/product-oil.jpg";
 import productMaize from "@/assets/product-maize.jpg";
@@ -56,12 +60,42 @@ const products = [
 ];
 
 const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const isFavorite = isInWishlist(`product-best-${product.id}`);
   const [selectedUnit, setSelectedUnit] = useState(product.unit);
   const [showUnits, setShowUnits] = useState(false);
 
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `product-best-${product.id}`,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      weight: selectedUnit,
+    });
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `product-best-${product.id}`,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      weight: selectedUnit,
+    });
+    navigate("/cart");
+  };
+
   return (
     <Card
+      onClick={() => navigate(`/product/${product.id}`)}
       className="
         w-full
         lg:w-[290px]
@@ -75,7 +109,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
         flex-col
         gap-2
         overflow-visible
-
+        cursor-pointer
         group
         hover:shadow-lg
         transition-shadow
@@ -93,8 +127,22 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
 
         {/* Wishlist */}
         <button
-          onClick={() => setIsFavorite(!isFavorite)}
-          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleWishlist({
+              id: `product-best-${product.id}`,
+              name: product.name,
+              price: product.price,
+              image: product.image,
+              originalPrice: product.originalPrice,
+              discount: product.discount,
+              weightOptions: product.units,
+            });
+            toast.success(
+              isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
+            );
+          }}
+          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center hover:scale-110 transition-transform"
         >
           <Heart
             className={`h-4 w-4 ${
@@ -112,7 +160,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
 
         {/* Price */}
         <div className="flex flex-wrap items-center gap-2 mt-1">
-          <span className="text-base sm:text-lg font-bold">
+          <span className="text-base sm:text-lg font-bold text-primary">
             ₹{product.price}
           </span>
 
@@ -129,7 +177,10 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
         <div className="flex items-center justify-between mt-2">
           <div className="relative">
             <button
-              onClick={() => setShowUnits(!showUnits)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowUnits(!showUnits);
+              }}
               className="flex items-center gap-1 border rounded px-2 py-1 text-[11px] sm:text-xs"
             >
               {selectedUnit}
@@ -137,15 +188,16 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
             </button>
 
             {showUnits && (
-              <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow z-30">
+              <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow z-30 min-w-[80px]">
                 {product.units.map((unit) => (
                   <button
                     key={unit}
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       setSelectedUnit(unit);
                       setShowUnits(false);
                     }}
-                    className="block w-full px-3 py-1 text-xs hover:bg-gray-100"
+                    className="block w-full px-3 py-2 text-xs text-left hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
                   >
                     {unit}
                   </button>
@@ -156,16 +208,24 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
 
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs sm:text-sm">{product.rating}</span>
+            <span className="text-xs sm:text-sm font-medium">
+              {product.rating}
+            </span>
           </div>
         </div>
       </div>
       {/* Buttons */}
       <div className="flex gap-2 mt-auto">
-        <button className="flex-1 border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-xs py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors font-medium">
+        <button
+          onClick={handleAddToCart}
+          className="flex-1 border border-primary text-primary text-xs py-2 rounded-md hover:bg-primary hover:text-white transition-colors font-semibold"
+        >
           Add to Cart
         </button>
-        <button className="flex-1 bg-[hsl(140,60%,30%)] text-white text-xs py-1.5 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors font-medium">
+        <button
+          onClick={handleBuyNow}
+          className="flex-1 bg-primary text-white text-xs py-2 rounded-md hover:bg-primary/90 transition-colors font-semibold shadow-sm"
+        >
           Buy Now
         </button>
       </div>

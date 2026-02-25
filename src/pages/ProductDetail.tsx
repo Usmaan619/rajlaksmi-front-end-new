@@ -137,13 +137,31 @@ const allReviews = [
   },
 ];
 
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { toast } from "sonner";
+
 const ProductDetail = () => {
+  const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState("1kg");
-  const [isFavorite, setIsFavorite] = useState(false);
+  const isFavorite = isInWishlist(`product-detail-${product.name}`);
   const [copiedCode, setCopiedCode] = useState<number | null>(null);
   const [reviewPage, setReviewPage] = useState(0);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: `product-${product.name}-${selectedSize}`,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      quantity: 1,
+      weight: selectedSize,
+    });
+    toast.success(`${product.name} added to cart!`);
+  };
 
   const reviewsPerPage = 3;
   const totalReviewPages = Math.ceil(allReviews.length / reviewsPerPage);
@@ -176,7 +194,6 @@ const ProductDetail = () => {
   ];
   return (
     <div className="min-h-screen bg-background">
-
       <main className="container mx-auto px-4 py-6 lg:py-10">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6">
@@ -269,7 +286,22 @@ const ProductDetail = () => {
               {/* Icons */}
               <div className="ml-auto flex items-center gap-2">
                 <button
-                  onClick={() => setIsFavorite(!isFavorite)}
+                  onClick={() => {
+                    toggleWishlist({
+                      id: `product-detail-${product.name}`,
+                      name: product.name,
+                      price: product.price,
+                      image: product.images[0],
+                      originalPrice: product.originalPrice,
+                      discount: product.discount,
+                      weightOptions: product.sizes,
+                    });
+                    toast.success(
+                      isFavorite
+                        ? `Removed from Wishlist`
+                        : `Added to Wishlist`,
+                    );
+                  }}
                   className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
                 >
                   <Heart
@@ -374,6 +406,7 @@ const ProductDetail = () => {
             <div className="flex gap-3">
               <Button
                 variant="outline"
+                onClick={handleAddToCart}
                 className="flex-1 h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-lg"
               >
                 Add to Cart
@@ -589,7 +622,6 @@ const ProductDetail = () => {
       <BentoGrid />
       <OurProductsSection />
       <FAQSection />
-
     </div>
   );
 };

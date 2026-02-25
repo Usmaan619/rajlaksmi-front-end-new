@@ -24,6 +24,9 @@ import WhyChooseRajlakshmiSection from "@/components/WhyChooseRajlakshmiSection"
 import ContactSection from "@/components/ContactSection";
 import TestimonialSection from "@/components/TestimonialSection";
 import CertificationsBottomSection from "@/components/CertificationsBottomSection";
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { toast } from "sonner";
 
 const allProducts = [
   {
@@ -163,8 +166,36 @@ const allProducts = [
 const ITEMS_PER_PAGE = 9;
 
 const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const isFavorite = isInWishlist(`product-all-${product.id}`);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `product-all-${product.id}`,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      weight: product.weight,
+    });
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `product-all-${product.id}`,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      weight: product.weight,
+    });
+    navigate("/cart");
+  };
 
   return (
     <Card
@@ -204,7 +235,18 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setIsFavorite(!isFavorite);
+            toggleWishlist({
+              id: `product-all-${product.id}`,
+              name: product.name,
+              price: product.price,
+              image: product.image,
+              originalPrice: product.mrp,
+              discount: parseInt(product.discount?.replace(/\D/g, "") || "0"),
+              weightOptions: [product.weight],
+            });
+            toast.success(
+              isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
+            );
           }}
           className="absolute top-2 right-2 w-8 h-8 rounded-full bg-popover shadow-soft flex items-center justify-center hover:scale-110 transition-transform"
         >
@@ -254,7 +296,7 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
           <Button
             size="sm"
             className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9"
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleAddToCart}
           >
             Add to Cart
           </Button>
@@ -263,7 +305,7 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
             size="sm"
             variant="outline"
             className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white border-border"
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleBuyNow}
           >
             Buy Now
           </Button>
@@ -370,8 +412,6 @@ const AllProducts = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-    
-
       <main className="flex-1 mt-5">
         <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
           {/* Title + mobile filter */}

@@ -24,6 +24,9 @@ import productOil from "@/assets/product-oil.jpg";
 
 import bgPattern from "@/assets/ourproductwithcategory/ourProductWithCategory.png";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { toast } from "sonner";
 
 const categories = [
   "Ghee",
@@ -91,8 +94,36 @@ const products = [
 ];
 
 const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const isFavorite = isInWishlist(`product-simple-${product.id}`);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `product-simple-${product.id}`,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      weight: product.unit,
+    });
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `product-simple-${product.id}`,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      weight: product.unit,
+    });
+    navigate("/cart");
+  };
 
   return (
     <Card
@@ -133,7 +164,18 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setIsFavorite(!isFavorite);
+            toggleWishlist({
+              id: `product-simple-${product.id}`,
+              name: product.name,
+              price: product.price,
+              image: product.image,
+              originalPrice: product.originalPrice,
+              discount: parseInt(product.discount?.replace(/\D/g, "") || "0"),
+              weightOptions: [product.unit],
+            });
+            toast.success(
+              isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
+            );
           }}
           className="absolute top-2 right-2 w-8 h-8 rounded-full bg-popover shadow-soft flex items-center justify-center hover:scale-110 transition-transform"
         >
@@ -186,7 +228,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
           <Button
             size="sm"
             className="flex-1 text-xs h-8"
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleAddToCart}
           >
             Add to Cart
           </Button>
@@ -194,7 +236,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
             size="sm"
             variant="outline"
             className="flex-1 text-xs h-8"
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleBuyNow}
           >
             Buy Now
           </Button>

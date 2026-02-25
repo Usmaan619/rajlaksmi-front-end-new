@@ -1,10 +1,13 @@
 import { useRef } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Heart } from "lucide-react";
 import heroGhee from "@/assets/hero-ghee.jpg";
 import dealGhee from "@/assets/deal-ghee.jpg";
 import VideoSource from "@/assets/Video/gauswarn.mp4";
 import ourProductVideoImg from "@/assets/ourproductwithcategory/ourProductVideo.png";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { toast } from "sonner";
 
 const products = [
   {
@@ -48,6 +51,21 @@ const products = [
 const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const isFavorite = isInWishlist(`product-video-${product.id}`);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `product-${product.id}`,
+      name: product.name,
+      price: product.price,
+      image: product.thumbnail,
+      quantity: 1,
+    });
+    toast.success(`${product.name} added to cart!`);
+  };
 
   return (
     <div
@@ -83,9 +101,30 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
             e.stopPropagation();
             navigate(`/product/${product.id}`);
           }}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center shadow-md"
+          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center shadow-md mb-2"
         >
           <ExternalLink className="h-4 w-4" />
+        </button>
+
+        {/* Wishlist icon */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleWishlist({
+              id: `product-video-${product.id}`,
+              name: product.name,
+              price: product.price,
+              image: product.thumbnail,
+            });
+            toast.success(
+              isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
+            );
+          }}
+          className="absolute top-14 right-4 mt-1 w-9 h-9 rounded-full bg-white text-white flex items-center justify-center shadow-md"
+        >
+          <Heart
+            className={`h-4 w-4 ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"}`}
+          />
         </button>
       </div>
 
@@ -110,7 +149,10 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
           </div>
         </div>
 
-        <button className="w-full border border-green-700 text-green-700 rounded-full py-2 text-sm font-semibold hover:bg-green-700 hover:text-white transition">
+        <button
+          onClick={handleAddToCart}
+          className="w-full border border-green-700 text-green-700 rounded-full py-2 text-sm font-semibold hover:bg-green-700 hover:text-white transition"
+        >
           ADD TO CART
         </button>
       </div>

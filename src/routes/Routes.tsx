@@ -18,10 +18,23 @@ import B2BMainPage from "@/pages/B2bMain";
 import LabReportsPage from "@/pages/LabReportMain";
 import AppWrapper from "@/AppWrapper";
 
+import LoginPage from "@/pages/Auth/LoginPage";
+import SignupPage from "@/pages/Auth/SignupPage";
+import ForgotPasswordPage from "@/pages/Auth/ForgotPasswordPage";
+import CartPage from "@/pages/CartPage";
+import CheckoutPage from "@/pages/CheckoutPage";
+import WishlistPage from "@/pages/WishlistPage";
+
 const MainRoutes = () => (
   <AppWrapper>
     <Routes>
       <Route path="/" element={<Index />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<SignupPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/cart" element={<CartPage />} />
+      <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/wishlist" element={<WishlistPage />} />
       <Route path="/products" element={<AllProducts />} />
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/certifications" element={<Certifications />} />

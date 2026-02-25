@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import MainRoutes from "./routes/Routes";
 
+import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -13,8 +16,11 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-      
-        <MainRoutes />
+        <WishlistProvider>
+          <CartProvider>
+            <MainRoutes />
+          </CartProvider>
+        </WishlistProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

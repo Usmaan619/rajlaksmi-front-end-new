@@ -1,10 +1,20 @@
 import { useState, useMemo } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  Heart,
+} from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CertificationsSection from "@/components/CertificationsSection";
 import ContactSection from "@/components/ContactSection";
 import CertificationsBottomSection from "@/components/CertificationsBottomSection";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+import { toast } from "sonner";
 
 type Product = {
   id: number;
@@ -301,13 +311,44 @@ const FilterDropdown = ({
 
 const ProductCard = ({ product }: { product: Product }) => {
   const [selectedWeight, setSelectedWeight] = useState(product.weight);
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const isFavorite = isInWishlist(`product-cat-${product.id}`);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `product-cat-${product.id}`,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      weight: selectedWeight,
+    });
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: `product-cat-${product.id}`,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      weight: selectedWeight,
+    });
+    navigate("/cart");
+  };
 
   return (
     // <div className="w-[290px] h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col">
     // <div className="w-full lg:w-[290px] h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col">
     <div
-      className="w-full lg:w-[290px] overflow-visible
- h-auto lg:h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col gap-2"
+      onClick={() => navigate(`/product/${product.id}`)}
+      className="w-full lg:w-[290px] overflow-visible cursor-pointer
+ h-auto lg:h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col gap-2 group"
     >
       {/* Badge */}
       <div className="relative mb-2">
@@ -317,9 +358,33 @@ const ProductCard = ({ product }: { product: Product }) => {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full aspect-square object-cover rounded-xl"
+          className="w-full aspect-square object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
         />
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleWishlist({
+              id: `product-cat-${product.id}`,
+              name: product.name,
+              price: product.price,
+              image: product.image,
+              originalPrice: product.originalPrice,
+              discount: product.discount,
+              weightOptions: product.weightOptions,
+            });
+            toast.success(
+              isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
+            );
+          }}
+          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center hover:scale-110 transition-transform z-10"
+        >
+          <Heart
+            className={`h-4 w-4 ${
+              isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
+            }`}
+          />
+        </button>
       </div>
 
       {/* Info */}
@@ -342,6 +407,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       <div className="flex items-center justify-between mt-2">
         <select
           value={selectedWeight}
+          onClick={(e) => e.stopPropagation()}
           onChange={(e) => setSelectedWeight(e.target.value)}
           className="border border-border rounded text-xs px-1.5 py-0.5 bg-background text-foreground"
         >
@@ -361,10 +427,16 @@ const ProductCard = ({ product }: { product: Product }) => {
 
       {/* Buttons */}
       <div className="flex gap-2 mt-auto">
-        <button className="flex-1 border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-xs py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors font-medium">
+        <button
+          onClick={handleAddToCart}
+          className="flex-1 border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-xs py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors font-medium"
+        >
           Add to Cart
         </button>
-        <button className="flex-1 bg-[hsl(140,60%,30%)] text-white text-xs py-1.5 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors font-medium">
+        <button
+          onClick={handleBuyNow}
+          className="flex-1 bg-[hsl(140,60%,30%)] text-white text-xs py-1.5 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors font-medium"
+        >
           Buy Now
         </button>
       </div>

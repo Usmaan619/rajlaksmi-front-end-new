@@ -42,8 +42,13 @@ const navigation = [
   { name: "Contact Us", href: "/contact" },
 ];
 
+import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/context/WishlistContext";
+
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
   const location = useLocation();
 
   return (
@@ -104,27 +109,40 @@ const Header = () => {
             >
               <Search className="h-5 w-5" />
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden sm:flex text-foreground hover:text-primary hover:bg-accent"
-            >
-              <Heart className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground hover:text-primary hover:bg-accent relative"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 bg-secondary text-secondary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center font-medium">
-                0
-              </span>
-            </Button>
-            <Button className="hidden sm:flex bg-primary hover:bg-forest-light text-primary-foreground gap-2 bg-[#01722C">
-              <User className="h-4 w-4" />
-              <span>Login</span>
-            </Button>
+            <Link to="/wishlist">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden sm:flex text-foreground hover:text-primary hover:bg-accent relative"
+              >
+                <Heart className="h-5 w-5" />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
+            <Link to="/cart">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-foreground hover:text-primary hover:bg-accent relative"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                    {cartCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
+            <Link to="/login" className="hidden sm:block">
+              <Button className="bg-primary hover:bg-forest-light text-primary-foreground gap-2">
+                <User className="h-4 w-4" />
+                <span>Login</span>
+              </Button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <Button
