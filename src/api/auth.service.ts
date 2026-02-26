@@ -41,7 +41,10 @@ export const loginAPI = async (payload: LoginPayload) => {
 };
 
 /* LOGOUT */
-export const logout = () => clearToken();
+export const logout = () => {
+  clearToken();
+  localStorage.removeItem("user_data");
+};
 
 /* GOOGLE LOGIN */
 export const googleLoginAPI = async (token: string) => {

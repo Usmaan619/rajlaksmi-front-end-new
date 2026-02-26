@@ -17,6 +17,7 @@ import { Eye, EyeOff, Lock, Mail, User, Phone } from "lucide-react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { googleLoginAPI, signupAPI } from "@/api/auth.service";
+import { useAuth } from "@/context/AuthContext";
 import RLJLOGOJAVIK from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
 
 const SignupPage = () => {
@@ -29,6 +30,7 @@ const SignupPage = () => {
     confirmPassword: "",
   });
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,8 +47,14 @@ const SignupPage = () => {
       });
 
       if (response.success) {
-        toast.success("Signup Successful");
-        navigate("/login");
+        if (response.user && response.token) {
+          login(response.user, response.token);
+          toast.success("Signup Successful");
+          navigate("/");
+        } else {
+          toast.success("Signup Successful");
+          navigate("/login");
+        }
       } else {
         toast.error(response.message || "Signup failed");
       }
@@ -60,7 +68,19 @@ const SignupPage = () => {
     if (credentialResponse.credential) {
       try {
         const response = await googleLoginAPI(credentialResponse.credential);
-        if (response.success) {
+        if (response.success && response.user && response.token) {
+          login(response.user, response.token);
+          toast.success("Login Successful");
+          navigate("/");
+        } else if (response.success) {
+          const decoded: any = jwtDecode(credentialResponse.credential);
+          const userObj = {
+            id: decoded.sub,
+            full_name: decoded.name,
+            email: decoded.email,
+            profile_image: decoded.picture,
+          };
+          login(userObj, response.token);
           toast.success("Login Successful");
           navigate("/");
         } else {
@@ -98,10 +118,10 @@ const SignupPage = () => {
                 }
               />
             </div>
-            <CardTitle className="text-3xl font-bold tracking-tight text-emerald-900">
+            <CardTitle className="text-3xl font-bold tracking-tight">
               Create Account
             </CardTitle>
-            <CardDescription className="text-emerald-600">
+            <CardDescription>
               Join the Rajlakshmi Javiks family today
             </CardDescription>
           </CardHeader>
@@ -197,7 +217,7 @@ const SignupPage = () => {
                 />
                 <label
                   htmlFor="terms"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-emerald-700"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 "
                 >
                   I agree to the{" "}
                   <Link
@@ -227,7 +247,7 @@ const SignupPage = () => {
                 <span className="w-full border-t border-gray-200" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500 font-medium">
+                <span className=" px-2 text-gray-500 font-medium">
                   Or sign up with
                 </span>
               </div>
@@ -240,7 +260,7 @@ const SignupPage = () => {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-2">
-            <p className="text-center text-sm text-emerald-600">
+            <p className="text-center text-sm ">
               Already have an account?{" "}
               <Link
                 to="/login"

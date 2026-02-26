@@ -17,6 +17,7 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { googleLoginAPI, loginAPI } from "@/api/auth.service";
+import { useAuth } from "@/context/AuthContext";
 
 import RLJLOGOJAVIK from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
 
@@ -25,12 +26,24 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await loginAPI({ email, password });
-      if (response.success) {
+      if (response.success && response.user && response.token) {
+        login(response.user, response.token);
+        toast.success("Login Successful");
+        navigate("/");
+      } else if (response.success) {
+        // Fallback if user object is not structured exactly as expected
+        const userObj = response.user || {
+          id: response.id || "",
+          full_name: response.full_name || "User",
+          email: email,
+        };
+        login(userObj, response.token);
         toast.success("Login Successful");
         navigate("/");
       } else {
@@ -46,7 +59,20 @@ const LoginPage = () => {
     if (credentialResponse.credential) {
       try {
         const response = await googleLoginAPI(credentialResponse.credential);
-        if (response.success) {
+        if (response.success && response.user && response.token) {
+          login(response.user, response.token);
+          toast.success("Login Successful");
+          navigate("/");
+        } else if (response.success) {
+          // Decode JWT for user info if backend doesn't return it
+          const decoded: any = jwtDecode(credentialResponse.credential);
+          const userObj = {
+            id: decoded.sub,
+            full_name: decoded.name,
+            email: decoded.email,
+            profile_image: decoded.picture,
+          };
+          login(userObj, response.token);
           toast.success("Login Successful");
           navigate("/");
         } else {

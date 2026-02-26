@@ -18,6 +18,8 @@ import B2BMainPage from "@/pages/B2bMain";
 import LabReportsPage from "@/pages/LabReportMain";
 import AppWrapper from "@/AppWrapper";
 
+import ProfilePage from "@/pages/ProfilePage";
+import OrdersPage from "@/pages/OrdersPage";
 import LoginPage from "@/pages/Auth/LoginPage";
 import SignupPage from "@/pages/Auth/SignupPage";
 import ForgotPasswordPage from "@/pages/Auth/ForgotPasswordPage";
@@ -35,6 +37,8 @@ const MainRoutes = () => (
       <Route path="/cart" element={<CartPage />} />
       <Route path="/checkout" element={<CheckoutPage />} />
       <Route path="/wishlist" element={<WishlistPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/orders" element={<OrdersPage />} />
       <Route path="/products" element={<AllProducts />} />
       <Route path="/product/:id" element={<ProductDetail />} />
       <Route path="/certifications" element={<Certifications />} />

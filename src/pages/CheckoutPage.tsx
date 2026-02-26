@@ -1,5 +1,20 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import {
+  MapPin,
+  Phone,
+  User as UserIcon,
+  Trash2,
+  Plus,
+  CheckCircle2,
+  ShoppingBag,
+  CreditCard,
+  Truck,
+  Loader2,
+} from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,34 +27,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
-  MapPin,
-  Phone,
-  User,
-  Trash2,
-  Plus,
-  CheckCircle2,
-  ShoppingBag,
-  CreditCard,
-  Truck,
-} from "lucide-react";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-
-interface Address {
-  id: number;
-  full_name: string;
-  phone: string;
-  address_line1: string;
-  address_line2: string;
-  city: string;
-  state: string;
-  pincode: string;
-  is_default: boolean;
-}
+  getAddressesAPI,
+  saveAddressAPI,
+  deleteAddressAPI,
+  Address,
+} from "@/api/user.service";
+import { placeOrderAPI } from "@/api/order.service";
 
 const CheckoutPage = () => {
   const { cart, cartTotal, clearCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
+
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
     null,
@@ -47,6 +46,7 @@ const CheckoutPage = () => {
   const [isAddingAddress, setIsAddingAddress] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
   // New Address Form State
   const [newAddress, setNewAddress] = useState({
@@ -59,19 +59,19 @@ const CheckoutPage = () => {
     pincode: "",
   });
 
-  // Mock User ID - In a real app, get this from Auth Context
-  const userId = 1;
-
   useEffect(() => {
-    fetchAddresses();
-  }, []);
+    if (user?.id) {
+      fetchAddresses();
+    } else {
+      setIsFetching(false);
+    }
+  }, [user?.id]);
 
   const fetchAddresses = async () => {
+    if (!user?.id) return;
+    setIsFetching(true);
     try {
-      const response = await fetch(
-        `http://localhost:5000/checkout/address/${userId}`,
-      );
-      const data = await response.json();
+      const data = await getAddressesAPI(user.id);
       if (data.success) {
         setAddresses(data.addresses);
         const defaultAddr = data.addresses.find((a: Address) => a.is_default);
@@ -81,25 +81,20 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error("Error fetching addresses:", error);
+    } finally {
+      setIsFetching(false);
     }
   };
 
   const handleSaveAddress = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user?.id) return;
     try {
-      const response = await fetch(
-        "http://localhost:5000/checkout/address/save",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...newAddress,
-            user_id: userId,
-            is_default: addresses.length === 0,
-          }),
-        },
-      );
-      const data = await response.json();
+      const data = await saveAddressAPI({
+        ...newAddress,
+        user_id: user.id,
+        is_default: addresses.length === 0,
+      });
       if (data.success) {
         toast.success("Address saved!");
         setIsAddingAddress(false);
@@ -121,11 +116,7 @@ const CheckoutPage = () => {
 
   const handleDeleteAddress = async (id: number) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/checkout/address/${id}`,
-        { method: "DELETE" },
-      );
-      const data = await response.json();
+      const data = await deleteAddressAPI(id);
       if (data.success) {
         toast.success("Address removed");
         fetchAddresses();
@@ -137,6 +128,11 @@ const CheckoutPage = () => {
   };
 
   const handlePlaceOrder = async () => {
+    if (!user?.id) {
+      toast.error("Please login to place order");
+      navigate("/login");
+      return;
+    }
     if (!selectedAddressId) {
       toast.error("Please select a shipping address");
       return;
@@ -145,27 +141,20 @@ const CheckoutPage = () => {
     setIsLoading(true);
     try {
       const orderData = {
-        user_id: userId,
+        user_id: user.id,
         total_amount: cartTotal + 50, // Including shipping
         shipping_address_id: selectedAddressId,
         items: cart,
         payment_method: paymentMethod,
       };
 
-      const response = await fetch(
-        "http://localhost:5000/checkout/order/place",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderData),
-        },
-      );
-
-      const data = await response.json();
+      const data = await placeOrderAPI(orderData);
       if (data.success) {
         toast.success("Order placed successfully!");
         clearCart();
-        navigate("/"); // Or a success page
+        navigate("/orders");
+      } else {
+        toast.error(data.message || "Failed to place order");
       }
     } catch (error) {
       toast.error("Failed to place order");
@@ -212,7 +201,11 @@ const CheckoutPage = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                {!isAddingAddress ? (
+                {isFetching ? (
+                  <div className="flex justify-center py-8">
+                    <Loader2 className="animate-spin text-primary h-8 w-8" />
+                  </div>
+                ) : !isAddingAddress ? (
                   <div className="space-y-4">
                     {addresses.length > 0 ? (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -228,7 +221,8 @@ const CheckoutPage = () => {
                           >
                             <div className="flex justify-between items-start mb-2">
                               <h4 className="font-bold text-emerald-900 inline-flex items-center gap-2 text-sm md:text-base">
-                                <User className="h-4 w-4" /> {addr.full_name}
+                                <UserIcon className="h-4 w-4" />{" "}
+                                {addr.full_name}
                               </h4>
                               <button
                                 onClick={(e) => {
@@ -286,7 +280,7 @@ const CheckoutPage = () => {
                               full_name: e.target.value,
                             })
                           }
-                          placeholder="Ex: Usmaan Khan"
+                          placeholder="Ex: John Doe"
                         />
                       </div>
                       <div className="space-y-1">
@@ -501,6 +495,7 @@ const CheckoutPage = () => {
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
+                      <Loader2 className="animate-spin h-5 w-5" />
                       Processing...
                     </span>
                   ) : (
