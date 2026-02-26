@@ -55,6 +55,15 @@ export const googleLoginAPI = async (token: string) => {
   return res.data;
 };
 
+/* FACEBOOK LOGIN */
+export const facebookLoginAPI = async (token: string) => {
+  const res = await api.post("/auth/facebook-login", { token });
+  if (res.data.success && res.data.token) {
+    setToken(res.data.token);
+  }
+  return res.data;
+};
+
 /* FORGOT PASSWORD */
 export const forgotPasswordAPI = async (payload: ForgotPasswordPayload) => {
   const res = await api.post("/auth/forgot-password", payload);
