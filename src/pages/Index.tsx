@@ -27,8 +27,6 @@ const Index = () => {
         <BestSellersSection />
         <FarmerDividerExclusive />
         <ExclusiveDealsSection />
-        <VideoSection />
-        <OurProductsSectionSimple />
         <BlogsSection />
         <OurProductsSection />
         <SellingSection />
@@ -43,5 +41,3 @@ const Index = () => {
 };
 
 export default Index;
-
-

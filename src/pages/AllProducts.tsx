@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, Mail, Search } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { ChevronLeft, ChevronRight, Search, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -10,189 +10,81 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import AnnouncementBar from "@/components/AnnouncementBar";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { useNavigate } from "react-router-dom";
-
+import producttest from "@/assets/product-nutmeg.jpg";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Heart, Star, ChevronDown } from "lucide-react";
-import productChana from "@/assets/product-chana.jpg";
-import productMaize from "@/assets/product-maize.jpg";
-import productNutmeg from "@/assets/product-nutmeg.jpg";
-import WhyChooseRajlakshmiSection from "@/components/WhyChooseRajlakshmiSection";
-import ContactSection from "@/components/ContactSection";
-import TestimonialSection from "@/components/TestimonialSection";
-import CertificationsBottomSection from "@/components/CertificationsBottomSection";
+
+import { getProducts } from "@/api/product.service";
+import { getCategories, Category } from "@/api/category.service";
+import { Product } from "@/types/product";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 
-const allProducts = [
-  {
-    id: 1,
-    name: "Organic Kabuli Chana",
-    image: productChana,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: "Best Seller",
-  },
-  {
-    id: 2,
-    name: "Organic Maize Whole",
-    image: productMaize,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: "Best Seller",
-  },
-  {
-    id: 3,
-    name: "Organic Nutmeg Whole",
-    image: productNutmeg,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: "Best Seller",
-  },
-  {
-    id: 4,
-    name: "Organic Nutmeg Whole",
-    image: productNutmeg,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: null,
-  },
-  {
-    id: 5,
-    name: "Organic Kabuli Chana",
-    image: productChana,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: null,
-  },
-  {
-    id: 6,
-    name: "Organic Maize Whole",
-    image: productMaize,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: null,
-  },
-  {
-    id: 7,
-    name: "Organic Maize Whole",
-    image: productMaize,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: null,
-  },
-  {
-    id: 8,
-    name: "Organic Nutmeg Whole",
-    image: productNutmeg,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: null,
-  },
-  {
-    id: 9,
-    name: "Organic Kabuli Chana",
-    image: productChana,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: null,
-  },
-  {
-    id: 10,
-    name: "Organic Maize Whole",
-    image: productMaize,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: null,
-  },
-  {
-    id: 11,
-    name: "Organic Kabuli Chana",
-    image: productChana,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: null,
-  },
-  {
-    id: 12,
-    name: "Organic Nutmeg Whole",
-    image: productNutmeg,
-    price: 899,
-    mrp: 1800,
-    discount: "50%Off",
-    rating: 4.5,
-    weight: "1000g",
-    badge: null,
-  },
-];
+import WhyChooseRajlakshmiSection from "@/components/WhyChooseRajlakshmiSection";
+import ContactSection from "@/components/ContactSection";
+import TestimonialSection from "@/components/TestimonialSection";
+import CertificationsBottomSection from "@/components/CertificationsBottomSection";
 
-const ITEMS_PER_PAGE = 9;
+const ITEMS_PER_PAGE = 10;
 
-const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
+const getFirstImage = (images: any) => {
+  if (!images) return "";
+  if (Array.isArray(images)) return images.length > 0 ? images[0] : "";
+  if (typeof images !== "string") return "";
+  try {
+    const parsed = JSON.parse(images);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed[0] : images;
+  } catch (e) {
+    return images;
+  }
+};
+
+const getWeightOptions = (weight: any) => {
+  if (!weight) return ["N/A"];
+  if (Array.isArray(weight)) return weight.length > 0 ? weight : ["N/A"];
+  try {
+    const parsed = JSON.parse(weight);
+    return Array.isArray(parsed) ? parsed : [weight];
+  } catch (e) {
+    return [weight];
+  }
+};
+
+const ProductCard = ({ product }: { product: Product }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isFavorite = isInWishlist(`product-all-${product.id}`);
 
+  const productImage = getFirstImage(product.product_images);
+  const weights = getWeightOptions(product.weight_options);
+  const [selectedWeight, setSelectedWeight] = useState(weights[0]);
+  const [showWeights, setShowWeights] = useState(false);
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
       id: `product-all-${product.id}`,
-      name: product.name,
+      name: product.product_name || product.name,
       price: product.price,
-      image: product.image,
+      image: productImage,
       quantity: 1,
-      weight: product.weight,
+      weight: selectedWeight,
     });
-    toast.success(`${product.name} added to cart!`);
+    toast.success(`${product.product_name || product.name} added to cart!`);
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
       id: `product-all-${product.id}`,
-      name: product.name,
+      name: product.product_name || product.name,
       price: product.price,
-      image: product.image,
+      image: productImage,
       quantity: 1,
-      weight: product.weight,
+      weight: selectedWeight,
     });
     navigate("/cart");
   };
@@ -211,7 +103,6 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
         border-border
         rounded-[20px]
         overflow-visible
-
         group
         hover:shadow-card
         transition-all
@@ -224,11 +115,14 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
     >
       {/* Image */}
       <div className="relative">
-        <div className="aspect-square rounded-xl overflow-hidden bg-muted">
+        <div className="aspect-square rounded-xl overflow-hidden bg-muted relative">
           <img
-            src={product.image}
-            alt={product.name}
+            src={productImage || producttest}
+            alt={product.product_name || product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = producttest;
+            }}
           />
         </div>
 
@@ -237,12 +131,12 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
             e.stopPropagation();
             toggleWishlist({
               id: `product-all-${product.id}`,
-              name: product.name,
+              name: product.product_name || product.name,
               price: product.price,
-              image: product.image,
-              originalPrice: product.mrp,
-              discount: parseInt(product.discount?.replace(/\D/g, "") || "0"),
-              weightOptions: [product.weight],
+              image: productImage,
+              originalPrice: product.product_del_price,
+              discount: product.discount,
+              weightOptions: weights,
             });
             toast.success(
               isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
@@ -263,32 +157,57 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
       {/* Content */}
       <div className="space-y-2 flex-1 flex flex-col">
         <h3 className="font-medium text-foreground text-sm line-clamp-2">
-          {product.name}
+          {product.product_name || product.name}
         </h3>
 
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-primary font-bold text-base">
             ₹{product.price}
           </span>
-          <span className="text-muted-foreground line-through text-xs">
-            ₹{product.mrp}
-          </span>
-          <Badge className="bg-primary text-primary-foreground text-[10px] px-2 py-0.5">
-            {product.discount}
+          {product.product_del_price > product.price && (
+            <span className="text-muted-foreground line-through text-xs">
+              ₹{product.product_del_price}
+            </span>
+          )}
+
+          <Badge className="bg-primary rounded-md text-primary-foreground text-[10px] px-2 py-0.5">
+            {product.discount || 33}% Off
           </Badge>
         </div>
 
         <div className="flex items-center justify-between">
-          <button
-            onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1 px-2 py-1 rounded-md border text-xs"
-          >
-            {product.weight}
-            <ChevronDown className="h-3 w-3" />
-          </button>
+          <div className="relative">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (weights.length > 1) setShowWeights(!showWeights);
+              }}
+              className="flex items-center gap-1 px-2 py-1 rounded-md border text-xs bg-white"
+            >
+              {selectedWeight}
+              {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
+            </button>
+            {showWeights && (
+              <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-md shadow-lg z-20 min-w-[80px]">
+                {weights.map((w: string) => (
+                  <div
+                    key={w}
+                    className="px-3 py-1 hover:bg-muted cursor-pointer text-xs"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedWeight(w);
+                      setShowWeights(false);
+                    }}
+                  >
+                    {w}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs">{product.rating}</span>
+            <span className="text-xs">{product.rating || "4.5"}</span>
           </div>
         </div>
 
@@ -304,7 +223,7 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
           <Button
             size="sm"
             variant="outline"
-            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white border-border"
+            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white border-border hover:bg-primary/5"
             onClick={handleBuyNow}
           >
             Buy Now
@@ -316,14 +235,130 @@ const ProductCard = ({ product }: { product: (typeof allProducts)[0] }) => {
 };
 
 const AllProducts = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  const totalPages = Math.ceil(allProducts.length / ITEMS_PER_PAGE);
-  const paginatedProducts = allProducts.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page") || "1"),
   );
+  const [totalPages, setTotalPages] = useState(1);
+
+  // Filter states
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || "",
+  );
+  const [selectedCategory, setSelectedCategory] = useState(
+    searchParams.get("category") || "all",
+  );
+  const [selectedWeight, setSelectedWeight] = useState(
+    searchParams.get("weight") || "all",
+  );
+  const [selectedPriceRange, setSelectedPriceRange] = useState(
+    searchParams.get("price") || "all",
+  );
+
+  const fetchCategories = async () => {
+    try {
+      const res = await getCategories();
+      if (res.success) setCategories(res.data || []);
+    } catch (err) {
+      console.error("Failed to fetch categories", err);
+    }
+  };
+
+  const fetchAllProducts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      let minPrice: number | undefined;
+      let maxPrice: number | undefined;
+
+      if (selectedPriceRange !== "all") {
+        const [min, max] = selectedPriceRange.split("-");
+        minPrice = parseInt(min);
+        maxPrice = max === "+" ? undefined : parseInt(max);
+      }
+
+      const res = await getProducts({
+        page: currentPage,
+        limit: ITEMS_PER_PAGE,
+        search: searchQuery || undefined,
+        category: selectedCategory === "all" ? undefined : selectedCategory,
+        weight: selectedWeight === "all" ? undefined : selectedWeight,
+        minPrice,
+        maxPrice,
+      });
+
+      if (res.success) {
+        const productData = res.products || res.data || [];
+
+        // Map backend fields to frontend names if needed
+        const mappedProducts = productData.map((p: any) => ({
+          ...p,
+          price: p.product_price !== undefined ? p.product_price : p.price,
+          mrp: p.product_del_price !== undefined ? p.product_del_price : p.mrp,
+          weight_options:
+            p.product_weight !== undefined
+              ? p.product_weight
+              : p.weight_options,
+        }));
+
+        setProducts(mappedProducts);
+        if (res.pagination) {
+          setTotalPages(res.pagination.totalPages || 1);
+        } else {
+          setTotalPages(1);
+        }
+      } else {
+        setError("Failed to fetch products");
+      }
+    } catch (err: any) {
+      setError(err.message || "Something went wrong while fetching products");
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    currentPage,
+    searchQuery,
+    selectedCategory,
+    selectedWeight,
+    selectedPriceRange,
+  ]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    fetchAllProducts();
+  }, [fetchAllProducts]);
+
+  const handleApplyFilters = () => {
+    setCurrentPage(1);
+    const params: any = {};
+    if (searchQuery) params.search = searchQuery;
+    if (selectedCategory !== "all") params.category = selectedCategory;
+    if (selectedWeight !== "all") params.weight = selectedWeight;
+    if (selectedPriceRange !== "all") params.price = selectedPriceRange;
+    params.page = "1";
+    setSearchParams(params);
+    setMobileFilterOpen(false);
+  };
+
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("all");
+    setSelectedWeight("all");
+    setSelectedPriceRange("all");
+    setCurrentPage(1);
+    setSearchParams({});
+    setMobileFilterOpen(false);
+  };
 
   const FilterContent = () => (
     <div className="space-y-5">
@@ -332,6 +367,9 @@ const AllProducts = () => {
         <Input
           placeholder="Find your products"
           className="pr-10 bg-white border-border"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleApplyFilters()}
         />
         <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       </div>
@@ -341,29 +379,27 @@ const AllProducts = () => {
         <label className="text-sm font-medium text-foreground mb-1.5 block">
           Category
         </label>
-        <Select defaultValue="all">
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
           <SelectTrigger className="bg-popover border-border">
             <SelectValue placeholder="All" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            <SelectItem value="grains">Organic Grains</SelectItem>
-            <SelectItem value="flours">Organic Flours</SelectItem>
-            <SelectItem value="oils">Organic Oils</SelectItem>
-            <SelectItem value="seeds">Organic Seeds</SelectItem>
-            <SelectItem value="dryfruits">Dry Fruits</SelectItem>
-            <SelectItem value="spices">Organic Spices</SelectItem>
-            <SelectItem value="ghee">Organic Ghee</SelectItem>
+            {categories?.map((cat) => (
+              <SelectItem key={cat.id} value={cat.category_name}>
+                {cat.category_name}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
 
       {/* Weight Filter */}
-      <div>
+      {/* <div>
         <label className="text-sm font-medium text-foreground mb-1.5 block">
           Weight
         </label>
-        <Select defaultValue="all">
+        <Select value={selectedWeight} onValueChange={setSelectedWeight}>
           <SelectTrigger className="bg-popover border-border">
             <SelectValue placeholder="All" />
           </SelectTrigger>
@@ -375,14 +411,17 @@ const AllProducts = () => {
             <SelectItem value="2000g">2000g</SelectItem>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
 
       {/* Price Filter */}
       <div>
         <label className="text-sm font-medium text-foreground mb-1.5 block">
           Price Range
         </label>
-        <Select defaultValue="all">
+        <Select
+          value={selectedPriceRange}
+          onValueChange={setSelectedPriceRange}
+        >
           <SelectTrigger className="bg-popover border-border">
             <SelectValue placeholder="All" />
           </SelectTrigger>
@@ -390,7 +429,7 @@ const AllProducts = () => {
             <SelectItem value="all">All</SelectItem>
             <SelectItem value="0-500">₹0 - ₹500</SelectItem>
             <SelectItem value="500-1000">₹500 - ₹1000</SelectItem>
-            <SelectItem value="1000+">₹1000+</SelectItem>
+            <SelectItem value="1000-+">₹1000+</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -400,10 +439,14 @@ const AllProducts = () => {
         <Button
           variant="outline"
           className="bg-white flex-1 border-border text-muted-foreground"
+          onClick={handleClearFilters}
         >
           Clear
         </Button>
-        <Button className="flex-1 bg-primary text-primary-foreground">
+        <Button
+          className="flex-1 bg-primary text-primary-foreground"
+          onClick={handleApplyFilters}
+        >
           Apply
         </Button>
       </div>
@@ -434,57 +477,138 @@ const AllProducts = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Products */}
             <div className="flex-1">
-              <div
-                className="
-    grid
-    grid-cols-2
-    sm:grid-cols-3
-    md:grid-cols-4
-    gap-4
-    lg:gap-6
-    lg:justify-center
-    lg:[grid-template-columns:repeat(auto-fit,290px)]
-  "
-              >
-                {paginatedProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
+              {loading ? (
+                <div className="flex flex-col items-center justify-center py-20 gap-4">
+                  <Loader2 className="h-10 w-10 text-primary animate-spin" />
+                  <p className="text-muted-foreground animate-pulse">
+                    Loading products...
+                  </p>
+                </div>
+              ) : error ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <p className="text-destructive font-medium mb-4">{error}</p>
+                  <Button onClick={fetchAllProducts}>Try Again</Button>
+                </div>
+              ) : products?.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <Search className="h-12 w-12 text-muted-foreground mb-4 opacity-20" />
+                  <h3 className="text-xl font-semibold mb-2">
+                    No products found
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    Try adjusting your filters or search terms
+                  </p>
+                  <Button variant="outline" onClick={handleClearFilters}>
+                    Clear all filters
+                  </Button>
+                </div>
+              ) : (
+                <div
+                  className="
+                    grid
+                    grid-cols-2
+                    sm:grid-cols-3
+                    md:grid-cols-4
+                    gap-4
+                    lg:gap-6
+                    lg:justify-center
+                    lg:[grid-template-columns:repeat(auto-fit,290px)]
+                  "
+                >
+                  {products?.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              )}
 
               {/* Pagination */}
-              <div className="flex items-center justify-center gap-2 mt-8">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8"
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((p) => p - 1)}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-
-                {Array.from({ length: totalPages }, (_, i) => (
+              {!loading && !error && totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-12">
                   <Button
-                    key={i + 1}
-                    variant={currentPage === i + 1 ? "default" : "ghost"}
-                    size="sm"
-                    className="h-8 w-8 text-xs"
-                    onClick={() => setCurrentPage(i + 1)}
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                    disabled={currentPage === 1}
+                    onClick={() => {
+                      const newPage = currentPage - 1;
+                      setCurrentPage(newPage);
+                      setSearchParams({
+                        ...Object.fromEntries(searchParams.entries()),
+                        page: newPage.toString(),
+                      });
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
-                    {i + 1}
+                    <ChevronLeft className="h-5 w-5" />
                   </Button>
-                ))}
 
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-8 w-8"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => p + 1)}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
+                  {Array.from({ length: totalPages }, (_, i) => {
+                    const pageNum = i + 1;
+                    // Dynamic pagination: show current, first, last, and neighbors
+                    if (
+                      pageNum === 1 ||
+                      pageNum === totalPages ||
+                      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                    ) {
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={
+                            currentPage === pageNum ? "default" : "ghost"
+                          }
+                          className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
+                            currentPage === pageNum
+                              ? "bg-primary text-white shadow-md scale-110"
+                              : "hover:text-primary hover:bg-primary/5"
+                          }`}
+                          onClick={() => {
+                            setCurrentPage(pageNum);
+                            setSearchParams({
+                              ...Object.fromEntries(searchParams.entries()),
+                              page: pageNum.toString(),
+                            });
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    } else if (
+                      (pageNum === 2 && currentPage > 3) ||
+                      (pageNum === totalPages - 1 &&
+                        currentPage < totalPages - 2)
+                    ) {
+                      return (
+                        <span
+                          key={pageNum}
+                          className="px-1 text-muted-foreground"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  })}
+
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                    disabled={currentPage === totalPages}
+                    onClick={() => {
+                      const newPage = currentPage + 1;
+                      setCurrentPage(newPage);
+                      setSearchParams({
+                        ...Object.fromEntries(searchParams.entries()),
+                        page: newPage.toString(),
+                      });
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* Desktop Sidebar */}

@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import api from "@/api/axios";
 import {
   ArrowLeft,
   Star,
@@ -11,6 +12,7 @@ import {
   Shield,
   Award,
   Leaf,
+  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,8 +35,14 @@ import WriteReviewModal from "@/components/WriteReviewModal";
 import BentoGrid from "@/components/BentoGrid";
 import OurProductsSection from "@/components/OurProductsSection";
 import FAQSection from "@/components/FAQSection";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
-const product = {
+const DEFAULT_PRODUCT = {
   name: "Organic Toor Dal",
   subtitle:
     "Naturally grown, protein-rich organic toor dal for everyday healthy meals.",
@@ -144,6 +152,56 @@ import { toast } from "sonner";
 const ProductDetail = () => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { id } = useParams();
+  const [apiProduct, setApiProduct] = useState<any>(null);
+
+  useEffect(() => {
+    if (id) {
+      api
+        .get(`/products/get-product/${id}`)
+        .then((res) => {
+          if (res.data?.success) {
+            setApiProduct(res.data.products);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [id]);
+
+  const product = apiProduct
+    ? {
+        ...DEFAULT_PRODUCT,
+        name: apiProduct.product_name || DEFAULT_PRODUCT.name,
+        subtitle: apiProduct.short_description || DEFAULT_PRODUCT.subtitle,
+        description: apiProduct.full_description || DEFAULT_PRODUCT.description,
+        healthBenefits: apiProduct.health_benefits
+          ? apiProduct.health_benefits.split("\n").filter(Boolean)
+          : DEFAULT_PRODUCT.healthBenefits,
+        ingredients: apiProduct.ingredients || DEFAULT_PRODUCT.ingredients,
+        longDescription:
+          apiProduct.full_description || DEFAULT_PRODUCT.longDescription,
+        images: apiProduct.product_images?.length
+          ? apiProduct.product_images
+          : DEFAULT_PRODUCT.images,
+        sizes: (() => {
+          if (!apiProduct.product_weight) return DEFAULT_PRODUCT.sizes;
+          if (Array.isArray(apiProduct.product_weight))
+            return apiProduct.product_weight;
+          try {
+            const parsed = JSON.parse(apiProduct.product_weight);
+            return Array.isArray(parsed) ? parsed : DEFAULT_PRODUCT.sizes;
+          } catch {
+            return DEFAULT_PRODUCT.sizes;
+          }
+        })(),
+        price: Number(apiProduct.product_price) || DEFAULT_PRODUCT.price,
+        originalPrice:
+          Number(apiProduct.product_del_price) || DEFAULT_PRODUCT.originalPrice,
+        discount: Number(apiProduct.discount) || DEFAULT_PRODUCT.discount,
+        category: apiProduct.category_name || DEFAULT_PRODUCT.category,
+      }
+    : DEFAULT_PRODUCT;
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState("1kg");
   const isFavorite = isInWishlist(`product-detail-${product.name}`);
@@ -193,7 +251,7 @@ const ProductDetail = () => {
     paymentLogo5,
   ];
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-6 lg:py-10">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6">
@@ -324,7 +382,7 @@ const ProductDetail = () => {
             </div>
 
             {/* Offers */}
-            <div>
+            {/* <div>
               <h3 className="text-sm font-semibold text-foreground mb-3">
                 Offers Available
               </h3>
@@ -357,7 +415,7 @@ const ProductDetail = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Size Selector */}
             <div>
@@ -365,7 +423,7 @@ const ProductDetail = () => {
                 Size
               </h3>
               <div className="flex flex-wrap gap-2">
-                {product.sizes.map((size) => (
+                {product.sizes?.map((size: string) => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
@@ -467,39 +525,64 @@ const ProductDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             <div>
               <h2 className="font-heading text-2xl lg:text-3xl font-bold text-primary mb-6">
-                Product Description
+                Product Details
               </h2>
-              <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line mb-8">
-                {product.description}
-              </p>
-
-              {/* Health Benefits */}
-              <div className="mb-8">
-                <h3 className="flex items-center gap-2 text-base font-bold text-foreground mb-3">
-                  <span className="text-primary">🌿</span> HEALTH BENEFITS
-                </h3>
-                <ul className="space-y-2">
-                  {product.healthBenefits.map((benefit) => (
-                    <li
-                      key={benefit}
-                      className="flex items-start gap-2 text-sm text-muted-foreground"
-                    >
-                      <span className="text-primary mt-1">•</span>
-                      {benefit}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Ingredients */}
-              <div>
-                <h3 className="flex items-center gap-2 text-base font-bold text-foreground mb-3">
-                  <span className="text-primary">🌾</span> INGREDIENTS
-                </h3>
-                <p className="text-sm text-muted-foreground whitespace-pre-line">
-                  {product.ingredients}
-                </p>
-              </div>
+              <Accordion
+                type="single"
+                collapsible
+                className="w-full"
+                defaultValue="item-1"
+              >
+                <AccordionItem
+                  value="item-1"
+                  className="border-b border-[hsl(120,20%,85%)]"
+                >
+                  <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                    <span className="flex-1">Description</span>
+                    <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                      <ChevronDown className="h-5 w-5" />
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
+                    {product.description}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem
+                  value="item-2"
+                  className="border-b border-[hsl(120,20%,85%)]"
+                >
+                  <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                    <span className="flex-1">Health Benefits</span>
+                    <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                      <ChevronDown className="h-5 w-5" />
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">
+                    <ul className="space-y-2">
+                      {product.healthBenefits.map((benefit: string) => (
+                        <li key={benefit} className="flex items-start gap-2">
+                          <span className="text-primary mt-1">•</span>
+                          {benefit}
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem
+                  value="item-3"
+                  className="border-b border-[hsl(120,20%,85%)]"
+                >
+                  <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                    <span className="flex-1">Ingredients</span>
+                    <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                      <ChevronDown className="h-5 w-5" />
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
+                    {product.ingredients}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
 
             {/* Description Image */}
@@ -512,11 +595,6 @@ const ProductDetail = () => {
                 />
               </div>
             </div>
-          </div>
-
-          {/* Long Description */}
-          <div className="mt-8 text-sm text-muted-foreground leading-relaxed">
-            <p>{product.longDescription}</p>
           </div>
         </div>
         {/* Customer Reviews Section */}
@@ -620,7 +698,6 @@ const ProductDetail = () => {
       </main>
       <RelatedProduct />
       <BentoGrid />
-      <OurProductsSection />
       <FAQSection />
     </div>
   );
