@@ -9,12 +9,14 @@ import { submitReview } from "@/api/feedback.service";
 import { Rating } from "react-simple-star-rating";
 
 interface WriteReviewModalProps {
+  productId: string;
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
 }
 
 const WriteReviewModal = ({
+  productId,
   isOpen,
   onClose,
   onSuccess,
@@ -50,6 +52,7 @@ const WriteReviewModal = ({
     setSubmitting(true);
     try {
       const res = await submitReview({
+        product_id: productId,
         name,
         title,
         email,

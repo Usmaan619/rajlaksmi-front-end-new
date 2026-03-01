@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Rating } from "react-simple-star-rating";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -149,7 +150,7 @@ const allReviews = [
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
-import { getAllReviews } from "@/api/feedback.service";
+import { getProductReviews } from "@/api/feedback.service";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
@@ -157,12 +158,22 @@ const ProductDetail = () => {
   const { id } = useParams();
   const [apiProduct, setApiProduct] = useState<any>(null);
   const [allReviews, setAllReviews] = useState<any[]>([]);
+  const [reviewStats, setReviewStats] = useState({
+    averageRating: 0,
+    totalReviews: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchReviews = async () => {
+    if (!id) return;
     try {
-      const res = await getAllReviews();
+      const res = await getProductReviews(id);
       if (res.reviews) {
         setAllReviews(res.reviews);
+        setReviewStats({
+          averageRating: res.averageRating || 0,
+          totalReviews: res.totalReviews || 0,
+        });
       }
     } catch (err) {
       console.error("Failed to fetch reviews:", err);
@@ -170,21 +181,34 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
-    fetchReviews();
-  }, []);
+    const loadData = async () => {
+      if (!id) return;
+      setIsLoading(true);
+      // Artificial delay for skeleton as requested
+      const delay = new Promise((resolve) => setTimeout(resolve, 2000));
 
-  useEffect(() => {
-    if (id) {
-      api
-        .get(`/products/get-product/${id}`)
-        .then((res) => {
-          if (res.data?.success) {
-            setApiProduct(res.data.products);
-          }
-        })
-        .catch(console.error);
-    }
+      try {
+        await Promise.all([fetchReviews(), delay]);
+
+        const res = await api.get(`/products/get-product/${id}`);
+        if (res.data?.success) {
+          setApiProduct(res.data.products);
+        }
+      } catch (err) {
+        console.error("Error loading product detail data:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
   }, [id]);
+
+  // Calculate dynamic stats or use fake defaults
+  const dynamicRating =
+    reviewStats.totalReviews > 0 ? reviewStats.averageRating : 4.5;
+  const dynamicReviewCount =
+    reviewStats.totalReviews > 0 ? reviewStats.totalReviews : 112;
 
   const product = apiProduct
     ? {
@@ -217,8 +241,14 @@ const ProductDetail = () => {
           Number(apiProduct.product_del_price) || DEFAULT_PRODUCT.originalPrice,
         discount: Number(apiProduct.discount) || DEFAULT_PRODUCT.discount,
         category: apiProduct.category_name || DEFAULT_PRODUCT.category,
+        rating: dynamicRating,
+        reviews: dynamicReviewCount,
       }
-    : DEFAULT_PRODUCT;
+    : {
+        ...DEFAULT_PRODUCT,
+        rating: dynamicRating,
+        reviews: dynamicReviewCount,
+      };
 
   const handleShare = async () => {
     const shareData = {
@@ -292,6 +322,51 @@ const ProductDetail = () => {
     paymentLogo4,
     paymentLogo5,
   ];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <main className="container mx-auto px-4 py-6 lg:py-10">
+          <div className="flex items-center gap-2 mb-6">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-4" />
+            <Skeleton className="h-4 w-48" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            <div>
+              <Skeleton className="aspect-square w-full rounded-2xl mb-4" />
+              <div className="grid grid-cols-4 gap-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="aspect-square rounded-lg" />
+                ))}
+              </div>
+            </div>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <Skeleton className="h-10 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-6 w-32" />
+              </div>
+              <Skeleton className="h-24 w-full rounded-xl" />
+              <div className="flex gap-4">
+                <Skeleton className="h-12 flex-1 rounded-lg" />
+                <Skeleton className="h-12 flex-1 rounded-lg" />
+              </div>
+              <div className="space-y-2 pt-4">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+                <Skeleton className="h-4 w-4/6" />
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-6 lg:py-10">
@@ -741,6 +816,7 @@ const ProductDetail = () => {
         </div>
 
         <WriteReviewModal
+          productId={id || ""}
           isOpen={isReviewModalOpen}
           onClose={() => setIsReviewModalOpen(false)}
           onSuccess={fetchReviews}
