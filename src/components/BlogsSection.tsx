@@ -32,15 +32,20 @@ const BlogsSection = () => {
     <section className="py-12 md:py-16">
       <div className="mx-auto px-5 sm:px-6 md:px-8 lg:px-12">
         {/* Section Header */}
-        <div className="mb-8 flex justify-between items-center">
-          <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#01722C]">
-            Blogs
+        <div className="mb-14 text-center relative flex flex-col items-center">
+          <p className="text-[#01722C] font-semibold text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-3">
+            The Wisdom of Tradition
+          </p>
+          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
+            Our Stories & Blogs
           </h2>
+          <div className="h-1 w-24 bg-[#01722C]/20 mt-6 rounded-full" />
+
           <button
             onClick={() => navigate("/blog")}
-            className="text-[#01722C] font-medium hover:underline"
+            className="mt-10 bg-white border border-[#01722C] text-[#01722C] px-8 py-2.5 rounded-full text-sm font-bold hover:bg-[#01722C] hover:text-white transition-all duration-300 shadow-sm md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2"
           >
-            View all
+            Explore All Stories
           </button>
         </div>
 

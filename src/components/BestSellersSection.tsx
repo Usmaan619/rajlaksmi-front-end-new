@@ -214,10 +214,14 @@ const BestSellersSection = () => {
     <section className="bg-white py-8 sm:py-12 lg:py-16">
       <div className="px-4 sm:px-6 md:px-8 lg:px-12">
         {/* Heading */}
-        <div className="mb-6 sm:mb-10">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#01722C]">
-            Best Sellers
+        <div className="mb-12 text-center">
+          <p className="text-[#01722C] font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] mb-3">
+            Most Loved
+          </p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
+            Our Best Sellers
           </h2>
+          <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
         </div>
 
         {/* Grid */}
@@ -238,8 +242,8 @@ const BestSellersSection = () => {
                   className="w-full lg:w-[290px] h-[448px] p-4 bg-muted animate-pulse rounded-2xl"
                 />
               ))
-            : products.map((product, index) => (
-                <ProductCard key={index} product={product} />
+            : products.map((product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
         </div>
       </div>

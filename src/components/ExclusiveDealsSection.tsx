@@ -37,21 +37,21 @@ const deals = [
   },
 
   {
-    id: 1,
+    id: 4,
     category: "GHEE",
     name: "A2 Ghee",
     image: dealGhee,
     discount: 40,
   },
   {
-    id: 2,
+    id: 5,
     category: "OIL",
     name: "Olive Oil",
     image: dealOil,
     discount: 40,
   },
   {
-    id: 3,
+    id: 6,
     category: "GHEE",
     name: "A2 Ghee",
     image: dealGhee2,
@@ -102,10 +102,17 @@ const ExclusiveDealsSection = () => {
 
       <div className="mx-auto px-4 sm:px-6 lg:px-10 relative z-10">
         {/* Heading */}
-        <div className="mb-6 sm:mb-10">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#01722C]">
-            Up to -40% exclusive deals
+        <div className="mb-12 text-center">
+          <p className="text-[#01722C] font-semibold text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-3">
+            Pure Savings, Pure Life
+          </p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
+            Special Deals
           </h2>
+          <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
+          <p className="mt-5 text-gray-600 italic text-sm sm:text-base md:text-lg font-medium">
+            Hand-picked organic essentials at up to -40% off.
+          </p>
         </div>
 
         {/* Carousel */}
