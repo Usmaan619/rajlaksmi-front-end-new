@@ -14,6 +14,7 @@ import {
   Leaf,
   ChevronDown,
 } from "lucide-react";
+import { Rating } from "react-simple-star-rating";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Header from "@/components/Header";
@@ -148,12 +149,29 @@ const allReviews = [
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
+import { getAllReviews } from "@/api/feedback.service";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { id } = useParams();
   const [apiProduct, setApiProduct] = useState<any>(null);
+  const [allReviews, setAllReviews] = useState<any[]>([]);
+
+  const fetchReviews = async () => {
+    try {
+      const res = await getAllReviews();
+      if (res.reviews) {
+        setAllReviews(res.reviews);
+      }
+    } catch (err) {
+      console.error("Failed to fetch reviews:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
 
   useEffect(() => {
     if (id) {
@@ -653,21 +671,24 @@ const ProductDetail = () => {
                     </div>
                   </div>
                   <div className="flex gap-0.5 ml-auto">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${i < review.rating ? "fill-golden text-golden" : "text-border"}`}
-                      />
-                    ))}
+                    <Rating
+                      initialValue={review.rating}
+                      readonly
+                      allowFraction
+                      size={18}
+                      fillColor="orange"
+                      className="flex"
+                      SVGclassName="inline-block"
+                    />
                   </div>
                 </div>
-                <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                  {review.quote}
+                <p className="text-muted-foreground text-sm mb-4 leading-relaxed italic">
+                  "{review.feedback || review.quote}"
                 </p>
                 <div>
                   <p className="font-semibold text-foreground">{review.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {review.title}
+                  <p className="text-xs text-primary font-medium">
+                    {review.title || "Verified Customer"}
                   </p>
                 </div>
               </div>
@@ -722,6 +743,7 @@ const ProductDetail = () => {
         <WriteReviewModal
           isOpen={isReviewModalOpen}
           onClose={() => setIsReviewModalOpen(false)}
+          onSuccess={fetchReviews}
         />
       </main>
       <RelatedProduct
