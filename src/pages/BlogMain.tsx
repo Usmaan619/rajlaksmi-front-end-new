@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Search,
-  ChevronLeft,
   ChevronRight,
   SlidersHorizontal,
   X,
@@ -11,142 +10,81 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
-
-import productChana from "@/assets/product-chana.jpg";
-import dealGhee from "@/assets/deal-ghee.jpg";
-import productRice from "@/assets/product-rice.jpg";
-import heroGhee from "@/assets/hero-ghee.jpg";
-import productOil from "@/assets/product-oil.jpg";
-import productMaize from "@/assets/product-maize.jpg";
+import { getAllBlogs, getBlogCategories } from "@/api/blog.service";
 
 import blogImg from "@/assets/blog/blogheader.png";
 
-const allBlogs = [
-  {
-    id: 1,
-    category: "Food Tips",
-    title: "Daal",
-    description:
-      "Explore the use of essential oils in skincare for various benefits and natural remedies.",
-    author: "Rajlakshmi Javiks",
-    date: "12 Aug 2026",
-    image: productRice,
-  },
-  {
-    id: 2,
-    category: "Health Benefits",
-    title: "A2 Ghee",
-    description:
-      "Explore the use of essential oils in skincare for various benefits and natural remedies.",
-    author: "Rajlakshmi Javiks",
-    date: "12 Aug 2026",
-    image: dealGhee,
-  },
-  {
-    id: 3,
-    category: "Sustainability",
-    title: "Kabuli Chana",
-    description:
-      "Explore the use of essential oils in skincare for various benefits and natural remedies.",
-    author: "Rajlakshmi Javiks",
-    date: "12 Aug 2026",
-    image: productChana,
-  },
-  {
-    id: 4,
-    category: "Food Tips",
-    title: "Cold Pressed Oil",
-    description:
-      "Explore the use of essential oils in skincare for various benefits and natural remedies.",
-    author: "Rajlakshmi Javiks",
-    date: "15 Aug 2026",
-    image: productOil,
-  },
-  {
-    id: 5,
-    category: "Organic Living",
-    title: "Maize Flour",
-    description:
-      "Explore the use of essential oils in skincare for various benefits and natural remedies.",
-    author: "Rajlakshmi Javiks",
-    date: "18 Aug 2026",
-    image: productMaize,
-  },
-  {
-    id: 6,
-    category: "Health Benefits",
-    title: "Pure A2 Ghee",
-    description:
-      "Explore the use of essential oils in skincare for various benefits and natural remedies.",
-    author: "Rajlakshmi Javiks",
-    date: "20 Aug 2026",
-    image: heroGhee,
-  },
-  {
-    id: 7,
-    category: "Food Tips",
-    title: "Organic Rice",
-    description:
-      "Explore the use of essential oils in skincare for various benefits and natural remedies.",
-    author: "Rajlakshmi Javiks",
-    date: "22 Aug 2026",
-    image: productRice,
-  },
-  {
-    id: 8,
-    category: "Sustainability",
-    title: "Natural Spices",
-    description:
-      "Explore the use of essential oils in skincare for various benefits and natural remedies.",
-    author: "Rajlakshmi Javiks",
-    date: "25 Aug 2026",
-    image: productChana,
-  },
-  {
-    id: 9,
-    category: "Organic Living",
-    title: "Farm Fresh Ghee",
-    description:
-      "Explore the use of essential oils in skincare for various benefits and natural remedies.",
-    author: "Rajlakshmi Javiks",
-    date: "28 Aug 2026",
-    image: dealGhee,
-  },
-];
-
-const categories = [
-  "All",
-  "Food Tips",
-  "Health Benefits",
-  "Sustainability",
-  "Organic Living",
-];
-
-const Blogs = () => {
+const BlogMain = () => {
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [categories, setCategories] = useState<string[]>(["All"]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState<any>(null);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+
   const blogsPerPage = 10;
 
-  const filteredBlogs = allBlogs.filter((blog) => {
-    const matchesSearch = blog.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "All" || blog.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const catRes = await getBlogCategories();
+        if (catRes.success) {
+          setCategories(catRes.categories);
+        }
+      } catch (err) {
+        console.error("Failed to fetch initial data:", err);
+      }
+    };
+    fetchInitialData();
+  }, []);
 
-  const totalPages = Math.ceil(filteredBlogs.length / blogsPerPage);
-  const paginatedBlogs = filteredBlogs.slice(
-    (currentPage - 1) * blogsPerPage,
-    currentPage * blogsPerPage,
-  );
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  const fetchBlogs = async () => {
+    setIsLoading(true);
+    // 2-second delay for skeleton as requested
+    const delay = new Promise((resolve) => setTimeout(resolve, 2000));
+
+    try {
+      const [res] = await Promise.all([
+        getAllBlogs({
+          page: currentPage,
+          limit: blogsPerPage,
+          search: debouncedSearch,
+          category: selectedCategory === "All" ? "" : selectedCategory,
+        }),
+        delay,
+      ]);
+
+      if (res.success) {
+        setBlogs(res.blogs);
+        setPagination(res.pagination);
+      }
+    } catch (err) {
+      console.error("Failed to fetch blogs:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBlogs();
+  }, [currentPage, debouncedSearch, selectedCategory]);
+
+  const totalPages = pagination?.totalPages || 1;
 
   const SidebarContent = () => (
     <>
@@ -196,16 +134,18 @@ const Blogs = () => {
           Recent Posts
         </h4>
         <div className="space-y-2">
-          {allBlogs.slice(0, 3).map((blog) => (
-            <Link
-              to={`/blog/${blog.id}`}
-              key={blog.id}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-              {blog.title}
-            </Link>
-          ))}
+          {isLoading
+            ? [1, 2, 3].map((i) => <Skeleton key={i} className="h-4 w-full" />)
+            : blogs.slice(0, 3).map((blog) => (
+                <Link
+                  to={`/blog/${blog.slug}`}
+                  key={blog.id}
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                  <span className="line-clamp-1">{blog.title}</span>
+                </Link>
+              ))}
         </div>
         <Button
           className="w-full mt-4 bg-primary text-primary-foreground"
@@ -243,7 +183,6 @@ const Blogs = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-     
       <main className="flex-1 ">
         {/* Hero Section */}
         <section className="py-10 md:py-14 mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
@@ -299,46 +238,80 @@ const Blogs = () => {
             {/* Blog Grid */}
             <div className="flex-1">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
-                {paginatedBlogs.map((blog) => (
-                  <Link to={`/blog/${blog.id}`} key={blog.id}>
-                    <article className="bg-card rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-shadow duration-300 h-full">
-                      <div className="relative p-3 pb-0">
-                        <div className="relative overflow-hidden rounded-xl">
-                          <img
-                            src={blog.image}
-                            alt={blog.title}
-                            className="w-full h-40 object-cover"
-                          />
-                          <Badge className="absolute top-2 left-2 bg-forest text-white text-xs font-medium px-3 py-1 rounded-full">
-                            {blog.category}
-                          </Badge>
+                {isLoading ? (
+                  Array.from({ length: 10 }).map((_, i) => (
+                    <div key={i} className="space-y-3">
+                      <Skeleton className="h-40 w-full rounded-xl" />
+                      <Skeleton className="h-6 w-3/4" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-1/2" />
+                    </div>
+                  ))
+                ) : blogs.length > 0 ? (
+                  blogs.map((blog) => (
+                    <Link to={`/blog/${blog.slug}`} key={blog.id}>
+                      <article className="bg-card rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-shadow duration-300 h-full">
+                        <div className="relative p-3 pb-0">
+                          <div className="relative overflow-hidden rounded-xl">
+                            {blog.image_url ? (
+                              <img
+                                src={blog.image_url}
+                                alt={blog.title}
+                                className="w-full h-40 object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-40 bg-muted flex items-center justify-center">
+                                <span className="text-muted-foreground text-xs text-center px-2">
+                                  {blog.title}
+                                </span>
+                              </div>
+                            )}
+                            <Badge className="absolute top-2 left-2 bg-forest text-white text-xs font-medium px-3 py-1 rounded-full">
+                              {blog.category}
+                            </Badge>
+                          </div>
                         </div>
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-heading font-bold text-lg text-foreground mb-2">
-                          {blog.title}
-                        </h3>
-                        <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
-                          {blog.description}
-                        </p>
-                        <p className="text-xs text-muted-foreground mb-3">
-                          By {blog.author} | {blog.date}
-                        </p>
-                        <span className="text-forest font-medium text-sm flex items-center gap-1">
-                          Read more <ArrowRight className="w-4 h-4" />
-                        </span>
-                      </div>
-                    </article>
-                  </Link>
-                ))}
+                        <div className="p-4">
+                          <h3 className="font-heading font-bold text-base text-foreground mb-2 line-clamp-2">
+                            {blog.title}
+                          </h3>
+                          <p className="text-muted-foreground text-xs mb-3 line-clamp-2">
+                            {blog.description}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground mb-3">
+                            By {blog.author} |{" "}
+                            {new Date(blog.created_at).toLocaleDateString()}
+                          </p>
+                          <span className="text-forest font-medium text-xs flex items-center gap-1">
+                            Read more <ArrowRight className="w-4 h-4" />
+                          </span>
+                        </div>
+                      </article>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="col-span-full py-20 text-center">
+                    <p className="text-muted-foreground italic">
+                      No articles found matching your criteria.
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-sm text-muted-foreground mr-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm text-muted-foreground mr-2"
+                    disabled={!pagination?.hasPrev}
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(1, prev - 1))
+                    }
+                  >
                     Previous
-                  </span>
+                  </Button>
                   {Array.from({ length: totalPages }, (_, i) => (
                     <Button
                       key={i}
@@ -350,14 +323,17 @@ const Blogs = () => {
                       {i + 1}
                     </Button>
                   ))}
-                  <span
-                    className="text-sm text-muted-foreground ml-2 cursor-pointer"
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-sm text-muted-foreground ml-2"
+                    disabled={!pagination?.hasNext}
                     onClick={() =>
-                      setCurrentPage(Math.min(totalPages, currentPage + 1))
+                      setCurrentPage((prev) => Math.min(totalPages, prev + 1))
                     }
                   >
                     Next <ChevronRight className="w-4 h-4 inline" />
-                  </span>
+                  </Button>
                 </div>
               )}
             </div>
@@ -415,7 +391,7 @@ transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                   className="bg-green-700 hover:bg-green-800 text-white rounded-md px-8 py-5 text-lg 
 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
-                  Shop Now
+                  <Link to="/products">Shop Now</Link>
                 </Button>
 
                 <Button
@@ -423,7 +399,7 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
                   className="border border-green-700 text-green-700 hover:bg-green-50 rounded-md px-8 py-5 text-lg 
   transition-all duration-300 hover:scale-105 hover:shadow-lg"
                 >
-                  <Link to="/certifications">Explore Categories</Link>
+                  <Link to="/products">Explore Categories</Link>
                 </Button>
               </div>
             </div>
@@ -434,4 +410,4 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
   );
 };
 
-export default Blogs;
+export default BlogMain;

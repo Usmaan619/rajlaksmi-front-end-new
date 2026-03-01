@@ -1,182 +1,96 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowRight, Clock, User, Share2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
-import productChana from "@/assets/product-chana.jpg";
-import dealGhee from "@/assets/deal-ghee.jpg";
-import productRice from "@/assets/product-rice.jpg";
-import heroGhee from "@/assets/hero-ghee.jpg";
 import LogoImg from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
-
-const blogsData = [
-  {
-    id: 1,
-    category: "Food Tips",
-    title: "Why Organic Food is Better for Your Health",
-    description:
-      "Explore the use of essential oils in skincare for various benefits.",
-    author: "Rajlakshmi Javiks",
-    date: "August 13, 2025",
-    readTime: "5 min read",
-    image: productRice,
-    content: {
-      intro:
-        "Organic food has become an essential part of healthy living for many families today. With increasing awareness about food safety, nutrition, and sustainability, people are turning towards organic products as a cleaner and more natural choice. In this article, we explore why organic food is better for your health and how it supports long-term wellness.",
-      sections: [
-        {
-          title: "What is Organic Food?",
-          text: "Organic food is produced using natural farming methods without the use of synthetic chemicals, pesticides, or genetically modified organisms (GMOs). These foods are grown in healthy soil and processed with care to retain their natural goodness.",
-          benefits: [
-            "Free from harmful chemicals — Organic foods are grown without synthetic pesticides or chemical fertilizers, reducing the risk of harmful residues in your diet.",
-            "Rich in Nutrients — Studies suggest that organic food may contain higher levels of essential nutrients such as antioxidants.",
-            "Better for Digestion — Natural farming practices help maintain the food's natural structure, making it easier to digest.",
-            "Supports Immunity — Choosing clean, chemical-free food helps strengthen the immune system over time.",
-          ],
-        },
-        {
-          title: "Organic Food & Environmental Health",
-          text: "Organic farming supports soil health, reduces water pollution, and promotes biodiversity. Choosing organic is not only beneficial for your own health but also for the planet.",
-        },
-      ],
-      keyTakeaways: [
-        "Organic food is grown naturally without harmful chemicals",
-        "It supports long-term health and immunity",
-        "Better for digestion and overall wellness",
-        "Environment-friendly farming practices",
-      ],
-    },
-  },
-  {
-    id: 2,
-    category: "Health Benefits",
-    title: "The Amazing Benefits of A2 Ghee",
-    description:
-      "Discover why A2 Ghee is considered a superfood in traditional medicine.",
-    author: "Rajlakshmi Javiks",
-    date: "August 15, 2025",
-    readTime: "4 min read",
-    image: dealGhee,
-    content: {
-      intro:
-        "A2 Ghee has been a staple in traditional Indian households for centuries. Made from the milk of indigenous cow breeds, it offers numerous health benefits that modern science is now beginning to validate.",
-      sections: [
-        {
-          title: "What Makes A2 Ghee Special?",
-          text: "A2 Ghee is made from A2 milk, which contains the A2 beta-casein protein. Unlike regular ghee made from A1 milk, A2 Ghee is easier to digest and offers superior nutritional benefits.",
-          benefits: [
-            "Rich in healthy fats and fat-soluble vitamins A, D, E, and K.",
-            "Contains conjugated linoleic acid (CLA) which supports metabolism.",
-            "Promotes gut health and aids digestion.",
-            "Strengthens bones and supports brain function.",
-          ],
-        },
-      ],
-      keyTakeaways: [
-        "A2 Ghee is made from indigenous cow milk",
-        "Rich in vitamins and healthy fats",
-        "Better digestibility than regular ghee",
-        "Supports overall wellness traditionally",
-      ],
-    },
-  },
-  {
-    id: 3,
-    category: "Sustainability",
-    title: "Sustainable Farming and Kabuli Chana",
-    description: "Learn about sustainable practices in chana farming.",
-    author: "Rajlakshmi Javiks",
-    date: "August 18, 2025",
-    readTime: "6 min read",
-    image: productChana,
-    content: {
-      intro:
-        "Kabuli Chana, also known as chickpeas, is one of the most sustainable crops to grow. Its cultivation enriches soil health and requires minimal water compared to other crops.",
-      sections: [
-        {
-          title: "Why Kabuli Chana is Sustainable",
-          text: "Chickpeas are nitrogen-fixing crops, meaning they naturally enrich the soil with essential nutrients, reducing the need for chemical fertilizers.",
-          benefits: [
-            "Nitrogen-fixing properties improve soil health naturally.",
-            "Requires significantly less water than other protein crops.",
-            "High protein content makes it a sustainable meat alternative.",
-            "Versatile crop that supports crop rotation practices.",
-          ],
-        },
-      ],
-      keyTakeaways: [
-        "Chickpeas are naturally sustainable crops",
-        "They improve soil health through nitrogen fixation",
-        "High protein, low environmental impact",
-        "Perfect for sustainable farming practices",
-      ],
-    },
-  },
-];
-
-const relatedArticles = [
-  {
-    id: 1,
-    category: "Food Tips",
-    title: "Daal",
-    description:
-      "Explore the use of essential oils in skincare for various benefits.",
-    author: "Rajlakshmi Javiks",
-    date: "12 Aug 2026",
-    image: productRice,
-  },
-  {
-    id: 2,
-    category: "Food Tips",
-    title: "Daal",
-    description:
-      "Explore the use of essential oils in skincare for various benefits.",
-    author: "Rajlakshmi Javiks",
-    date: "12 Aug 2026",
-    image: productChana,
-  },
-  {
-    id: 3,
-    category: "Food Tips",
-    title: "Daal",
-    description:
-      "Explore the use of essential oils in skincare for various benefits.",
-    author: "Rajlakshmi Javiks",
-    date: "12 Aug 2026",
-    image: heroGhee,
-  },
-  {
-    id: 3,
-    category: "Food Tips",
-    title: "Daal",
-    description:
-      "Explore the use of essential oils in skincare for various benefits.",
-    author: "Rajlakshmi Javiks",
-    date: "12 Aug 2026",
-    image: heroGhee,
-  },
-  {
-    id: 3,
-    category: "Food Tips",
-    title: "Daal",
-    description:
-      "Explore the use of essential oils in skincare for various benefits.",
-    author: "Rajlakshmi Javiks",
-    date: "12 Aug 2026",
-    image: heroGhee,
-  },
-];
+import { getBlogBySlug } from "@/api/blog.service";
 
 const BlogDetail = () => {
-  const { id } = useParams();
-  const blog = blogsData.find((b) => b.id === Number(id)) || blogsData[0];
+  const { id: slug } = useParams(); // Using 'id' param as 'slug' based on routes
+  const [blog, setBlog] = useState<any>(null);
+  const [relatedArticles, setRelatedArticles] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogData = async () => {
+      if (!slug) return;
+      setIsLoading(true);
+      // 2-second delay for skeleton
+      const delay = new Promise((resolve) => setTimeout(resolve, 2000));
+
+      try {
+        const [res] = await Promise.all([getBlogBySlug(slug), delay]);
+
+        if (res.success) {
+          setBlog(res.blog);
+          setRelatedArticles(res.relatedArticles || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch blog detail:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlogData();
+    window.scrollTo(0, 0);
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <main className="flex-1">
+          <article className="w-full max-w-[1650px] mx-auto px-6 sm:px-8 lg:px-12 py-10 lg:py-14">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-14">
+              <div className="w-full lg:w-[70%] space-y-6">
+                <Skeleton className="h-12 w-3/4" />
+                <Skeleton className="h-4 w-1/4" />
+                <Skeleton className="h-80 w-full rounded-lg" />
+                <div className="space-y-4">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-5/6" />
+                </div>
+              </div>
+              <div className="w-full lg:w-[30%] space-y-6">
+                <Skeleton className="h-40 w-full rounded-lg" />
+                <Skeleton className="h-64 w-full rounded-lg" />
+              </div>
+            </div>
+          </article>
+        </main>
+      </div>
+    );
+  }
+
+  if (!blog) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <h2 className="text-2xl font-bold mb-4">Blog not found</h2>
+        <Link to="/blog">
+          <Button>Back to Blogs</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  // Parse content if it's JSON
+  let content = blog.content;
+  if (typeof content === "string") {
+    try {
+      content = JSON.parse(content);
+    } catch (e) {
+      content = { intro: blog.content, sections: [] };
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-   
-
       <main className="flex-1">
         {/* Article Section */}
         <article className="w-full max-w-[1650px] mx-auto px-6 sm:px-8 lg:px-12 py-10 lg:py-14">
@@ -195,32 +109,39 @@ const BlogDetail = () => {
                     <span className="font-medium">By {blog.author}</span>
                   </span>
                   <span className="hidden sm:inline">·</span>
-                  <time dateTime={blog.date}>{blog.date}</time>
+                  <time dateTime={blog.created_at}>
+                    {new Date(blog.created_at).toLocaleDateString()}
+                  </time>
                   <span className="hidden sm:inline">·</span>
                   <span className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4" /> {blog.readTime}
+                    <Clock className="w-4 h-4" />{" "}
+                    {blog.read_time || "5 min read"}
                   </span>
                 </div>
               </header>
 
               {/* Featured Image */}
               <figure className="mb-6">
-                <img
-                  src={blog.image}
-                  alt={blog.title}
-                  className="w-full h-64 lg:h-80 object-cover rounded-lg"
-                />
+                {blog.image_url ? (
+                  <img
+                    src={blog.image_url}
+                    alt={blog.title}
+                    className="w-full h-64 lg:h-80 object-cover rounded-lg"
+                  />
+                ) : (
+                  <div className="w-full h-64 lg:h-80 bg-muted rounded-lg" />
+                )}
               </figure>
 
               {/* Article Body */}
               <div className="prose prose-lg max-w-none">
                 {/* Introduction */}
                 <p className="text-gray-700 text-base leading-relaxed mb-6">
-                  {blog.content.intro}
+                  {content?.intro}
                 </p>
 
                 {/* Article Sections */}
-                {blog.content.sections.map((section, idx) => (
+                {content?.sections?.map((section: any, idx: number) => (
                   <section key={idx} className="mb-8" id={`section-${idx}`}>
                     <h2 className="text-2xl font-bold text-gray-900 mb-3">
                       {section.title}
@@ -229,24 +150,26 @@ const BlogDetail = () => {
                       {section.text}
                     </p>
 
-                    {section.benefits && (
+                    {section.benefits && Array.isArray(section.benefits) && (
                       <div className="mb-6">
                         <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                          Health Benefits of Organic Food:
+                          Benefits:
                         </h3>
                         <ul className="space-y-2.5">
-                          {section.benefits.map((benefit, bIdx) => (
-                            <li
-                              key={bIdx}
-                              className="flex items-start gap-2.5 text-gray-700"
-                            >
-                              <span
-                                className="w-1.5 h-1.5 rounded-full bg-green-600 flex-shrink-0"
-                                style={{ marginTop: "0.5rem" }}
-                              />
-                              <span>{benefit}</span>
-                            </li>
-                          ))}
+                          {section.benefits.map(
+                            (benefit: string, bIdx: number) => (
+                              <li
+                                key={bIdx}
+                                className="flex items-start gap-2.5 text-gray-700"
+                              >
+                                <span
+                                  className="w-1.5 h-1.5 rounded-full bg-green-600 flex-shrink-0"
+                                  style={{ marginTop: "0.5rem" }}
+                                />
+                                <span>{benefit}</span>
+                              </li>
+                            ),
+                          )}
                         </ul>
                       </div>
                     )}
@@ -254,33 +177,39 @@ const BlogDetail = () => {
                 ))}
 
                 {/* Key Takeaways Box */}
-                <aside className="bg-gradient-to-br  to-emerald-50 border-2 rounded-2xl p-6 md:p-8 my-10 shadow-md hover:shadow-xl transition-all duration-300">
-                  <h3 className="text-xl md:text-2xl font-heading font-bold mb-4 text-[#01722C] flex items-center gap-2">
-                    Key Takeaways
-                  </h3>
-                  <ul className="space-y-3">
-                    {blog.content.keyTakeaways.map((point, idx) => (
-                      <li
-                        key={idx}
-                        className="flex items-start gap-3 text-foreground"
-                      >
-                        <span className="w-2 h-2 rounded-full bg-[#01722C] mt-2 shrink-0" />
-                        <span className="font-medium">{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </aside>
+                {content?.keyTakeaways &&
+                  Array.isArray(content.keyTakeaways) &&
+                  content.keyTakeaways.length > 0 && (
+                    <aside className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 border-2 border-emerald-100 rounded-2xl p-6 md:p-8 my-10 shadow-md">
+                      <h3 className="text-xl md:text-2xl font-heading font-bold mb-4 text-[#01722C] flex items-center gap-2">
+                        Key Takeaways
+                      </h3>
+                      <ul className="space-y-3">
+                        {content.keyTakeaways.map(
+                          (point: string, idx: number) => (
+                            <li
+                              key={idx}
+                              className="flex items-start gap-3 text-foreground"
+                            >
+                              <span className="w-2 h-2 rounded-full bg-[#01722C] mt-2 shrink-0" />
+                              <span className="font-medium">{point}</span>
+                            </li>
+                          ),
+                        )}
+                      </ul>
+                    </aside>
+                  )}
 
-                {/* Organic Food & Environmental Health Section */}
+                {/* Static Sections */}
                 <section className="mb-8">
-                  <h2 className="text-2xl font-bold text-[#01722C]-900 mb-3">
-                    Organic Food & Environmental Health
+                  <h2 className="text-2xl font-bold text-[#01722C] mb-3">
+                    Sustainable Health with Rajlakshmi Javiks
                   </h2>
                   <p className="text-gray-700 text-base leading-relaxed">
-                    Organic farming supports soil health, reduces water
-                    pollution, and promotes biodiversity. Choosing organic is
-                    not only beneficial for your own health but also for the
-                    planet.
+                    Our commitment to organic quality ensures that you get the
+                    most nutritional value from every bite. Whether it's the
+                    pure A2 Ghee or our hand-picked pulses, we prioritize your
+                    wellness and the planet's health.
                   </p>
                 </section>
 
@@ -331,29 +260,6 @@ const BlogDetail = () => {
                     </div>
                   </div>
                 </aside>
-
-                <section className="bg-[#F0FFF0] text-[#01722C] rounded-lg p-6 mb-8">
-                  <h3 className="text-xl font-bold mb-3">
-                    Start Your Organic Journey Today{" "}
-                  </h3>
-                  <p className="mb-4 leading-relaxed">
-                    Make healthier choices for you and your family with
-                    Rajlakshmi Javiks’ pure and natural food products.
-                  </p>
-                  <div className="flex flex-wrap gap-4">
-                    <Link to="/products">
-                      <Button className="bg-[#01722C] hover:bg-[#01722C] text-white rounded-xl px-7 py-3 font-semibold text-base shadow-sm transition-all duration-300">
-                        Shop Now
-                      </Button>
-                    </Link>
-
-                    <Link to="/contact">
-                      <Button className="bg-[#F0FFF0] text-[#01722C] hover:text-white border border-[#01722C]  rounded-xl px-7 py-3 font-semibold text-base transition-all duration-300">
-                        Contact Us
-                      </Button>
-                    </Link>
-                  </div>
-                </section>
               </div>
             </div>
 
@@ -380,92 +286,100 @@ const BlogDetail = () => {
                 </nav>
 
                 {/* Related Articles Widget */}
-                <div className="bg-white border border-gray-200 rounded-lg p-6">
-                  <h4 className="text-lg font-bold text-gray-900 mb-4">
-                    RELATED ARTICLES
-                  </h4>
-                  <div className="space-y-4">
-                    {relatedArticles.map((article) => (
-                      <Link
-                        to={`/blog/${article.id}`}
-                        key={article.id}
-                        className="flex items-start gap-3 group"
-                      >
-                        <img
-                          src={article.image}
-                          alt={article.title}
-                          className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs text-green-600 font-semibold mb-1">
-                            {article.category}
-                          </p>
-                          <p className="text-sm font-bold text-gray-900 group-hover:text-green-600 line-clamp-2 mb-1">
-                            {article.description.slice(0, 50)}...
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {article.author} · {article.date}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
+                {relatedArticles.length > 0 && (
+                  <div className="bg-white border border-gray-200 rounded-lg p-6">
+                    <h4 className="text-lg font-bold text-gray-900 mb-4 text-center">
+                      RELATED ARTICLES
+                    </h4>
+                    <div className="space-y-4">
+                      {relatedArticles.map((article) => (
+                        <Link
+                          to={`/blog/${article.slug}`}
+                          key={article.id}
+                          className="flex items-start gap-3 group"
+                        >
+                          {article.image_url ? (
+                            <img
+                              src={article.image_url}
+                              alt={article.title}
+                              className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                            />
+                          ) : (
+                            <div className="w-20 h-20 bg-muted rounded-lg flex-shrink-0" />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[10px] text-green-600 font-semibold mb-1 uppercase tracking-wider">
+                              {article.category}
+                            </p>
+                            <p className="text-sm font-bold text-gray-900 group-hover:text-green-600 line-clamp-2 mb-1">
+                              {article.title}
+                            </p>
+                            <p className="text-[10px] text-gray-500">
+                              {new Date(
+                                article.created_at,
+                              ).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    <Link
+                      to="/blog"
+                      className="block text-center text-sm text-green-600 font-semibold border-2 border-green-600 rounded-md px-4 py-2 hover:bg-green-600 hover:text-white transition-colors"
+                      style={{ marginTop: "1rem" }}
+                    >
+                      View all
+                    </Link>
                   </div>
-                  <Link
-                    to="/blog"
-                    className="block text-center text-sm text-green-600 font-semibold border-2 border-green-600 rounded-md px-4 py-2 hover:bg-green-600 hover:text-white transition-colors"
-                    style={{ marginTop: "1rem" }}
-                  >
-                    View all
-                  </Link>
-                </div>
+                )}
               </div>
             </aside>
           </div>
         </article>
 
-        {/* Related Articles Grid */}
-        <section className="px-4 sm:px-6 md:px-8 lg:px-12 mx-auto pb-16 mb-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8 mt-8">
-            {relatedArticles.slice(0, 5).map((article) => (
-              <Link to={`/blog/${article.id}`} key={article.id}>
-                <article className="bg-card rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-shadow duration-300 h-full">
-                  <div className="relative p-3 pb-0">
-                    <div className="relative overflow-hidden rounded-xl">
-                      <img
-                        src={article.image}
-                        alt={article.title}
-                        className="w-full h-40 object-cover"
-                      />
-                      <Badge className="absolute top-2 left-2 bg-forest text-white text-xs font-medium px-3 py-1 rounded-full">
-                        {article.category}
-                      </Badge>
+        {/* Bottom Related Grid */}
+        {relatedArticles.length > 0 && (
+          <section className="px-4 sm:px-6 md:px-8 lg:px-12 mx-auto pb-16 mb-10">
+            <h3 className="text-2xl font-bold mb-6">You Might Also Like</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-8">
+              {relatedArticles.slice(0, 5).map((article) => (
+                <Link to={`/blog/${article.slug}`} key={article.id}>
+                  <article className="bg-card rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-shadow duration-300 h-full">
+                    <div className="relative p-3 pb-0">
+                      <div className="relative overflow-hidden rounded-xl">
+                        {article.image_url ? (
+                          <img
+                            src={article.image_url}
+                            alt={article.title}
+                            className="w-full h-40 object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-40 bg-muted" />
+                        )}
+                        <Badge className="absolute top-2 left-2 bg-forest text-white text-xs font-medium px-3 py-1 rounded-full">
+                          {article.category}
+                        </Badge>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="p-4">
-                    <h3 className="font-heading font-bold text-lg text-foreground mb-2">
-                      {article.title}
-                    </h3>
-
-                    <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
-                      {article.description}
-                    </p>
-
-                    <p className="text-xs text-muted-foreground mb-3">
-                      By {article.author} | {article.date}
-                    </p>
-
-                    <span className="text-forest font-medium text-sm flex items-center gap-1">
-                      Read more <ArrowRight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </article>
-              </Link>
-            ))}
-          </div>
-        </section>
+                    <div className="p-4">
+                      <h3 className="font-heading font-bold text-lg text-foreground mb-2 line-clamp-2">
+                        {article.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+                        {article.description}
+                      </p>
+                      <span className="text-forest font-medium text-sm flex items-center gap-1">
+                        Read more <ArrowRight className="w-4 h-4" />
+                      </span>
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
-
     </div>
   );
 };
