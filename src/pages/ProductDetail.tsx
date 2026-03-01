@@ -202,6 +202,30 @@ const ProductDetail = () => {
       }
     : DEFAULT_PRODUCT;
 
+  const handleShare = async () => {
+    const shareData = {
+      title: product.name,
+      text: `Check out ${product.name} on Rajlaxmi Javik!`,
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(shareData.url);
+        toast.success("Link copied to clipboard!");
+      } catch (err) {
+        toast.error("Failed to copy link.");
+      }
+    }
+  };
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState("1kg");
   const isFavorite = isInWishlist(`product-detail-${product.name}`);
@@ -366,7 +390,11 @@ const ProductDetail = () => {
                     className={`h-4 w-4 ${isFavorite ? "fill-destructive text-destructive" : "text-muted-foreground"}`}
                   />
                 </button>
-                <button className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors">
+                <button
+                  onClick={handleShare}
+                  title="Share product"
+                  className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
+                >
                   <Share2 className="h-4 w-4 text-muted-foreground" />
                 </button>
               </div>
