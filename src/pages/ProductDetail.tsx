@@ -696,7 +696,10 @@ const ProductDetail = () => {
           onClose={() => setIsReviewModalOpen(false)}
         />
       </main>
-      <RelatedProduct />
+      <RelatedProduct
+        category={apiProduct?.category_name}
+        currentProductId={id}
+      />
       <BentoGrid />
       <FAQSection />
     </div>
