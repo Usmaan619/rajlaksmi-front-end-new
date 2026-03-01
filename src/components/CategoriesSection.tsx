@@ -65,8 +65,8 @@ const CategoriesSection = () => {
     <section className="bg-white py-8 sm:py-12 relative overflow-hidden">
       <div className="px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px] mx-auto">
         {/* Header */}
-        <div className="mb-12 text-center">
-          <p className="text-[#01722C] font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] mb-3">
+        <div className="mb-14 text-center">
+          <p className="text-[#01722C] font-semibold text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-4">
             Pure & Authentic
           </p>
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">

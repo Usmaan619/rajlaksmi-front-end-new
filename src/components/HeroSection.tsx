@@ -14,14 +14,7 @@ import banner2Img from "@/assets/banner-main-page/banner1.png";
 
 import { getHomeBannerAPI } from "@/api/contact.service";
 
-/* =========================
-   LAZY LOAD CAROUSEL
-========================= */
-const Carousel = lazy(() =>
-  import("react-responsive-carousel").then((mod) => ({
-    default: mod.Carousel,
-  })),
-);
+import { Carousel } from "react-responsive-carousel";
 
 /* =========================
    FALLBACK
@@ -99,70 +92,58 @@ const HeroSection: React.FC = () => {
   }
 
   return (
-    <section className="relative w-full overflow-hidden bg-white">
-      <Suspense
-        fallback={
-          <div className="w-full aspect-[16/9] sm:aspect-[16/7] md:aspect-[1920/650] bg-[#F9F9F9] animate-pulse" />
-        }
-      >
-        <div className="relative group">
-          <Carousel
-            showThumbs={false}
-            showStatus={false}
-            showArrows={false}
-            infiniteLoop
-            autoPlay
-            interval={6000}
-            transitionTime={800}
-            animationHandler="fade"
-            swipeable={true}
-            emulateTouch={true}
-            stopOnHover={false}
-            renderIndicator={(onClickHandler, isSelected, index, label) => (
-              <li
-                className={`inline-block mx-1.5 h-1 md:h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
-                  isSelected
-                    ? "bg-[#01722C] w-8 md:w-12 text-[#01722C]"
-                    : "bg-black/10 hover:bg-black/20 w-3 md:w-4 text-transparent"
-                }`}
-                onClick={onClickHandler}
-                onKeyDown={onClickHandler}
-                value={index}
-                key={index}
-                role="button"
-                tabIndex={0}
-                title={`${label} ${index + 1}`}
-                aria-label={`${label} ${index + 1}`}
+    <section className="relative w-full bg-white">
+      <div className="relative overflow-hidden w-full h-[220px] sm:h-[400px] md:h-[550px] lg:h-[650px]">
+        <Carousel
+          showThumbs={false}
+          showStatus={false}
+          showArrows={false}
+          infiniteLoop={true}
+          autoPlay={true}
+          interval={5000}
+          transitionTime={800}
+          swipeable={true}
+          emulateTouch={true}
+          stopOnHover={false}
+          renderIndicator={(onClickHandler, isSelected, index, label) => (
+            <li
+              className={`inline-block mx-1.5 h-1 md:h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+                isSelected
+                  ? "bg-[#01722C] w-8 md:w-12"
+                  : "bg-black/10 hover:bg-black/20 w-3 md:w-4"
+              }`}
+              onClick={onClickHandler}
+              onKeyDown={onClickHandler}
+              value={index}
+              key={index}
+              role="button"
+              tabIndex={0}
+              title={`${label} ${index + 1}`}
+              aria-label={`${label} ${index + 1}`}
+            />
+          )}
+        >
+          {slides.map((item, index) => (
+            <div
+              key={index}
+              className="w-full h-[220px] sm:h-[400px] md:h-[550px] lg:h-[650px] relative overflow-hidden"
+            >
+              <img
+                src={item.desktop}
+                alt={item.alt}
+                className="w-full h-full object-cover pointer-events-none select-none"
+                onError={(e) => {
+                  console.error("Banner image failed to load:", item.desktop);
+                  e.currentTarget.src = FALLBACK_BANNERS[0];
+                }}
               />
-            )}
-          >
-            {slides.map((item, index) => (
-              <div
-                key={index}
-                className="relative aspect-[16/9] sm:aspect-[16/7] md:aspect-[1920/650] overflow-hidden"
-              >
-                <picture>
-                  <source media="(max-width:768px)" srcSet={item.mobile} />
-                  <img
-                    src={item.desktop}
-                    alt={item.alt}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : "auto"}
-                    decoding="async"
-                    className="w-full h-full object-cover block"
-                    onError={(e) => {
-                      e.currentTarget.src = banner1Img;
-                    }}
-                  />
-                </picture>
-              </div>
-            ))}
-          </Carousel>
+            </div>
+          ))}
+        </Carousel>
 
-          {/* Bottom decorative fade */}
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white/20 to-transparent pointer-events-none" />
-        </div>
-      </Suspense>
+        {/* Aesthetic bottom shadow for premium feel */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/30 to-transparent pointer-events-none z-10" />
+      </div>
     </section>
   );
 };
