@@ -204,3 +204,27 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+/* Custom Visible Scrollbar */
+.scrollbar-custom::-webkit-scrollbar {
+  height: 4px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: #ebf4ee;
+  border-radius: 10px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: rgba(1, 114, 44, 0.2);
+  border-radius: 10px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: rgba(1, 114, 44, 0.4);
+}
+
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(1, 114, 44, 0.2) #ebf4ee;
+}
