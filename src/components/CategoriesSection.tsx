@@ -63,7 +63,7 @@ const CategoriesSection = () => {
 
   return (
     <section className="bg-white py-8 sm:py-12 relative overflow-hidden">
-      <div className="px-4 sm:px-6 md:px-8 lg:px-12 max-w-[1440px] mx-auto">
+      <div className="px-4 sm:px-6 md:px-8 lg:px-12 max-w-full mx-auto">
         {/* Header */}
         <div className="mb-14 text-center">
           <p className="text-[#01722C] font-semibold text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-4">
