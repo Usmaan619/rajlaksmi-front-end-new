@@ -13,7 +13,12 @@ export const getProducts = async (
   return response.data;
 };
 
+export const getHomeProducts = async () => {
+  const response = await api.get("/products/home-products");
+  return response.data;
+};
+
 export const getProductById = async (id: string) => {
-  const response = await api.get(`/products/${id}`);
+  const response = await api.get(`/products/get-product/${id}`);
   return response.data;
 };

@@ -1,92 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Heart, Star, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
+import { getHomeProducts } from "@/api/product.service";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import productOil from "@/assets/product-oil.jpg";
-import productMaize from "@/assets/product-maize.jpg";
-import productNutmeg from "@/assets/product-nutmeg.jpg";
-import productRice from "@/assets/product-rice.jpg";
-
-const products = [
-  {
-    id: 1,
-    name: "Organic Oil",
-    image: productOil,
-    price: 899,
-    originalPrice: 1800,
-    discount: 50,
-    rating: 4.5,
-    unit: "1000ml",
-    units: ["500ml", "1000ml", "2L"],
-  },
-  {
-    id: 2,
-    name: "Organic Maize whole",
-    image: productMaize,
-    price: 89,
-    originalPrice: 180,
-    discount: 50,
-    rating: 4.5,
-    unit: "1000gm",
-    units: ["500gm", "1000gm", "2kg"],
-  },
-  {
-    id: 3,
-    name: "Organic Nutmeg Whole",
-    image: productNutmeg,
-    price: 899,
-    originalPrice: 1800,
-    discount: 50,
-    rating: 4.5,
-    unit: "1000gm",
-    units: ["250gm", "500gm", "1000gm"],
-  },
-  {
-    id: 4,
-    name: "Organic Idli Rice",
-    image: productRice,
-    price: 89,
-    originalPrice: 180,
-    discount: 50,
-    rating: 4.5,
-    unit: "1000gm",
-    units: ["500gm", "1000gm", "5kg"],
-  },
-];
-
-const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
+const ProductCard = ({ product }: { product: any }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isFavorite = isInWishlist(`product-best-${product.id}`);
-  const [selectedUnit, setSelectedUnit] = useState(product.unit);
+  const [selectedUnit, setSelectedUnit] = useState(
+    Array.isArray(product.product_weight)
+      ? product.product_weight[0]
+      : product.product_weight,
+  );
   const [showUnits, setShowUnits] = useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
       id: `product-best-${product.id}`,
-      name: product.name,
-      price: product.price,
-      image: product.image,
+      name: product.product_name,
+      price: product.product_price,
+      image: product.product_images[0],
       quantity: 1,
       weight: selectedUnit,
     });
-    toast.success(`${product.name} added to cart!`);
+    toast.success(`${product.product_name} added to cart!`);
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
       id: `product-best-${product.id}`,
-      name: product.name,
-      price: product.price,
-      image: product.image,
+      name: product.product_name,
+      price: product.product_price,
+      image: product.product_images[0],
       quantity: 1,
       weight: selectedUnit,
     });
@@ -119,8 +72,8 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
       <div className="relative">
         <div className="aspect-square rounded-xl overflow-hidden bg-muted">
           <img
-            src={product.image}
-            alt={product.name}
+            src={product.product_images[0]}
+            alt={product.product_name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
@@ -131,12 +84,14 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
             e.stopPropagation();
             toggleWishlist({
               id: `product-best-${product.id}`,
-              name: product.name,
-              price: product.price,
-              image: product.image,
-              originalPrice: product.originalPrice,
+              name: product.product_name,
+              price: product.product_price,
+              image: product.product_images[0],
+              originalPrice: product.product_del_price,
               discount: product.discount,
-              weightOptions: product.units,
+              weightOptions: Array.isArray(product.product_weight)
+                ? product.product_weight
+                : [product.product_weight],
             });
             toast.success(
               isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
@@ -155,22 +110,26 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
       {/* Content */}
       <div className="flex flex-col flex-grow">
         <h3 className="font-medium text-sm sm:text-base line-clamp-2 min-h-[40px]">
-          {product.name}
+          {product.product_name}
         </h3>
 
         {/* Price */}
         <div className="flex flex-wrap items-center gap-2 mt-1">
           <span className="text-base sm:text-lg font-bold text-primary">
-            ₹{product.price}
+            ₹{product.product_price}
           </span>
 
-          <span className="text-xs sm:text-sm line-through text-gray-400">
-            ₹{product.originalPrice}
-          </span>
+          {product.product_del_price && (
+            <span className="text-xs sm:text-sm line-through text-gray-400">
+              ₹{product.product_del_price}
+            </span>
+          )}
 
-          <span className="bg-green-600 text-white text-[10px] sm:text-xs px-2 py-0.5 rounded">
-            {product.discount}% OFF
-          </span>
+          {product.discount > 0 && (
+            <span className="bg-green-600 text-white text-[10px] sm:text-xs px-2 py-0.5 rounded">
+              {product.discount}% OFF
+            </span>
+          )}
         </div>
 
         {/* Unit + Rating */}
@@ -187,9 +146,9 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
               <ChevronDown className="h-3 w-3" />
             </button>
 
-            {showUnits && (
+            {showUnits && Array.isArray(product.product_weight) && (
               <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow z-30 min-w-[80px]">
-                {product.units.map((unit) => (
+                {product.product_weight.map((unit: string) => (
                   <button
                     key={unit}
                     onClick={(e) => {
@@ -208,9 +167,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
 
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs sm:text-sm font-medium">
-              {product.rating}
-            </span>
+            <span className="text-xs sm:text-sm font-medium">4.5</span>
           </div>
         </div>
       </div>
@@ -234,6 +191,25 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
 };
 
 const BestSellersSection = () => {
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBestSellers = async () => {
+      try {
+        const res = await getHomeProducts();
+        if (res.success) {
+          setProducts(res.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch best sellers:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchBestSellers();
+  }, []);
+
   return (
     <section className="bg-white py-8 sm:py-12 lg:py-16">
       <div className="px-4 sm:px-6 md:px-8 lg:px-12">
@@ -247,17 +223,24 @@ const BestSellersSection = () => {
         {/* Grid */}
         <div
           className="
-  grid
-  grid-cols-2
-  sm:grid-cols-3
-  md:grid-cols-4
-  gap-4 sm:gap-6
-  lg:[grid-template-columns:repeat(auto-fit,290px)]
-"
+            grid
+            grid-cols-2
+            sm:grid-cols-3
+            md:grid-cols-4
+            gap-4 sm:gap-6
+            lg:[grid-template-columns:repeat(auto-fit,290px)]
+          "
         >
-          {products.map((product, index) => (
-            <ProductCard key={index} product={product} />
-          ))}
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="w-full lg:w-[290px] h-[448px] p-4 bg-muted animate-pulse rounded-2xl"
+                />
+              ))
+            : products.map((product, index) => (
+                <ProductCard key={index} product={product} />
+              ))}
         </div>
       </div>
     </section>
