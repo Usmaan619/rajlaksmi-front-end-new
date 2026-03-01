@@ -1,263 +1,70 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   Star,
   Heart,
+  Loader2,
+  Search,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CertificationsSection from "@/components/CertificationsSection";
 import ContactSection from "@/components/ContactSection";
 import CertificationsBottomSection from "@/components/CertificationsBottomSection";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
-
-type Product = {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
-  originalPrice: number;
-  discount: number;
-  weight: string;
-  weightOptions: string[];
-  rating: number;
-  badge: string;
-  available: boolean;
-};
-
-const allProducts: Product[] = [
-  {
-    id: 1,
-    name: "Organic Kabuli Chana",
-    image:
-      "https://images.unsplash.com/photo-1515543904532-3b4e62e2e72e?w=300&h=300&fit=crop",
-    price: 299,
-    originalPrice: 499,
-    discount: 50,
-    weight: "500ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 2,
-    name: "Organic Maize Whole",
-    image:
-      "https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=300&h=300&fit=crop",
-    price: 299,
-    originalPrice: 549,
-    discount: 50,
-    weight: "1000ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 3,
-    name: "Organic Nutmeg Whole",
-    image:
-      "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&h=300&fit=crop",
-    price: 899,
-    originalPrice: 1100,
-    discount: 50,
-    weight: "500ml",
-    weightOptions: ["250ml", "500ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 4,
-    name: "Organic Idli Rice",
-    image:
-      "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=300&fit=crop",
-    price: 699,
-    originalPrice: 1100,
-    discount: 50,
-    weight: "1000ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 5,
-    name: "Organic Kabuli Chana",
-    image:
-      "https://images.unsplash.com/photo-1515543904532-3b4e62e2e72e?w=300&h=300&fit=crop",
-    price: 699,
-    originalPrice: 999,
-    discount: 50,
-    weight: "1000ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 6,
-    name: "Organic Maize Whole",
-    image:
-      "https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=300&h=300&fit=crop",
-    price: 299,
-    originalPrice: 549,
-    discount: 50,
-    weight: "1000ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 7,
-    name: "Organic Nutmeg Whole",
-    image:
-      "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&h=300&fit=crop",
-    price: 199,
-    originalPrice: 399,
-    discount: 50,
-    weight: "500ml",
-    weightOptions: ["250ml", "500ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 8,
-    name: "Organic Idli Rice",
-    image:
-      "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=300&fit=crop",
-    price: 899,
-    originalPrice: 1100,
-    discount: 50,
-    weight: "1000ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 9,
-    name: "Organic Kabuli Chana",
-    image:
-      "https://images.unsplash.com/photo-1515543904532-3b4e62e2e72e?w=300&h=300&fit=crop",
-    price: 299,
-    originalPrice: 499,
-    discount: 50,
-    weight: "500ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 10,
-    name: "Organic Maize Whole",
-    image:
-      "https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=300&h=300&fit=crop",
-    price: 299,
-    originalPrice: 549,
-    discount: 50,
-    weight: "1000ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 11,
-    name: "Organic Nutmeg Whole",
-    image:
-      "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&h=300&fit=crop",
-    price: 899,
-    originalPrice: 1100,
-    discount: 50,
-    weight: "500ml",
-    weightOptions: ["250ml", "500ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 12,
-    name: "Organic Idli Rice",
-    image:
-      "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=300&fit=crop",
-    price: 699,
-    originalPrice: 1100,
-    discount: 50,
-    weight: "1000ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.5,
-    badge: "Hot",
-    available: false,
-  },
-  {
-    id: 13,
-    name: "Organic Toor Dal",
-    image:
-      "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300&h=300&fit=crop",
-    price: 399,
-    originalPrice: 599,
-    discount: 33,
-    weight: "500ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.0,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 14,
-    name: "Organic Moong Dal",
-    image:
-      "https://images.unsplash.com/photo-1515543904532-3b4e62e2e72e?w=300&h=300&fit=crop",
-    price: 349,
-    originalPrice: 499,
-    discount: 30,
-    weight: "500ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.2,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 15,
-    name: "Organic Chana Dal",
-    image:
-      "https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=300&h=300&fit=crop",
-    price: 259,
-    originalPrice: 399,
-    discount: 35,
-    weight: "1000ml",
-    weightOptions: ["500ml", "1000ml"],
-    rating: 4.3,
-    badge: "Hot",
-    available: true,
-  },
-  {
-    id: 16,
-    name: "Organic Urad Dal",
-    image:
-      "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=300&fit=crop",
-    price: 449,
-    originalPrice: 699,
-    discount: 36,
-    weight: "500ml",
-    weightOptions: ["250ml", "500ml", "1000ml"],
-    rating: 4.6,
-    badge: "Hot",
-    available: true,
-  },
-];
+import { getProducts } from "@/api/product.service";
+import { Product } from "@/types/product";
+import producttest from "@/assets/product-nutmeg.jpg";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ITEMS_PER_PAGE = 12;
+
+const getFirstImage = (images: any) => {
+  if (!images) return "";
+  if (Array.isArray(images)) return images.length > 0 ? images[0] : "";
+  if (typeof images !== "string") return "";
+  try {
+    const parsed = JSON.parse(images);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed[0] : images;
+  } catch (e) {
+    return images;
+  }
+};
+
+const getWeightOptions = (weight: any) => {
+  if (!weight) return ["N/A"];
+  if (Array.isArray(weight)) return weight.length > 0 ? weight : ["N/A"];
+  try {
+    const parsed = JSON.parse(weight);
+    return Array.isArray(parsed) ? parsed : [weight];
+  } catch (e) {
+    return [weight];
+  }
+};
+
+const ProductSkeleton = () => (
+  <div className="w-full lg:w-[290px] border border-gray-100 rounded-2xl p-3 flex flex-col gap-3 bg-white">
+    <Skeleton className="w-full aspect-square rounded-xl" />
+    <Skeleton className="h-4 w-3/4" />
+    <div className="flex gap-2">
+      <Skeleton className="h-4 w-1/4" />
+      <Skeleton className="h-4 w-1/4" />
+    </div>
+    <div className="flex justify-between items-center">
+      <Skeleton className="h-6 w-1/3" />
+      <Skeleton className="h-4 w-8" />
+    </div>
+    <div className="flex gap-2 mt-auto">
+      <Skeleton className="h-9 flex-1" />
+      <Skeleton className="h-9 flex-1" />
+    </div>
+  </div>
+);
 
 const FilterDropdown = ({
   label,
@@ -281,7 +88,7 @@ const FilterDropdown = ({
         <ChevronDown size={14} />
       </button>
       {open && (
-        <div className="absolute top-full mt-1 left-0 bg-background border border-border rounded-lg shadow-lg z-20 min-w-[160px]">
+        <div className="absolute top-full mt-1 left-0 bg-background border border-border rounded-lg shadow-lg z-[60] min-w-[160px]">
           <button
             onClick={() => {
               onChange("");
@@ -310,32 +117,50 @@ const FilterDropdown = ({
 };
 
 const ProductCard = ({ product }: { product: Product }) => {
-  const [selectedWeight, setSelectedWeight] = useState(product.weight);
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isFavorite = isInWishlist(`product-cat-${product.id}`);
 
+  const pName = product.product_name || (product as any).name;
+  const pPrice = Number(
+    product.product_price !== undefined ? product.product_price : product.price,
+  );
+  const pDelPrice = Number(
+    product.product_del_price !== undefined
+      ? product.product_del_price
+      : (product as any).mrp,
+  );
+  const pDiscount = product.discount || 0;
+  const pRating = product.rating || "4.5";
+
+  const productImage = getFirstImage(product.product_images);
+  const weights = getWeightOptions(
+    product.weight_options || product.product_weight,
+  );
+  const [selectedWeight, setSelectedWeight] = useState(weights[0]);
+  const [showWeights, setShowWeights] = useState(false);
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
       id: `product-cat-${product.id}`,
-      name: product.name,
-      price: product.price,
-      image: product.image,
+      name: pName,
+      price: pPrice,
+      image: productImage || producttest,
       quantity: 1,
       weight: selectedWeight,
     });
-    toast.success(`${product.name} added to cart!`);
+    toast.success(`${pName} added to cart!`);
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
       id: `product-cat-${product.id}`,
-      name: product.name,
-      price: product.price,
-      image: product.image,
+      name: pName,
+      price: pPrice,
+      image: productImage || producttest,
       quantity: 1,
       weight: selectedWeight,
     });
@@ -343,35 +168,39 @@ const ProductCard = ({ product }: { product: Product }) => {
   };
 
   return (
-    // <div className="w-[290px] h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col">
-    // <div className="w-full lg:w-[290px] h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col">
     <div
       onClick={() => navigate(`/product/${product.id}`)}
       className="w-full lg:w-[290px] overflow-visible cursor-pointer
- h-auto lg:h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col gap-2 group"
+ h-auto lg:min-h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col gap-2 group bg-white"
     >
-      {/* Badge */}
+      {/* Image Wrap */}
       <div className="relative mb-2">
-        <span className="absolute top-1 left-1 bg-[hsl(0,80%,50%)] text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10">
-          {product.badge}
-        </span>
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full aspect-square object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
-        />
+        {pDiscount > 0 && (
+          <span className="absolute top-1 left-1 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10">
+            {pDiscount}% Off
+          </span>
+        )}
+        <div className="aspect-square rounded-xl overflow-hidden bg-muted">
+          <img
+            src={productImage || producttest}
+            alt={pName}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = producttest;
+            }}
+          />
+        </div>
         <button
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
               id: `product-cat-${product.id}`,
-              name: product.name,
-              price: product.price,
-              image: product.image,
-              originalPrice: product.originalPrice,
-              discount: product.discount,
-              weightOptions: product.weightOptions,
+              name: pName,
+              price: pPrice,
+              image: productImage || producttest,
+              originalPrice: pDelPrice,
+              discount: pDiscount,
+              weightOptions: weights,
             });
             toast.success(
               isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
@@ -388,54 +217,69 @@ const ProductCard = ({ product }: { product: Product }) => {
       </div>
 
       {/* Info */}
-      <h3 className="text-sm font-semibold text-foreground truncate">
-        {product.name}
+      <h3 className="text-sm font-semibold text-foreground line-clamp-2 min-h-[40px]">
+        {pName}
       </h3>
+
       <div className="flex items-center gap-1.5 mt-1">
         <span className="text-[hsl(140,60%,30%)] font-bold text-sm">
-          ₹{product.price}
+          ₹{pPrice}
         </span>
-        <span className="text-muted-foreground line-through text-xs">
-          ₹{product.originalPrice}
-        </span>
-        <span className="bg-[hsl(140,60%,30%)] text-white text-[10px] px-1.5 py-0.5 rounded font-semibold">
-          {product.discount}%OFF
-        </span>
+        {pDelPrice > pPrice && (
+          <span className="text-muted-foreground line-through text-xs">
+            ₹{pDelPrice}
+          </span>
+        )}
       </div>
 
       {/* Weight + Rating */}
       <div className="flex items-center justify-between mt-2">
-        <select
-          value={selectedWeight}
-          onClick={(e) => e.stopPropagation()}
-          onChange={(e) => setSelectedWeight(e.target.value)}
-          className="border border-border rounded text-xs px-1.5 py-0.5 bg-background text-foreground"
-        >
-          {product.weightOptions.map((w) => (
-            <option key={w} value={w}>
-              {w}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (weights.length > 1) setShowWeights(!showWeights);
+            }}
+            className="flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] bg-white"
+          >
+            {selectedWeight}
+            {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
+          </button>
+          {showWeights && (
+            <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-md shadow-lg z-[50] min-w-[70px]">
+              {weights.map((w: string) => (
+                <div
+                  key={w}
+                  className="px-2 py-1 hover:bg-muted cursor-pointer text-[10px]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedWeight(w);
+                    setShowWeights(false);
+                  }}
+                >
+                  {w}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <div className="flex items-center gap-0.5">
           <Star size={12} className="fill-yellow-400 text-yellow-400" />
-          <span className="text-xs text-muted-foreground">
-            {product.rating}
-          </span>
+          <span className="text-xs text-muted-foreground">{pRating}</span>
         </div>
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-2 mt-auto">
+      <div className="flex gap-2 mt-auto pt-2">
         <button
           onClick={handleAddToCart}
-          className="flex-1 border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-xs py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors font-medium"
+          className="flex-1 border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-[11px] py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors font-medium"
         >
           Add to Cart
         </button>
         <button
           onClick={handleBuyNow}
-          className="flex-1 bg-[hsl(140,60%,30%)] text-white text-xs py-1.5 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors font-medium"
+          className="flex-1 bg-[hsl(140,60%,30%)] text-white text-[11px] py-1.5 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors font-medium"
         >
           Buy Now
         </button>
@@ -445,65 +289,111 @@ const ProductCard = ({ product }: { product: Product }) => {
 };
 
 const CategoryMain = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const categoryName = searchParams.get("category") || "";
+
   const [currentPage, setCurrentPage] = useState(1);
   const [availability, setAvailability] = useState("");
   const [weight, setWeight] = useState("");
   const [filterBy, setFilterBy] = useState("");
   const [sortBy, setSortBy] = useState("");
 
-  const filtered = useMemo(() => {
-    let result = [...allProducts];
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      let minPrice: number | undefined;
+      let maxPrice: number | undefined;
 
-    if (availability === "In Stock") result = result.filter((p) => p.available);
-    if (availability === "Out of Stock")
-      result = result.filter((p) => !p.available);
+      if (filterBy) {
+        if (filterBy === "Under ₹300") {
+          minPrice = 0;
+          maxPrice = 300;
+        } else if (filterBy === "₹300 - ₹500") {
+          minPrice = 300;
+          maxPrice = 500;
+        } else if (filterBy === "₹500 - ₹1000") {
+          minPrice = 500;
+          maxPrice = 1000;
+        } else if (filterBy === "Above ₹1000") {
+          minPrice = 1000;
+        }
+      }
 
-    if (weight) result = result.filter((p) => p.weightOptions.includes(weight));
+      const res = await getProducts({
+        category: categoryName || undefined,
+        minPrice,
+        maxPrice,
+        weight: weight === "All" || !weight ? undefined : weight,
+      });
 
-    if (filterBy === "Under ₹300") result = result.filter((p) => p.price < 300);
-    else if (filterBy === "₹300 - ₹500")
-      result = result.filter((p) => p.price >= 300 && p.price <= 500);
-    else if (filterBy === "₹500 - ₹1000")
-      result = result.filter((p) => p.price >= 500 && p.price <= 1000);
-    else if (filterBy === "Above ₹1000")
-      result = result.filter((p) => p.price > 1000);
+      if (res.success) {
+        let fetched = res.products || res.data || [];
 
-    if (sortBy === "Price: Low to High")
-      result.sort((a, b) => a.price - b.price);
-    else if (sortBy === "Price: High to Low")
-      result.sort((a, b) => b.price - a.price);
-    else if (sortBy === "Rating") result.sort((a, b) => b.rating - a.rating);
-    else if (sortBy === "Discount")
-      result.sort((a, b) => b.discount - a.discount);
+        // Local Sorting
+        if (sortBy === "Price: Low to High") {
+          fetched.sort(
+            (a, b) =>
+              (a.product_price || a.price) - (b.product_price || b.price),
+          );
+        } else if (sortBy === "Price: High to Low") {
+          fetched.sort(
+            (a, b) =>
+              (b.product_price || b.price) - (a.product_price || a.price),
+          );
+        } else if (sortBy === "Rating") {
+          fetched.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        } else if (sortBy === "Discount") {
+          fetched.sort((a, b) => (b.discount || 0) - (a.discount || 0));
+        }
 
-    return result;
-  }, [availability, weight, filterBy, sortBy]);
+        // Add 3 second artificial delay for visual skeleton impact as requested
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        setProducts(fetched);
+      } else {
+        setError("Failed to fetch products");
+      }
+    } catch (err: any) {
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  }, [categoryName, filterBy, weight, availability, sortBy]);
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [categoryName, availability, weight, filterBy, sortBy]);
+
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const visibleProducts = filtered.slice(
+  const visibleProducts = products.slice(
     startIndex,
     startIndex + ITEMS_PER_PAGE,
   );
 
-  // Reset page when filters change
-  useMemo(() => setCurrentPage(1), [availability, weight, filterBy, sortBy]);
-
   return (
     <>
-      <div className="min-h-screen">
-        {/* Header */}
+      <div className="min-h-screen bg-gray-50/30">
+        {/* Header Title */}
         <section className="px-4 md:px-16 lg:px-24 pt-8 pb-4">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            Organic Pulses
+            {categoryName || "Organic Products"}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Pure, protein-rich pulses for healthy everyday meals
+            Pure, naturally grown products for your healthy lifestyle.
           </p>
         </section>
 
         {/* Filter Bar */}
-        <section className="px-4 md:px-16 lg:px-24 pb-4">
+        <section className="px-4 md:px-16 lg:px-24 pb-4 sticky top-[64px] lg:top-[80px] bg-gray-50/90 backdrop-blur-sm z-40 py-2 border-b border-gray-200/50 mb-6">
           <div className="flex flex-wrap items-center gap-2">
             <FilterDropdown
               label="Availability"
@@ -512,13 +402,21 @@ const CategoryMain = () => {
               onChange={setAvailability}
             />
             <FilterDropdown
-              label="Weight (Kg, ltr)"
-              options={["250ml", "500ml", "1000ml"]}
+              label="Weight"
+              options={[
+                "250ml",
+                "500ml",
+                "1000ml",
+                "250g",
+                "500g",
+                "1kg",
+                "5kg",
+              ]}
               value={weight}
               onChange={setWeight}
             />
             <FilterDropdown
-              label="Filter By"
+              label="Filter By Price"
               options={[
                 "Under ₹300",
                 "₹300 - ₹500",
@@ -539,28 +437,67 @@ const CategoryMain = () => {
               value={sortBy}
               onChange={setSortBy}
             />
+
+            {(availability || weight || filterBy || sortBy) && (
+              <button
+                onClick={() => {
+                  setAvailability("");
+                  setWeight("");
+                  setFilterBy("");
+                  setSortBy("");
+                }}
+                className="text-xs text-red-500 hover:underline ml-2"
+              >
+                Clear All
+              </button>
+            )}
           </div>
         </section>
 
         {/* Product Grid */}
         <section className="px-4 md:px-16 lg:px-24 pb-8">
-          {visibleProducts.length > 0 ? (
+          {loading ? (
+            <div className="grid grid-cols-2 gap-4 sm:gap-5 md:gap-6 lg:justify-center lg:[grid-template-columns:repeat(auto-fit,290px)]">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <ProductSkeleton key={i} />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="text-center py-16">
+              <p className="text-red-500 mb-4">{error}</p>
+              <button
+                onClick={fetchProducts}
+                className="bg-primary text-white px-4 py-2 rounded-md"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : visibleProducts.length > 0 ? (
             <div className="grid grid-cols-2 gap-4 sm:gap-5 md:gap-6 lg:justify-center lg:[grid-template-columns:repeat(auto-fit,290px)]">
               {visibleProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 text-muted-foreground">
-              No products match your filters.
+            <div className="text-center py-20 border-2 border-dashed border-gray-200 rounded-3xl bg-white">
+              <Search className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900">
+                No products found
+              </h3>
+              <p className="text-gray-500 mt-1">
+                Try adjusting your filters or selecting a different category.
+              </p>
             </div>
           )}
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-8">
+          {!loading && totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 mt-12">
               <button
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                onClick={() => {
+                  setCurrentPage((p) => Math.max(1, p - 1));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
                 disabled={currentPage === 1}
                 className="flex items-center gap-1 text-sm text-muted-foreground disabled:opacity-40 hover:text-foreground transition-colors"
               >
@@ -569,10 +506,13 @@ const CategoryMain = () => {
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
                   key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`w-8 h-8 rounded-full text-sm transition-colors ${
+                  onClick={() => {
+                    setCurrentPage(i + 1);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className={`w-9 h-9 rounded-full text-sm font-medium transition-all ${
                     currentPage === i + 1
-                      ? "bg-[hsl(140,60%,30%)] text-white font-bold"
+                      ? "bg-[hsl(140,60%,30%)] text-white shadow-md scale-110"
                       : "text-muted-foreground hover:bg-muted"
                   }`}
                 >
@@ -580,9 +520,10 @@ const CategoryMain = () => {
                 </button>
               ))}
               <button
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(totalPages, p + 1))
-                }
+                onClick={() => {
+                  setCurrentPage((p) => Math.min(totalPages, p + 1));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
                 disabled={currentPage === totalPages}
                 className="flex items-center gap-1 text-sm text-muted-foreground disabled:opacity-40 hover:text-foreground transition-colors"
               >
@@ -592,39 +533,53 @@ const CategoryMain = () => {
           )}
         </section>
 
-        {/* Certification Logos */}
-
         <CertificationsSection />
-        {/* Why Choose Section */}
-        <section className="mx-4 md:mx-16 lg:mx-24 mb-12 rounded-3xl overflow-hidden ">
+
+        {/* Why Choose Section (Dynamic Title) */}
+        <section className="mx-4 md:mx-16 lg:mx-24 mb-12 rounded-3xl overflow-hidden bg-white shadow-sm border border-gray-100">
           <div className="grid md:grid-cols-2 gap-0">
             <div className="p-8 md:p-12 flex flex-col justify-center">
               <h2 className="text-xl md:text-2xl font-bold text-[hsl(140,60%,30%)] mb-4">
-                Why Choose Our Organic Pulses?
+                Why Choose Our {categoryName || "Organic Products"}?
               </h2>
-              <p className="text-sm text-foreground mb-4">
-                Our pulses are carefully cultivated without synthetic
+              <p className="text-sm text-foreground mb-4 leading-relaxed text-gray-600">
+                Our products are carefully cultivated without synthetic
                 fertilizers or pesticides. Each product is processed with utmost
                 care to preserve its natural nutritional value, making it a
                 perfect choice for health-conscious families.
               </p>
-              <p className="text-sm font-semibold text-foreground mb-2">
-                Ideal for:
-              </p>
-              <ul className="text-sm text-foreground space-y-1 list-disc list-inside">
-                <li>Daily home cooking</li>
-                <li>Traditional Indian recipes</li>
-                <li>Protein-rich diets</li>
-                <li>Healthy lifestyle choices</li>
-              </ul>
+              <div className="space-y-4 mt-2">
+                <div>
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+                    Ideal for:
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      "Daily home cooking",
+                      "Traditional recipes",
+                      "Protein-rich diets",
+                      "Healthy lifestyle",
+                    ].map((item) => (
+                      <div
+                        key={item}
+                        className="flex items-center gap-2 text-xs text-gray-700"
+                      >
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="relative min-h-[250px] md:min-h-full">
+            <div className="relative min-h-[300px] md:min-h-full">
               <img
-                src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&h=400&fit=crop"
-                alt="Organic pulses and grains"
+                src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop"
+                alt="Organic farming"
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent md:hidden" />
             </div>
           </div>
         </section>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Search,
@@ -23,37 +23,75 @@ import RLJLOGOJAVIK from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
-
-const navigation = [
-  { name: "Home", href: "/" },
-  { name: "All Products", href: "/products" },
-  {
-    name: "Categories",
-    href: "/categories",
-    submenu: [
-      { name: "Organic Grains", href: "/categories" },
-      { name: "Organic Flours", href: "/categories" },
-      { name: "Organic Oils", href: "/categories" },
-      { name: "Organic Seeds", href: "/categories" },
-      { name: "Dry Fruits", href: "/categories" },
-      { name: "Organic Spices", href: "/categories" },
-      { name: "Organic Ghee", href: "/categories" },
-      { name: "Superfoods", href: "/categories" },
-    ],
-  },
-  { name: "B2B", href: "/b2b" },
-  { name: "Certifications", href: "/certifications" },
-  { name: "Track Order", href: "/track-order" },
-  { name: "Contact Us", href: "/contact" },
-];
+import { getCategories, Category } from "@/api/category.service";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await getCategories();
+        if (res.success) setCategories(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch categories", err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  const navigation = [
+    { name: "Home", href: "/" },
+    { name: "All Products", href: "/products" },
+    {
+      name: "Categories",
+      href: "/categories",
+      submenu:
+        categories.length > 0
+          ? categories.map((cat) => ({
+              name: cat.category_name,
+              href: `/categories?category=${encodeURIComponent(cat.category_name)}`,
+            }))
+          : [
+              {
+                name: "Organic Grains",
+                href: "/categories?category=Organic Grains",
+              },
+              {
+                name: "Organic Flours",
+                href: "/categories?category=Organic Flours",
+              },
+              {
+                name: "Organic Oils",
+                href: "/categories?category=Organic Oils",
+              },
+              {
+                name: "Organic Seeds",
+                href: "/categories?category=Organic Seeds",
+              },
+              { name: "Dry Fruits", href: "/categories?category=Dry Fruits" },
+              {
+                name: "Organic Spices",
+                href: "/categories?category=Organic Spices",
+              },
+              {
+                name: "Organic Ghee",
+                href: "/categories?category=Organic Ghee",
+              },
+              { name: "Superfoods", href: "/categories?category=Superfoods" },
+            ],
+    },
+    { name: "B2B", href: "/b2b" },
+    { name: "Certifications", href: "/certifications" },
+    { name: "Track Order", href: "/track-order" },
+    { name: "Contact Us", href: "/contact" },
+  ];
 
   const handleLogout = () => {
     logout();
@@ -87,7 +125,7 @@ const Header = () => {
                     {item.name}
                     <ChevronDown className="h-4 w-4" />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="bg-popover border-border">
+                  <DropdownMenuContent className="bg-popover border-border max-h-[70vh] overflow-y-auto">
                     {item.submenu.map((subItem) => (
                       <DropdownMenuItem key={subItem.name} asChild>
                         <Link to={subItem.href} className="cursor-pointer">

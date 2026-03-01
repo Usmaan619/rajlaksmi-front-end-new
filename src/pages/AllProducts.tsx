@@ -21,6 +21,7 @@ import { Product } from "@/types/product";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import WhyChooseRajlakshmiSection from "@/components/WhyChooseRajlakshmiSection";
 import ContactSection from "@/components/ContactSection";
@@ -52,6 +53,25 @@ const getWeightOptions = (weight: any) => {
   }
 };
 
+const ProductSkeleton = () => (
+  <div className="w-full lg:w-[290px] border border-gray-100 rounded-[20px] p-3 flex flex-col gap-[10px] bg-white">
+    <Skeleton className="w-full aspect-square rounded-xl" />
+    <Skeleton className="h-4 w-3/4" />
+    <div className="flex gap-2">
+      <Skeleton className="h-4 w-1/4" />
+      <Skeleton className="h-4 w-1/4" />
+    </div>
+    <div className="flex justify-between items-center">
+      <Skeleton className="h-6 w-1/3" />
+      <Skeleton className="h-4 w-8" />
+    </div>
+    <div className="flex gap-2 mt-auto">
+      <Skeleton className="h-8 flex-1" />
+      <Skeleton className="h-8 flex-1" />
+    </div>
+  </div>
+);
+
 const ProductCard = ({ product }: { product: Product }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
@@ -67,20 +87,20 @@ const ProductCard = ({ product }: { product: Product }) => {
     e.stopPropagation();
     addToCart({
       id: `product-all-${product.id}`,
-      name: product.product_name || product.name,
+      name: product.product_name,
       price: product.price,
       image: productImage,
       quantity: 1,
       weight: selectedWeight,
     });
-    toast.success(`${product.product_name || product.name} added to cart!`);
+    toast.success(`${product.product_name} added to cart!`);
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
       id: `product-all-${product.id}`,
-      name: product.product_name || product.name,
+      name: product.product_name,
       price: product.price,
       image: productImage,
       quantity: 1,
@@ -118,7 +138,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         <div className="aspect-square rounded-xl overflow-hidden bg-muted relative">
           <img
             src={productImage || producttest}
-            alt={product.product_name || product.name}
+            alt={product.product_name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
               (e.target as HTMLImageElement).src = producttest;
@@ -131,7 +151,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             e.stopPropagation();
             toggleWishlist({
               id: `product-all-${product.id}`,
-              name: product.product_name || product.name,
+              name: product.product_name,
               price: product.price,
               image: productImage,
               originalPrice: product.product_del_price,
@@ -157,7 +177,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       {/* Content */}
       <div className="space-y-2 flex-1 flex flex-col">
         <h3 className="font-medium text-foreground text-sm line-clamp-2">
-          {product.product_name || product.name}
+          {product.product_name}
         </h3>
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -308,6 +328,9 @@ const AllProducts = () => {
               : p.weight_options,
         }));
 
+        // 3 second artificial delay for visual skeleton impact
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
         setProducts(mappedProducts);
         if (res.pagination) {
           setTotalPages(res.pagination.totalPages || 1);
@@ -394,25 +417,6 @@ const AllProducts = () => {
         </Select>
       </div>
 
-      {/* Weight Filter */}
-      {/* <div>
-        <label className="text-sm font-medium text-foreground mb-1.5 block">
-          Weight
-        </label>
-        <Select value={selectedWeight} onValueChange={setSelectedWeight}>
-          <SelectTrigger className="bg-popover border-border">
-            <SelectValue placeholder="All" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="250g">250g</SelectItem>
-            <SelectItem value="500g">500g</SelectItem>
-            <SelectItem value="1000g">1000g</SelectItem>
-            <SelectItem value="2000g">2000g</SelectItem>
-          </SelectContent>
-        </Select>
-      </div> */}
-
       {/* Price Filter */}
       <div>
         <label className="text-sm font-medium text-foreground mb-1.5 block">
@@ -478,11 +482,21 @@ const AllProducts = () => {
             {/* Products */}
             <div className="flex-1">
               {loading ? (
-                <div className="flex flex-col items-center justify-center py-20 gap-4">
-                  <Loader2 className="h-10 w-10 text-primary animate-spin" />
-                  <p className="text-muted-foreground animate-pulse">
-                    Loading products...
-                  </p>
+                <div
+                  className="
+                    grid
+                    grid-cols-2
+                    sm:grid-cols-3
+                    md:grid-cols-4
+                    gap-4
+                    lg:gap-6
+                    lg:justify-center
+                    lg:[grid-template-columns:repeat(auto-fit,290px)]
+                  "
+                >
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <ProductSkeleton key={i} />
+                  ))}
                 </div>
               ) : error ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center">

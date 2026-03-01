@@ -15,45 +15,85 @@ import superfoodsImg from "@/assets/category-superfoods.jpg";
 const categories = [
   {
     name: "Organic Grains",
-    href: "/categories/grains",
+    href: "/categories?category=Organic Grains",
     image: grainsImg,
     active: true,
   },
-  { name: "Organic Flours", href: "/categories/flours", image: floursImg },
-  { name: "Organic Oils", href: "/categories/oils", image: oilsImg },
-  { name: "Organic Seeds", href: "/categories/seeds", image: seedsImg },
+  {
+    name: "Organic Flours",
+    href: "/categories?category=Organic Flours",
+    image: floursImg,
+  },
+  {
+    name: "Organic Oils",
+    href: "/categories?category=Organic Oils",
+    image: oilsImg,
+  },
+  {
+    name: "Organic Seeds",
+    href: "/categories?category=Organic Seeds",
+    image: seedsImg,
+  },
   {
     name: "Organic Dry Fruits",
-    href: "/categories/dry-fruits",
+    href: "/categories?category=Organic Dry Fruits",
     image: dryfruitsImg,
   },
-  { name: "Organic Spices", href: "/categories/spices", image: spicesImg },
-  { name: "Organic Ghee", href: "/categories/ghee", image: gheeImg },
+  {
+    name: "Organic Spices",
+    href: "/categories?category=Organic Spices",
+    image: spicesImg,
+  },
+  {
+    name: "Organic Ghee",
+    href: "/categories?category=Organic Ghee",
+    image: gheeImg,
+  },
   {
     name: "Organic Superfoods",
-    href: "/categories/superfoods",
+    href: "/categories?category=Organic Superfoods",
     image: superfoodsImg,
   },
 
   {
     name: "Organic Grains",
-    href: "/categories/grains",
+    href: "/categories?category=Organic Grains",
     image: grainsImg,
     active: true,
   },
-  { name: "Organic Flours", href: "/categories/flours", image: floursImg },
-  { name: "Organic Oils", href: "/categories/oils", image: oilsImg },
-  { name: "Organic Seeds", href: "/categories/seeds", image: seedsImg },
+  {
+    name: "Organic Flours",
+    href: "/categories?category=Organic Flours",
+    image: floursImg,
+  },
+  {
+    name: "Organic Oils",
+    href: "/categories?category=Organic Oils",
+    image: oilsImg,
+  },
+  {
+    name: "Organic Seeds",
+    href: "/categories?category=Organic Seeds",
+    image: seedsImg,
+  },
   {
     name: "Organic Dry Fruits",
-    href: "/categories/dry-fruits",
+    href: "/categories?category=Organic Dry Fruits",
     image: dryfruitsImg,
   },
-  { name: "Organic Spices", href: "/categories/spices", image: spicesImg },
-  { name: "Organic Ghee", href: "/categories/ghee", image: gheeImg },
+  {
+    name: "Organic Spices",
+    href: "/categories?category=Organic Spices",
+    image: spicesImg,
+  },
+  {
+    name: "Organic Ghee",
+    href: "/categories?category=Organic Ghee",
+    image: gheeImg,
+  },
   {
     name: "Organic Superfoods",
-    href: "/categories/superfoods",
+    href: "/categories?category=Organic Superfoods",
     image: superfoodsImg,
   },
 ];
