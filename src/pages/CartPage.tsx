@@ -28,17 +28,17 @@ const CartPage = () => {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center p-4 text-center">
         <div className="bg-emerald-50 p-6 rounded-full mb-6">
-          <ShoppingBag className="h-16 w-16 text-emerald-600" />
+          <ShoppingBag className="h-16 w-16 text-[#01722c]" />
         </div>
         <h2 className="text-3xl font-bold text-emerald-900 mb-2">
           Your Cart is Empty
         </h2>
-        <p className="text-emerald-600 mb-8 max-w-md">
+        <p className="text-[#01722c] mb-8 max-w-md">
           Looks like you haven't added any of our fresh organic products to your
           cart yet.
         </p>
         <Link to="/products">
-          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-lg rounded-xl shadow-lg transition-transform hover:scale-105">
+          <Button className="bg-[#01722c] hover:bg-[#0c9c43] text-white px-8 py-6 text-lg rounded-md shadow-lg transition-transform hover:scale-105">
             Start Shopping
           </Button>
         </Link>

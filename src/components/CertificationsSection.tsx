@@ -7,72 +7,52 @@ import Usda from "@/assets/certified/Orignal-icon.png";
 import Apeda from "@/assets/certified/apeda-seeklogo.com.svg";
 
 const logos = [
-  {
-    src: FssaiLogo,
-    alt: "FSSAI certified",
-  },
-  {
-    src: IndiaOrganicLogo,
-    alt: "India Organic",
-  },
-  {
-    src: Usda,
-    alt: "USDA Organic",
-  },
-  {
-    src: Apeda,
-    alt: "APEDA certified",
-  },
+  { src: FssaiLogo, alt: "FSSAI certified" },
+  { src: IndiaOrganicLogo, alt: "India Organic" },
+  { src: Usda, alt: "USDA Organic" },
+  { src: Apeda, alt: "APEDA certified" },
 ];
 
 const CertificationsSection: React.FC = () => {
   return (
-    <section className="py-12 lg:py-20 bg-white border-y border-gray-100">
+    <section className="py-10 sm:py-14 lg:py-20 bg-white border-y border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <p className="text-[#01722C] font-semibold text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-4">
+        <div className="text-center mb-10 sm:mb-14">
+          <p className="text-[#01722C] font-semibold text-[11px] sm:text-xs uppercase tracking-[0.3em] mb-3">
             Quality Guaranteed
           </p>
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#01722C] tracking-tight font-serif mb-4">
+
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#01722C] tracking-tight font-serif mb-3">
             Our Trusted Certifications
           </h2>
-          <p className="text-gray-500 text-sm sm:text-base max-w-xl mx-auto font-medium">
+
+          <p className="text-gray-500 text-sm sm:text-base max-w-xl mx-auto">
             Adhering to the highest global standards to bring you pure,
             authentic, and safe organic products from the heart of India.
           </p>
         </div>
 
-        {/* Logo Container */}
-        <div className="relative group">
-          {/* Decorative background element */}
-          <div className="absolute inset-0 bg-white/40 blur-3xl rounded-full -z-10 transition-colors duration-700 group-hover:bg-[#01722C]/5" />
+        {/* Logos */}
+        <div className="relative">
+          {/* decorative bg */}
+          <div className="absolute inset-0 bg-[#01722C]/5 blur-3xl rounded-full -z-10" />
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12 md:gap-16 items-center justify-items-center">
+          {/* GRID */}
+          <div className="grid grid-cols-4 gap-2 sm:gap-6 md:gap-10 items-center justify-items-center">
             {logos.map((logo, index) => (
-              <div
-                key={index}
-                className="w-full flex justify-center transform transition-all duration-500 hover:scale-110"
-              >
-                <div className="p-4 sm:p-6 rounded-3xl bg-white backdrop-blur-sm border border-white shadow-md hover:shadow-lg transition-all duration-300">
+              <div key={index} className="w-full flex justify-center">
+                <div className="w-full flex items-center justify-center p-2 sm:p-4 md:p-6 bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
                   <img
                     src={logo.src}
                     alt={logo.alt}
                     loading="lazy"
-                    className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain"
+                    className="h-8 sm:h-12 md:h-14 lg:h-16 w-auto object-contain"
                   />
                 </div>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Small Trust Footnote */}
-        <div className="mt-12 sm:mt-16 pt-8 border-t border-gray-100 flex flex-col items-center">
-          <div className="h-1 w-12 bg-[#01722C]/20 mb-6 rounded-full" />
-          <p className="text-[#01722C]/60 text-[10px] sm:text-xs font-bold tracking-[0.1em] uppercase text-center">
-            Purity & Integrity in Every Pack
-          </p>
         </div>
       </div>
     </section>

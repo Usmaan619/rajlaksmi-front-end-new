@@ -26,6 +26,8 @@ import ForgotPasswordPage from "@/pages/Auth/ForgotPasswordPage";
 import CartPage from "@/pages/CartPage";
 import CheckoutPage from "@/pages/CheckoutPage";
 import WishlistPage from "@/pages/WishlistPage";
+import PaymentSuccess from "@/pages/PaymentSuccess";
+import PaymentFailed from "@/pages/PaymentFailed";
 
 const MainRoutes = () => (
   <AppWrapper>
@@ -54,6 +56,8 @@ const MainRoutes = () => (
       <Route path="/faq" element={<FAQMainPage />} />
       <Route path="/b2b" element={<B2BMainPage />} />
       <Route path="/lab-report" element={<LabReportsPage />} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
+      <Route path="/payment-failed" element={<PaymentFailed />} />
 
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />

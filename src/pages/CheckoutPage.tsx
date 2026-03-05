@@ -215,7 +215,7 @@ const CheckoutPage = () => {
       if (!order) {
         toast.success("Order placed successfully!");
         clearCart();
-        navigate("/orders");
+        navigate("/payment-success");
         setIsLoading(false);
         return;
       }
@@ -273,11 +273,10 @@ const CheckoutPage = () => {
               sessionStorage.removeItem("cart");
 
               setIsLoading(false);
-              navigate("/orders");
+              navigate("/payment-success");
             } else {
-              navigate("/orders"); // Or payment-failed if you have one
               setIsLoading(false);
-              clearCart();
+              navigate("/payment-failed");
             }
           } catch (e) {
             setIsLoading(false);
@@ -301,7 +300,7 @@ const CheckoutPage = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center p-4">
         <ShoppingBag className="h-20 w-20 text-emerald-100 mb-4" />
         <h2 className="text-2xl font-bold text-gray-800">Your cart is empty</h2>
         <p className="text-gray-500 mb-6">
@@ -309,7 +308,7 @@ const CheckoutPage = () => {
         </p>
         <Button
           onClick={() => navigate("/products")}
-          className="bg-emerald-600 hover:bg-emerald-700"
+          className="bg-[#01722c] hover:bg-[#0c9c43] text-white"
         >
           Shop Now
         </Button>
@@ -582,7 +581,7 @@ const CheckoutPage = () => {
 
           {/* Right Column: Order Summary */}
           <div className="space-y-6">
-            <Card className="border-none shadow-md sticky top-10">
+            <Card className="border-none shadow-md  sticky top-10">
               <CardHeader className="bg-[#01722c] rounded-t-xl py-6">
                 <CardTitle className="text-white flex justify-between items-center">
                   Order Summary

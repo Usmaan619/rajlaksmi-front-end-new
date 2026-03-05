@@ -277,7 +277,7 @@ const OurProductsSectionSimple = () => {
   const scrollNext = () => api?.scrollNext();
 
   return (
-    <section className="py-12  lg:py-16 bg-gradient-to-b from-[#EBF4EE] to-white relative overflow-hidden">
+    <section className="py-12  lg:py-16 bg-gradient-to-br from-green-50 to-white relative overflow-hidden">
       {/* Bottom Background Image */}
       <img
         src={bgPattern}
