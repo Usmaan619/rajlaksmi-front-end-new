@@ -24,6 +24,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { getProducts } from "@/api/product.service";
 import { Product } from "@/types/product";
+import { sortWeights } from "@/lib/utils";
 
 const getFirstImage = (images: any) => {
   if (!images) return "";
@@ -38,14 +39,24 @@ const getFirstImage = (images: any) => {
 };
 
 const getWeightOptions = (weight: any) => {
-  if (!weight) return ["N/A"];
-  if (Array.isArray(weight)) return weight.length > 0 ? weight : ["N/A"];
-  try {
-    const parsed = JSON.parse(weight);
-    return Array.isArray(parsed) ? parsed : [weight];
-  } catch (e) {
-    return [weight];
+  let options: any[] = [];
+  if (!weight) return [{ weight: "N/A", price: "" }];
+
+  if (Array.isArray(weight)) {
+    options = weight;
+  } else {
+    try {
+      const parsed = JSON.parse(weight);
+      options = Array.isArray(parsed) ? parsed : [parsed];
+    } catch (e) {
+      options = [weight];
+    }
   }
+
+  options = options.map((opt) =>
+    typeof opt === "string" ? { weight: String(opt), price: "" } : opt,
+  );
+  return sortWeights(options);
 };
 
 const ProductCard = ({ product }: { product: Product }) => {
@@ -71,18 +82,35 @@ const ProductCard = ({ product }: { product: Product }) => {
   const weights = getWeightOptions(
     product.weight_options || product.product_weight,
   );
-  const [selectedWeight, setSelectedWeight] = useState(weights[0]);
+  const [selectedWeightIdx, setSelectedWeightIdx] = useState(0);
   const [showWeights, setShowWeights] = useState(false);
+
+  const selectedWeightObj = weights[selectedWeightIdx] || {
+    weight: "N/A",
+    price: "",
+  };
+  const currentPrice = selectedWeightObj.price
+    ? Number(selectedWeightObj.price)
+    : pPrice;
+
+  let currentDiscount = pDiscount;
+  if (selectedWeightObj.price && pDelPrice > currentPrice) {
+    currentDiscount = Math.round(
+      ((pDelPrice - currentPrice) / pDelPrice) * 100,
+    );
+  } else if (currentPrice >= pDelPrice) {
+    currentDiscount = 0;
+  }
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
       id: `product-related-${product.id}`,
       name: pName,
-      price: pPrice,
+      price: currentPrice,
       image: productImage,
       quantity: 1,
-      weight: selectedWeight,
+      weight: selectedWeightObj.weight,
     });
     toast.success(`${pName} added to cart!`);
   };
@@ -92,10 +120,10 @@ const ProductCard = ({ product }: { product: Product }) => {
     addToCart({
       id: `product-related-${product.id}`,
       name: pName,
-      price: pPrice,
+      price: currentPrice,
       image: productImage,
       quantity: 1,
-      weight: selectedWeight,
+      weight: selectedWeightObj.weight,
     });
     navigate("/cart");
   };
@@ -155,15 +183,19 @@ const ProductCard = ({ product }: { product: Product }) => {
         </h3>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-primary font-bold text-base">₹{pPrice}</span>
-          {pDelPrice > pPrice && (
+          <span className="text-primary font-bold text-base">
+            ₹{currentPrice.toFixed(2)}
+          </span>
+          {pDelPrice > currentPrice && (
             <span className="text-muted-foreground line-through text-xs">
-              ₹{pDelPrice}
+              ₹{pDelPrice.toFixed(2)}
             </span>
           )}
-          <Badge className="bg-primary text-primary-foreground text-[10px] px-2 py-0.5">
-            {pDiscount}% Off
-          </Badge>
+          {currentDiscount > 0 && (
+            <Badge className="bg-primary text-primary-foreground text-[10px] px-2 py-0.5">
+              {currentDiscount}% Off
+            </Badge>
+          )}
         </div>
 
         <div className="flex items-center justify-between">
@@ -175,22 +207,22 @@ const ProductCard = ({ product }: { product: Product }) => {
               }}
               className="flex items-center gap-1 px-2 py-1 rounded-md border text-xs bg-white"
             >
-              {selectedWeight}
+              {selectedWeightObj.weight}
               {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
             </button>
-            {showWeights && (
+            {showWeights && weights.length > 1 && (
               <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-md shadow-lg z-20 min-w-[80px]">
-                {weights.map((w: string) => (
+                {weights.map((w: any, idx: number) => (
                   <div
-                    key={w}
+                    key={idx}
                     className="px-3 py-1 hover:bg-muted cursor-pointer text-xs"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedWeight(w);
+                      setSelectedWeightIdx(idx);
                       setShowWeights(false);
                     }}
                   >
-                    {w}
+                    {w.weight}
                   </div>
                 ))}
               </div>

@@ -65,6 +65,7 @@ const ProfilePage = () => {
     city: "",
     state: "",
     pincode: "",
+    country: "",
   });
 
   useEffect(() => {
@@ -149,6 +150,7 @@ const ProfilePage = () => {
           city: "",
           state: "",
           pincode: "",
+          country: "",
         });
       } else {
         toast.error(res.message || "Failed to save address");
@@ -161,6 +163,7 @@ const ProfilePage = () => {
   };
 
   const handleDeleteAddress = async (id: number) => {
+    console.log("Address ID:", id);
     if (!confirm("Are you sure you want to delete this address?")) return;
     try {
       const res = await deleteAddressAPI(id);
@@ -400,6 +403,20 @@ const ProfilePage = () => {
                             }
                           />
                         </div>
+
+                        <div className="space-y-2">
+                          <Label>Country</Label>
+                          <Input
+                            required
+                            value={addressForm.country}
+                            onChange={(e) =>
+                              setAddressForm({
+                                ...addressForm,
+                                country: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
                         <div className="space-y-2">
                           <Label>City</Label>
                           <Input
@@ -413,6 +430,7 @@ const ProfilePage = () => {
                             }
                           />
                         </div>
+
                         <div className="space-y-2">
                           <Label>State</Label>
                           <Input
@@ -426,7 +444,7 @@ const ProfilePage = () => {
                             }
                           />
                         </div>
-                        <div className="space-y-2 col-span-2">
+                        <div className="space-y-2">
                           <Label>Pincode</Label>
                           <Input
                             required
@@ -487,7 +505,8 @@ const ProfilePage = () => {
                           {addr.address_line1},{" "}
                           {addr.address_line2 && addr.address_line2 + ","}{" "}
                           <br />
-                          {addr.city}, {addr.state} - {addr.pincode}
+                          {addr.city}, {addr.state}, {addr.country} -{" "}
+                          {addr.pincode}
                         </p>
                         <div className="flex items-center justify-between mt-auto">
                           <div className="flex items-center gap-1.5 text-[11px] text-slate-600 font-bold">

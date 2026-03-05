@@ -18,6 +18,7 @@ import {
   ArrowLeft,
   ArrowRight,
 } from "lucide-react";
+import { formatWeight } from "@/lib/utils";
 
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, cartTotal, cartCount } =
@@ -46,7 +47,7 @@ const CartPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-6xl">
+    <div className=" mx-auto px-4 py-12 max-w-7xl bg-white mb-16">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold text-emerald-900">
           Your Shopping Cart ({cartCount})
@@ -87,7 +88,7 @@ const CartPage = () => {
                     </h3>
                     {item.weight && (
                       <p className="text-xs sm:text-sm text-emerald-600">
-                        Weight: {item.weight}
+                        Weight: {formatWeight(item.weight)}
                       </p>
                     )}
                     <p className="font-semibold text-sm sm:text-base text-emerald-700">
@@ -137,14 +138,14 @@ const CartPage = () => {
           <Card className="sticky top-24 border-emerald-200 shadow-xl bg-emerald-50/30 overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600" />
             <CardHeader>
-              <CardTitle className="text-xl text-emerald-900">
+              <CardTitle className="text-xl text-[#01722c]">
                 Order Summary
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between text-emerald-700">
+              <div className="flex justify-between text-[#01722c]">
                 <span>Subtotal ({cartCount} items)</span>
-                <span className="font-semibold text-emerald-900 font-mono">
+                <span className="font-semibold text-[#01722c] font-mono">
                   ₹{cartTotal.toFixed(2)}
                 </span>
               </div>
@@ -170,30 +171,17 @@ const CartPage = () => {
                   </p>
                 </div>
                 <Link to="/checkout" className="block w-full">
-                  <Button className="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg transition-all transform hover:translate-y-[-2px]">
+                  <Button className="w-full bg-[#01722c] hover:bg-emerald-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg transition-all transform hover:translate-y-[-2px]">
                     Proceed to Checkout <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
               </div>
             </CardContent>
             <CardFooter className="bg-emerald-50 flex justify-center py-4">
-              <div className="flex items-center space-x-4 grayscale opacity-60">
-                <img
-                  src="https://www.svgrepo.com/show/508709/visa.svg"
-                  alt="Visa"
-                  className="h-6"
-                />
-                <img
-                  src="https://www.svgrepo.com/show/508696/mastercard.svg"
-                  alt="Mastercard"
-                  className="h-6"
-                />
-                <img
-                  src="https://www.svgrepo.com/show/508719/upi.svg"
-                  alt="UPI"
-                  className="h-6"
-                />
-              </div>
+              <p className="text-sm sm:text-base text-gray-700 font-medium">
+                Cash on Delivery{" "}
+                <span className="font-bold">Not Available</span>
+              </p>
             </CardFooter>
           </Card>
         </div>

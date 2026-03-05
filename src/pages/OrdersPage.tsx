@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,8 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Package,
   ChevronRight,
-  Search,
-  ExternalLink,
   ShoppingBag,
   Loader2,
   Clock,
@@ -16,9 +14,16 @@ import {
   Truck,
   XCircle,
   AlertCircle,
+  ExternalLink,
 } from "lucide-react";
-import { getMyOrdersAPI, Order } from "@/api/order.service";
+import { formatWeight } from "@/lib/utils";
+import {
+  getMyOrdersAPI,
+  getTrackingStatusAPI,
+  Order,
+} from "@/api/order.service";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 const OrdersPage = () => {
   const { user } = useAuth();
@@ -26,6 +31,12 @@ const OrdersPage = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [trackingInfo, setTrackingInfo] = useState<
+    Record<number | string, any>
+  >({});
+  const [trackingLoading, setTrackingLoading] = useState<
+    Record<number | string, boolean>
+  >({});
 
   useEffect(() => {
     if (user?.id) {
@@ -42,31 +53,60 @@ const OrdersPage = () => {
       }
     } catch (err) {
       console.error("Error fetching orders", err);
+      toast.error("Failed to load orders");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleTrackOrder = async (orderId: string | number) => {
+    if (trackingInfo[orderId]) {
+      // Toggle view if already fetched (or refetch if you prefer)
+      setTrackingInfo((prev) => {
+        const next = { ...prev };
+        delete next[orderId];
+        return next;
+      });
+      return;
+    }
+
+    setTrackingLoading((prev) => ({ ...prev, [orderId]: true }));
+    try {
+      const res = await getTrackingStatusAPI(orderId);
+      if (res.success) {
+        setTrackingInfo((prev) => ({ ...prev, [orderId]: res.tracking }));
+      } else {
+        toast.error(res.message || "Could not fetch tracking info");
+      }
+    } catch (err) {
+      toast.error("Error connecting to tracking service");
+    } finally {
+      setTrackingLoading((prev) => ({ ...prev, [orderId]: false }));
+    }
+  };
+
   const statusIcons: Record<string, any> = {
-    Pending: <Clock size={16} />,
-    Processing: <Loader2 size={16} className="animate-spin" />,
-    Shipped: <Truck size={16} />,
-    Delivered: <CheckCircle2 size={16} />,
-    Cancelled: <XCircle size={16} />,
+    pending: <Clock size={16} />,
+    processing: <Loader2 size={16} className="animate-spin" />,
+    shipped: <Truck size={16} />,
+    delivered: <CheckCircle2 size={16} />,
+    cancelled: <XCircle size={16} />,
   };
 
   const statusColors: Record<string, string> = {
-    Pending: "bg-amber-100 text-amber-700 border-amber-200",
-    Processing: "bg-blue-100 text-blue-700 border-blue-200",
-    Shipped: "bg-purple-100 text-purple-700 border-purple-200",
-    Delivered: "bg-emerald-100 text-emerald-700 border-emerald-200",
-    Cancelled: "bg-rose-100 text-rose-700 border-rose-200",
+    pending: "bg-amber-100 text-amber-700 border-amber-200",
+    processing: "bg-blue-100 text-blue-700 border-blue-200",
+    shipped: "bg-purple-100 text-purple-700 border-purple-200",
+    delivered: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    cancelled: "bg-rose-100 text-rose-700 border-rose-200",
   };
+
+  const getStatusKey = (status: string) => status?.toLowerCase() || "pending";
 
   const filteredOrders =
     filter === "all"
       ? orders
-      : orders.filter((o) => o.status.toLowerCase() === filter.toLowerCase());
+      : orders.filter((o) => getStatusKey(o.status) === filter.toLowerCase());
 
   if (loading) {
     return (
@@ -109,12 +149,12 @@ const OrdersPage = () => {
               Delivered
             </Button>
             <Button
-              variant={filter === "pending" ? "default" : "ghost"}
+              variant={filter === "processing" ? "default" : "ghost"}
               size="sm"
-              onClick={() => setFilter("pending")}
+              onClick={() => setFilter("processing")}
               className="h-9 px-4 rounded-md font-medium"
             >
-              In Progress
+              Processing
             </Button>
           </div>
         </div>
@@ -152,9 +192,9 @@ const OrdersPage = () => {
                       </div>
                       <Badge
                         variant="outline"
-                        className={`h-9 px-4 gap-2 font-bold rounded-full ${statusColors[order.status]}`}
+                        className={`h-9 px-4 gap-2 font-bold rounded-full capitalize ${statusColors[getStatusKey(order.status)]}`}
                       >
-                        {statusIcons[order.status]}
+                        {statusIcons[getStatusKey(order.status)]}
                         {order.status}
                       </Badge>
                     </div>
@@ -167,12 +207,16 @@ const OrdersPage = () => {
                         key={idx}
                         className="flex items-center gap-4 bg-white p-3 rounded-xl border border-slate-100"
                       >
-                        <div className="h-16 w-16 rounded-lg overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="h-full w-full object-cover"
-                          />
+                        <div className="h-16 w-16 rounded-lg overflow-hidden bg-slate-50 border border-slate-100 flex-shrink-0 flex items-center justify-center">
+                          {item.image ? (
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <ShoppingBag className="text-slate-300" size={24} />
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-slate-900 truncate">
@@ -180,7 +224,7 @@ const OrdersPage = () => {
                           </h4>
                           <p className="text-xs text-slate-500 font-medium">
                             Qty: {item.quantity}{" "}
-                            {item.weight && `| ${item.weight}`}
+                            {item.weight && `| ${formatWeight(item.weight)}`}
                           </p>
                         </div>
                         <div className="text-right">
@@ -190,19 +234,64 @@ const OrdersPage = () => {
                         </div>
                       </div>
                     ))}
+
+                    {/* Tracking Info Section */}
+                    {trackingInfo[order.id] && (
+                      <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-xl mt-4 animate-in fade-in slide-in-from-top-2">
+                        <div className="flex items-center gap-2 mb-2 text-emerald-800 font-bold">
+                          <Truck size={18} />
+                          Tracking Update
+                        </div>
+                        <p className="text-sm font-bold text-emerald-900">
+                          Status: {trackingInfo[order.id].current_status}
+                        </p>
+                        {trackingInfo[order.id].awb_number && (
+                          <p className="text-xs text-emerald-700 mt-1 font-medium">
+                            AWB: {trackingInfo[order.id].awb_number} | Courier:{" "}
+                            {trackingInfo[order.id].courier || "Assigned"}
+                          </p>
+                        )}
+                        {trackingInfo[order.id].expected_delivery_date && (
+                          <p className="text-xs text-emerald-700 mt-1">
+                            Expected Delivery:{" "}
+                            {trackingInfo[order.id].expected_delivery_date}
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div className="bg-white p-5 border-t border-slate-50 flex items-center justify-between">
                     <p className="text-xs text-slate-400 font-medium flex items-center gap-1">
                       <AlertCircle size={14} />
-                      Payments via Cash on Delivery
+                      Paid via {(order as any).payment_method || "ONLINE"}
                     </p>
-                    <Button
-                      variant="ghost"
-                      className="text-primary font-bold gap-2 hover:bg-primary/5"
-                    >
-                      Order Details
-                      <ChevronRight size={18} />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleTrackOrder(order.id)}
+                        disabled={trackingLoading[order.id]}
+                        className="font-bold gap-2 border-primary text-primary hover:bg-primary/5 rounded-lg"
+                      >
+                        {trackingLoading[order.id] ? (
+                          <Loader2 size={16} className="animate-spin" />
+                        ) : (
+                          <Truck size={16} />
+                        )}
+                        {trackingInfo[order.id]
+                          ? "Hide Tracking"
+                          : "Track Order"}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(`/orders/${order.id}`)}
+                        className="text-slate-600 font-bold gap-1 hover:bg-slate-50 rounded-lg"
+                      >
+                        Details
+                        <ChevronRight size={18} />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -230,7 +319,7 @@ const OrdersPage = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-12">
-          <Card className="border-none shadow-md rounded-2xl bg-primary text-white overflow-hidden p-6 relative">
+          <Card className="border-none shadow-md rounded-2xl bg-[#01722c] text-white overflow-hidden p-6 relative">
             <div className="space-y-4 relative z-10">
               <h3 className="text-xl font-bold uppercase tracking-wide">
                 Refund Policy
@@ -243,7 +332,7 @@ const OrdersPage = () => {
               <Button
                 variant="secondary"
                 size="sm"
-                className="font-medium gap-2 rounded-md transition-all hover:bg-white text-primary"
+                className="font-medium gap-2 rounded-md transition-all hover:bg-white text-[#01722c]"
               >
                 View Policy <ExternalLink size={16} />
               </Button>

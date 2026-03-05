@@ -13,6 +13,7 @@ export interface CartItem {
   image: string;
   quantity: number;
   weight?: string;
+  originalId?: string;
 }
 
 interface CartContextType {
@@ -40,14 +41,20 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   }, [cart]);
 
   const addToCart = (item: CartItem) => {
+    // Force a dynamically unique ID that accounts for the variant weight
+    const uniqueId = `${item.id}-${item.weight || "noweight"}`;
+    const cartItemToInsert = { ...item, id: uniqueId, originalId: item.id };
+
     setCart((prevCart) => {
-      const existingItem = prevCart.find((i) => i.id === item.id);
+      const existingItem = prevCart.find((i) => i.id === cartItemToInsert.id);
       if (existingItem) {
         return prevCart.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i,
+          i.id === cartItemToInsert.id
+            ? { ...i, quantity: i.quantity + cartItemToInsert.quantity }
+            : i,
         );
       }
-      return [...prevCart, item];
+      return [...prevCart, cartItemToInsert];
     });
   };
 

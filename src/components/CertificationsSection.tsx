@@ -27,7 +27,7 @@ const logos = [
 
 const CertificationsSection: React.FC = () => {
   return (
-    <section className="py-12 lg:py-20 bg-[#F9FBF9] border-y border-gray-100">
+    <section className="py-12 lg:py-20 bg-white border-y border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16">
@@ -52,9 +52,9 @@ const CertificationsSection: React.FC = () => {
             {logos.map((logo, index) => (
               <div
                 key={index}
-                className="w-full flex justify-center transform transition-all duration-500 hover:scale-110 grayscale hover:grayscale-0 opacity-60 hover:opacity-100"
+                className="w-full flex justify-center transform transition-all duration-500 hover:scale-110"
               >
-                <div className="p-4 sm:p-6 rounded-3xl bg-white/50 backdrop-blur-sm border border-white/80 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(1,114,44,0.1)] transition-all">
+                <div className="p-4 sm:p-6 rounded-3xl bg-white backdrop-blur-sm border border-white shadow-md hover:shadow-lg transition-all duration-300">
                   <img
                     src={logo.src}
                     alt={logo.alt}
@@ -68,7 +68,7 @@ const CertificationsSection: React.FC = () => {
         </div>
 
         {/* Small Trust Footnote */}
-        <div className="mt-12 sm:mt-16 pt-8 border-t border-gray-100 flex flex-center flex-col items-center">
+        <div className="mt-12 sm:mt-16 pt-8 border-t border-gray-100 flex flex-col items-center">
           <div className="h-1 w-12 bg-[#01722C]/20 mb-6 rounded-full" />
           <p className="text-[#01722C]/60 text-[10px] sm:text-xs font-bold tracking-[0.1em] uppercase text-center">
             Purity & Integrity in Every Pack

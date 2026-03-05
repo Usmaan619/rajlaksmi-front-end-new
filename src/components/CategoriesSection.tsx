@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCategories, Category } from "@/api/category.service";
 
@@ -13,6 +12,13 @@ import spicesImg from "@/assets/category-spices.jpg";
 import gheeImg from "@/assets/category-ghee.jpg";
 import superfoodsImg from "@/assets/category-superfoods.jpg";
 
+type CategoryItem = {
+  name: string;
+  href: string;
+  image: string;
+  bgColor: string;
+};
+
 const categoryImages: Record<string, string> = {
   "Organic Grains": grainsImg,
   "Organic Flours": floursImg,
@@ -24,32 +30,36 @@ const categoryImages: Record<string, string> = {
   "Organic Superfoods": superfoodsImg,
 };
 
-const CategoriesSection = () => {
-  const [categories, setCategories] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+const pastelColors = [
+  "bg-[#E8F5E9]",
+  "bg-[#FFF3E0]",
+  "bg-[#E3F2FD]",
+  "bg-[#F3E5F5]",
+  "bg-[#FFFDE7]",
+  "bg-[#FCE4EC]",
+  "bg-[#E0F2F1]",
+  "bg-[#EFEBE9]",
+];
 
-  const pastelColors = [
-    "bg-[#E8F5E9]", // Light Green
-    "bg-[#FFF3E0]", // Light Orange
-    "bg-[#E3F2FD]", // Light Blue
-    "bg-[#F3E5F5]", // Light Purple
-    "bg-[#FFFDE7]", // Light Yellow
-    "bg-[#FCE4EC]", // Light Pink
-    "bg-[#E0F2F1]", // Light Teal
-    "bg-[#EFEBE9]", // Light Brown
-  ];
+const CategoriesSection = () => {
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await getCategories();
-        if (res.success) {
-          const mapped = res.data.map((cat: Category, index: number) => ({
-            name: cat.category_name,
-            href: `/categories?category=${encodeURIComponent(cat.category_name)}`,
-            image: categoryImages[cat.category_name] || grainsImg,
-            bgColor: pastelColors[index % pastelColors.length],
-          }));
+        if (res.success && res.data?.length) {
+          const mapped: CategoryItem[] = res.data.map(
+            (cat: Category, index: number) => ({
+              name: cat.category_name,
+              href: `/categories?category=${encodeURIComponent(
+                cat.category_name,
+              )}`,
+              image: categoryImages[cat.category_name] || grainsImg,
+              bgColor: pastelColors[index % pastelColors.length],
+            }),
+          );
           setCategories(mapped);
         }
       } catch (err) {
@@ -58,51 +68,56 @@ const CategoriesSection = () => {
         setIsLoading(false);
       }
     };
+
     fetchCategories();
   }, []);
 
   return (
-    <section className="bg-white py-8 sm:py-12 relative overflow-hidden">
-      <div className="px-4 sm:px-6 md:px-8 lg:px-12 max-w-full mx-auto">
+    <section className="bg-white py-10 sm:py-14 relative overflow-hidden">
+      <div className="px-4 sm:px-6 md:px-10 max-w-[1850px] mx-auto">
         {/* Header */}
         <div className="mb-14 text-center">
-          <p className="text-[#01722C] font-semibold text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-4">
+          <p className="text-[#01722C] font-semibold text-xs uppercase tracking-[0.3em] mb-4">
             Pure & Authentic
           </p>
-          <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
             Shop by Category
           </h2>
           <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
         </div>
 
-        {/* Responsive Grid - Blinkit Style */}
-        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3 sm:gap-4 md:gap-5">
+        {/* Scrollable Container */}
+        <div className="flex overflow-x-auto gap-4 sm:gap-6 md:gap-8 pb-6 scrollbar-custom snap-x scroll-smooth">
           {isLoading
             ? Array.from({ length: 10 }).map((_, i) => (
-                <div key={i} className="flex flex-col items-center gap-2">
-                  <Skeleton className="w-full aspect-square rounded-2xl" />
-                  <Skeleton className="h-3 w-3/4" />
+                <div
+                  key={i}
+                  className="flex flex-col items-center gap-3 flex-shrink-0 w-24 sm:w-28 md:w-32"
+                >
+                  <Skeleton className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl" />
+                  <Skeleton className="h-3 w-16" />
                 </div>
               ))
             : categories.map((category) => (
                 <Link
                   key={category.name}
                   to={category.href}
-                  className="group flex flex-col items-center text-center gap-2 transition-transform duration-200 active:scale-95"
+                  className="group flex flex-col items-center text-center gap-2 transition-transform duration-200 active:scale-95 flex-shrink-0 w-24 sm:w-28 md:w-32 snap-start"
                 >
-                  {/* Category Container */}
+                  {/* Image Card */}
                   <div
-                    className={`w-full aspect-square ${category.bgColor} rounded-2xl sm:rounded-[24px] flex items-center justify-center p-2 sm:p-3 overflow-hidden transition-all duration-300 group-hover:shadow-md group-hover:bg-white border border-transparent group-hover:border-gray-100`}
+                    className={`w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 mx-auto ${category.bgColor} rounded-2xl flex items-center justify-center p-2 sm:p-3 overflow-hidden border border-transparent transition-all duration-300 group-hover:bg-white group-hover:border-gray-100 group-hover:shadow-lg`}
                   >
                     <img
                       src={category.image}
                       alt={category.name}
-                      className="w-full h-full object-contain mix-blend-multiply transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
+                      className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                     />
                   </div>
 
-                  {/* Category Name */}
-                  <span className="text-[10px] sm:text-xs font-bold text-[#333] leading-tight line-clamp-2 h-8 sm:h-9 pt-1">
+                  {/* Name */}
+                  <span className="text-[11px] sm:text-xs font-semibold text-gray-800 leading-tight line-clamp-2 min-h-[32px] px-1">
                     {category.name}
                   </span>
                 </Link>

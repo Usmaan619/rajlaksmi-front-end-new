@@ -13,6 +13,7 @@ import ContactSection from "@/components/ContactSection";
 import TestimonialSection from "@/components/TestimonialSection";
 import CertificationsBottomSection from "@/components/CertificationsBottomSection";
 import CategoryProductsSection from "@/components/CategoryProductsSection";
+import OurProductsSection from "@/components/OurProductsSection";
 
 const Index = () => {
   return (
@@ -25,6 +26,7 @@ const Index = () => {
         <BestSellersSection />
         <FarmerDividerExclusive />
         <ExclusiveDealsSection />
+        <OurProductsSection />
         <CategoryProductsSection />
         <BlogsSection />
         <SellingSection />
@@ -32,7 +34,10 @@ const Index = () => {
         <AboutSection />
         <ContactSection />
         <TestimonialSection />
-        <CertificationsBottomSection className="bg-[#F0FFF0]" />
+        <CertificationsBottomSection
+          className="bg-[#F0FFF0] "
+          btnCss="bg-white mb"
+        />
       </main>
     </div>
   );

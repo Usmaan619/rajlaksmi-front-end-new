@@ -13,11 +13,34 @@ const ProductCard = ({ product }: { product: any }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isFavorite = isInWishlist(`product-best-${product.id}`);
-  const [selectedUnit, setSelectedUnit] = useState(
-    Array.isArray(product.product_weight)
-      ? product.product_weight[0]
-      : product.product_weight,
-  );
+  const weights = Array.isArray(product.product_weight)
+    ? product.product_weight
+    : product.product_weight
+      ? [product.product_weight]
+      : [];
+  const [selectedUnitIdx, setSelectedUnitIdx] = useState(0);
+  const selectedUnit = weights[selectedUnitIdx];
+  const selectedUnitWeight =
+    typeof selectedUnit === "object" ? selectedUnit.weight : selectedUnit;
+  const currentPrice =
+    typeof selectedUnit === "object" && selectedUnit.price
+      ? Number(selectedUnit.price)
+      : product.product_price;
+
+  let currentDiscount = product.discount || 0;
+  if (
+    typeof selectedUnit === "object" &&
+    selectedUnit.price &&
+    product.product_del_price > currentPrice
+  ) {
+    currentDiscount = Math.round(
+      ((product.product_del_price - currentPrice) / product.product_del_price) *
+        100,
+    );
+  } else if (currentPrice >= product.product_del_price) {
+    currentDiscount = 0;
+  }
+
   const [showUnits, setShowUnits] = useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -25,10 +48,10 @@ const ProductCard = ({ product }: { product: any }) => {
     addToCart({
       id: `product-best-${product.id}`,
       name: product.product_name,
-      price: product.product_price,
+      price: currentPrice,
       image: product.product_images[0],
       quantity: 1,
-      weight: selectedUnit,
+      weight: selectedUnitWeight,
     });
     toast.success(`${product.product_name} added to cart!`);
   };
@@ -38,10 +61,10 @@ const ProductCard = ({ product }: { product: any }) => {
     addToCart({
       id: `product-best-${product.id}`,
       name: product.product_name,
-      price: product.product_price,
+      price: currentPrice,
       image: product.product_images[0],
       quantity: 1,
-      weight: selectedUnit,
+      weight: selectedUnitWeight,
     });
     navigate("/cart");
   };
@@ -116,18 +139,18 @@ const ProductCard = ({ product }: { product: any }) => {
         {/* Price */}
         <div className="flex flex-wrap items-center gap-2 mt-1">
           <span className="text-base sm:text-lg font-bold text-primary">
-            ₹{product.product_price}
+            ₹{currentPrice}
           </span>
 
-          {product.product_del_price && (
+          {product.product_del_price > currentPrice && (
             <span className="text-xs sm:text-sm line-through text-gray-400">
               ₹{product.product_del_price}
             </span>
           )}
 
-          {product.discount > 0 && (
+          {currentDiscount > 0 && (
             <span className="bg-green-600 text-white text-[10px] sm:text-xs px-2 py-0.5 rounded">
-              {product.discount}% OFF
+              {currentDiscount}% OFF
             </span>
           )}
         </div>
@@ -138,27 +161,27 @@ const ProductCard = ({ product }: { product: any }) => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setShowUnits(!showUnits);
+                if (weights.length > 1) setShowUnits(!showUnits);
               }}
               className="flex items-center gap-1 border rounded px-2 py-1 text-[11px] sm:text-xs"
             >
-              {selectedUnit}
-              <ChevronDown className="h-3 w-3" />
+              {selectedUnitWeight}
+              {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
             </button>
 
-            {showUnits && Array.isArray(product.product_weight) && (
+            {showUnits && weights.length > 1 && (
               <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow z-30 min-w-[80px]">
-                {product.product_weight.map((unit: string) => (
+                {weights.map((unit: any, idx: number) => (
                   <button
-                    key={unit}
+                    key={idx}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedUnit(unit);
+                      setSelectedUnitIdx(idx);
                       setShowUnits(false);
                     }}
                     className="block w-full px-3 py-2 text-xs text-left hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
                   >
-                    {unit}
+                    {typeof unit === "object" ? unit.weight : unit}
                   </button>
                 ))}
               </div>

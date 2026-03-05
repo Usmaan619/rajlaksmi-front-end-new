@@ -22,18 +22,24 @@ export interface Order {
 
 /* GET ALL ORDERS FOR USER */
 export const getMyOrdersAPI = async (userId: string | number) => {
-  const res = await api.get(`/orders/user/${userId}`);
+  const res = await api.get(`/checkout/orders/${userId}`);
   return res.data;
 };
 
 /* GET ORDER DETAILS */
 export const getOrderDetailsAPI = async (orderId: string | number) => {
-  const res = await api.get(`/orders/${orderId}`);
+  const res = await api.get(`/checkout/order/${orderId}`);
   return res.data;
 };
 
 /* PLACE ORDER */
 export const placeOrderAPI = async (payload: any) => {
   const res = await api.post("/checkout/order/place", payload);
+  return res.data;
+};
+
+/* TRACK ORDER */
+export const getTrackingStatusAPI = async (orderId: string | number) => {
+  const res = await api.get(`/checkout/track/${orderId}`);
   return res.data;
 };

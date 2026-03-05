@@ -12,6 +12,7 @@ import {
   CreditCard,
   Truck,
   Loader2,
+  Key,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -33,6 +34,16 @@ import {
   Address,
 } from "@/api/user.service";
 import { placeOrderAPI } from "@/api/order.service";
+import api from "@/api/axios";
+import { formatWeight } from "@/lib/utils";
+import RLJLOGOJAVIK from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+    fbq: any;
+  }
+}
 
 const CheckoutPage = () => {
   const { cart, cartTotal, clearCart } = useCart();
@@ -57,7 +68,20 @@ const CheckoutPage = () => {
     city: "",
     state: "",
     pincode: "",
+    country: "",
   });
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (user?.id) {
@@ -107,6 +131,7 @@ const CheckoutPage = () => {
           city: "",
           state: "",
           pincode: "",
+          country: "",
         });
       }
     } catch (error) {
@@ -138,27 +163,138 @@ const CheckoutPage = () => {
       return;
     }
 
-    setIsLoading(true);
     try {
-      const orderData = {
+      setIsLoading(true);
+
+      const subtotal = cart.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0,
+      );
+
+      const selectedAddress = addresses.find(
+        (addr) => addr.id === selectedAddressId,
+      );
+
+      if (!selectedAddress) {
+        toast.error("Invalid shipping address selected");
+        setIsLoading(false);
+        return;
+      }
+
+      const payload = {
+        user_total_amount: subtotal + 50, // total + shipping
+        purchase_price: cart[0]?.price || 0,
+        product_quantity: cart.reduce((acc, item) => acc + item.quantity, 0),
+        cart: cart.map(({ image, ...item }) => item),
         user_id: user.id,
-        total_amount: cartTotal + 50, // Including shipping
+        user_name: selectedAddress.full_name,
+        user_email: user.email,
+        user_mobile_num: selectedAddress.phone,
         shipping_address_id: selectedAddressId,
-        items: cart,
-        payment_method: paymentMethod,
+        payment_method: "ONLINE",
+        user_state: selectedAddress.state,
+        user_city: selectedAddress.city,
+        user_pincode: selectedAddress.pincode,
+        user_country: selectedAddress.country,
+        user_house_number: selectedAddress.address_line1,
+        user_landmark: selectedAddress.address_line2,
       };
 
-      const data = await placeOrderAPI(orderData);
-      if (data.success) {
+      console.log("Payment Payload:", payload);
+
+      const res = await api.post("/users/create-order", payload);
+
+      if (!res.data.success) {
+        toast.error(res.data.message || "Order creation failed");
+        setIsLoading(false);
+        return;
+      }
+
+      const order = res.data.razorpay_order;
+
+      if (!order) {
         toast.success("Order placed successfully!");
         clearCart();
         navigate("/orders");
-      } else {
-        toast.error(data.message || "Failed to place order");
+        setIsLoading(false);
+        return;
       }
-    } catch (error) {
-      toast.error("Failed to place order");
-    } finally {
+
+      console.log("User:--------------------------->", user);
+      const options = {
+        // key: "rzp_live_woFUpWK35AZbcn",
+        key: "rzp_test_qcl3EzwXvpMnwS",
+        amount: order.amount,
+        currency: order.currency,
+        name: "Rajlakshmi Javiks International",
+        description: "Order Payment",
+        image: RLJLOGOJAVIK,
+        order_id: order.id,
+        prefill: {
+          name: user.full_name || order.notes?.user_name,
+          email: user.email || order.notes?.user_email,
+          contact:
+            (user as any).phone ||
+            (user as any).mobile_number ||
+            order.notes?.user_mobile_num,
+        },
+        handler: async function (rzpResponse: any) {
+          try {
+            setIsLoading(true);
+
+            const validateRes = await api.post("/users/status", {
+              rzpResponse,
+              ...order,
+            });
+
+            const result = validateRes.data;
+            console.log("Payment Validation Response:", result);
+
+            if (result.success) {
+              // ===== META PURCHASE EVENT =====
+              try {
+                if (window.fbq && cart.length > 0) {
+                  const contentIds = cart.map((item) => item.id);
+                  const totalValue = subtotal;
+
+                  window.fbq("track", "Purchase", {
+                    content_ids: contentIds,
+                    content_type: "product",
+                    value: totalValue,
+                    currency: "INR",
+                  });
+                }
+              } catch (err) {
+                console.error("Purchase pixel error:", err);
+              }
+              // ===== END META EVENT =====
+
+              clearCart();
+              sessionStorage.removeItem("cart");
+
+              setIsLoading(false);
+              navigate("/orders");
+            } else {
+              navigate("/orders"); // Or payment-failed if you have one
+              setIsLoading(false);
+              clearCart();
+            }
+          } catch (e) {
+            setIsLoading(false);
+            toast.error("Payment validation failed");
+          }
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+
+      setIsLoading(false);
+    } catch (err: any) {
+      console.error("Payment Error:", err);
+      toast.error(
+        err.response?.data?.message || err.message || "Something went wrong",
+      );
       setIsLoading(false);
     }
   };
@@ -182,10 +318,10 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10 px-4 md:px-8">
+    <div className="min-h-screen bg-white py-10 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-emerald-900 mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3">
-          <CheckCircle2 className="text-emerald-500 h-6 w-6 sm:h-8 sm:w-8" />
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#01722c] mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3">
+          <CheckCircle2 className="text-[#01722c] h-6 w-6 sm:h-8 sm:w-8" />
           Secure Checkout
         </h1>
 
@@ -195,7 +331,7 @@ const CheckoutPage = () => {
             {/* Shipping Address Section */}
             <Card className="border-none shadow-md overflow-hidden">
               <CardHeader className="bg-white border-b border-emerald-50">
-                <CardTitle className="flex items-center gap-2 text-emerald-800">
+                <CardTitle className="flex items-center gap-2 text-[#01722c]">
                   <Truck className="h-5 w-5" />
                   Shipping Address
                 </CardTitle>
@@ -238,7 +374,8 @@ const CheckoutPage = () => {
                               {addr.address_line1}, {addr.address_line2}
                             </p>
                             <p className="text-sm text-slate-600 mb-2">
-                              {addr.city}, {addr.state} - {addr.pincode}
+                              {addr.city}, {addr.state}, {addr.country} -{" "}
+                              {addr.pincode}
                             </p>
                             <div className="flex items-center gap-1 text-slate-600 text-sm">
                               <Phone className="h-3 w-3" /> {addr.phone}
@@ -365,17 +502,31 @@ const CheckoutPage = () => {
                           }
                         />
                       </div>
+                      <div className="space-y-1">
+                        <Label>Country</Label>
+                        <Input
+                          required
+                          value={newAddress.country}
+                          onChange={(e) =>
+                            setNewAddress({
+                              ...newAddress,
+                              country: e.target.value,
+                            })
+                          }
+                          placeholder="Ex: India"
+                        />
+                      </div>
                     </div>
                     <div className="flex gap-3 pt-2">
                       <Button
                         type="submit"
-                        className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                        className="flex-1 bg-[#01722c] hover:bg-[#01722c]"
                       >
                         Save Address
                       </Button>
                       <Button
                         type="button"
-                        variant="ghost"
+                        variant="outline"
                         onClick={() => setIsAddingAddress(false)}
                         className="flex-1"
                       >
@@ -387,7 +538,7 @@ const CheckoutPage = () => {
               </CardContent>
             </Card>
 
-            {/* Payment Method Section */}
+            {/* Payment Method Section
             <Card className="border-none shadow-md overflow-hidden">
               <CardHeader className="bg-white border-b border-emerald-50">
                 <CardTitle className="flex items-center gap-2 text-emerald-800">
@@ -426,16 +577,16 @@ const CheckoutPage = () => {
                   </div>
                 </RadioGroup>
               </CardContent>
-            </Card>
+            </Card> */}
           </div>
 
           {/* Right Column: Order Summary */}
           <div className="space-y-6">
             <Card className="border-none shadow-md sticky top-10">
-              <CardHeader className="bg-emerald-900 rounded-t-xl py-6">
+              <CardHeader className="bg-[#01722c] rounded-t-xl py-6">
                 <CardTitle className="text-white flex justify-between items-center">
                   Order Summary
-                  <span className="text-emerald-400 text-sm font-normal">
+                  <span className="text-[#01722c] text-sm font-normal">
                     {cart.length} items
                   </span>
                 </CardTitle>
@@ -461,7 +612,7 @@ const CheckoutPage = () => {
                           </p>
                           <p className="text-xs text-slate-500">
                             Qty: {item.quantity}{" "}
-                            {item.weight && `| ${item.weight}`}
+                            {item.weight && `| ${formatWeight(item.weight)}`}
                           </p>
                         </div>
                       </div>
@@ -491,7 +642,7 @@ const CheckoutPage = () => {
                 <Button
                   onClick={handlePlaceOrder}
                   disabled={isLoading || !selectedAddressId}
-                  className="w-full h-14 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-lg rounded-xl shadow-lg transition-all active:scale-[0.98]"
+                  className="w-full h-14 bg-[#01722c]   hover:bg-[#0c9c43] text-white font-bold text-lg rounded-xl shadow-lg transition-all active:scale-[0.98]"
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
@@ -517,3 +668,7 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
+
+// Today task:-
+//  Add product and category API services and types, refactor product listing and detail pages, and update application typography to Nunito.
+//  Implement product filtering and pagination for product listings, and add detailed description fields to products.

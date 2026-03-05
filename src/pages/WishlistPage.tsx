@@ -31,7 +31,7 @@ const WishlistPage = () => {
 
   if (wishlistCount === 0) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center p-4 tekxt-center">
+      <div className="min-h-[70vh] bg-white flex flex-col items-center justify-center p-4 tekxt-center">
         <div className="bg-white p-6 rounded-full mb-6">
           <Heart className="h-16 w-16 text-red-500  fill-red-500" />
         </div>
@@ -98,7 +98,7 @@ const WishlistPage = () => {
 
               <CardContent className="p-5 bg-white">
                 <div className="flex justify-between items-start mb-3">
-                  <h3 className="font-bold text-lg text-slate-800 line-clamp-1 flex-1 pr-2">
+                  <h3 className="font-bold text-lg text-slate-800 line-clamp-1 riflex-1 pr-2">
                     {item.name}
                   </h3>
                 </div>

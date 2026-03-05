@@ -58,7 +58,13 @@ const DEFAULT_PRODUCT = {
     "Traditionally Churned",
   ],
   images: [productChana, productMaize, productNutmeg, productRice, productOil],
-  sizes: ["1kg", "250g", "500g", "5KG", "10KG"],
+  sizes: [
+    { weight: "250g", price: "" },
+    { weight: "500g", price: "" },
+    { weight: "1kg", price: "" },
+    { weight: "5kg", price: "" },
+    { weight: "10kg", price: "" },
+  ],
   selectedSize: "1kg",
   price: 240,
   originalPrice: 480,
@@ -151,6 +157,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { getProductReviews } from "@/api/feedback.service";
+import { sortWeights, getWeightValue } from "@/lib/utils";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
@@ -213,6 +220,7 @@ const ProductDetail = () => {
   const product = apiProduct
     ? {
         ...DEFAULT_PRODUCT,
+        id: apiProduct.id,
         name: apiProduct.product_name || DEFAULT_PRODUCT.name,
         subtitle: apiProduct.short_description || DEFAULT_PRODUCT.subtitle,
         description: apiProduct.full_description || DEFAULT_PRODUCT.description,
@@ -226,28 +234,69 @@ const ProductDetail = () => {
           ? apiProduct.product_images
           : DEFAULT_PRODUCT.images,
         sizes: (() => {
-          if (!apiProduct.product_weight) return DEFAULT_PRODUCT.sizes;
-          if (Array.isArray(apiProduct.product_weight))
-            return apiProduct.product_weight;
-          try {
-            const parsed = JSON.parse(apiProduct.product_weight);
-            return Array.isArray(parsed) ? parsed : DEFAULT_PRODUCT.sizes;
-          } catch {
-            return DEFAULT_PRODUCT.sizes;
+          let parsed;
+          if (!apiProduct.product_weight)
+            return DEFAULT_PRODUCT.sizes.map((s) => ({
+              weight: s.weight,
+              price: "",
+            }));
+          if (Array.isArray(apiProduct.product_weight)) {
+            parsed = apiProduct.product_weight;
+          } else {
+            try {
+              parsed = JSON.parse(apiProduct.product_weight);
+              if (!Array.isArray(parsed)) parsed = [parsed];
+            } catch {
+              if (
+                typeof apiProduct.product_weight === "string" &&
+                (apiProduct.product_weight.includes("Size") ||
+                  apiProduct.product_weight.includes("KG"))
+              ) {
+                const matches = apiProduct.product_weight.match(
+                  /\d+(\.\d+)?(kg|g|gm|ml|l|ltr)/gi,
+                );
+                parsed = matches && matches.length > 0 ? matches : [];
+              } else {
+                parsed = [apiProduct.product_weight];
+              }
+            }
           }
+          const mapped: { weight: string; price: string }[] = parsed.map(
+            (item: any) =>
+              typeof item === "object" && item !== null && "weight" in item
+                ? item
+                : { weight: String(item), price: "" },
+          );
+          return mapped.sort(
+            (a, b) => getWeightValue(a.weight) - getWeightValue(b.weight),
+          );
         })(),
         price: Number(apiProduct.product_price) || DEFAULT_PRODUCT.price,
         originalPrice:
           Number(apiProduct.product_del_price) || DEFAULT_PRODUCT.originalPrice,
         discount: Number(apiProduct.discount) || DEFAULT_PRODUCT.discount,
         category: apiProduct.category_name || DEFAULT_PRODUCT.category,
+        categoryId: apiProduct.category_id,
         rating: dynamicRating,
         reviews: dynamicReviewCount,
+        stock: apiProduct.product_stock ?? 0,
+        isFeatured: !!apiProduct.is_featured,
+        bestSeller: !!apiProduct.best_saller,
+        createdAt: apiProduct.created_at,
+        updatedAt: apiProduct.updated_at,
+        purchasePrice: apiProduct.product_purchase_price, // internal but mapping it
       }
     : {
         ...DEFAULT_PRODUCT,
+        id: "",
+        categoryId: "",
+        createdAt: "",
+        updatedAt: "",
         rating: dynamicRating,
         reviews: dynamicReviewCount,
+        stock: 0,
+        isFeatured: false,
+        bestSeller: false,
       };
 
   const handleShare = async () => {
@@ -275,7 +324,26 @@ const ProductDetail = () => {
   };
 
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState("1kg");
+  const [selectedSizeIdx, setSelectedSizeIdx] = useState(0);
+
+  // sizes is always {weight, price}[] after our mapping
+  const sizesArr = product.sizes as { weight: string; price: string }[];
+  const selectedSizeInfo: { weight: string; price: string } = sizesArr[
+    selectedSizeIdx
+  ] || { weight: "1kg", price: "" };
+
+  const currentPrice = selectedSizeInfo.price
+    ? Number(selectedSizeInfo.price)
+    : product.price;
+
+  let currentDiscount = product.discount;
+  if (selectedSizeInfo.price && product.originalPrice > currentPrice) {
+    currentDiscount = Math.round(
+      ((product.originalPrice - currentPrice) / product.originalPrice) * 100,
+    );
+  } else if (currentPrice >= product.originalPrice) {
+    currentDiscount = 0;
+  }
   const isFavorite = isInWishlist(`product-detail-${product.name}`);
   const [copiedCode, setCopiedCode] = useState<number | null>(null);
   const [reviewPage, setReviewPage] = useState(0);
@@ -283,12 +351,12 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     addToCart({
-      id: `product-${product.name}-${selectedSize}`,
+      id: `product-${product.name}-${selectedSizeInfo.weight}`,
       name: product.name,
-      price: product.price,
+      price: currentPrice,
       image: product.images[0],
       quantity: 1,
-      weight: selectedSize,
+      weight: selectedSizeInfo.weight,
     });
     toast.success(`${product.name} added to cart!`);
   };
@@ -437,6 +505,18 @@ const ProductDetail = () => {
 
           {/* Product Info */}
           <div className="space-y-5">
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              {product.bestSeller && (
+                <Badge className="bg-golden hover:bg-golden/90 text-white border-none py-1 px-3">
+                  Best Seller
+                </Badge>
+              )}
+              {product.isFeatured && (
+                <Badge className="bg-primary hover:bg-primary/90 text-white border-none py-1 px-3">
+                  Featured
+                </Badge>
+              )}
+            </div>
             <h1 className="font-heading text-2xl lg:text-3xl font-bold text-foreground">
               {product.name}
             </h1>
@@ -469,7 +549,9 @@ const ProductDetail = () => {
                       image: product.images[0],
                       originalPrice: product.originalPrice,
                       discount: product.discount,
-                      weightOptions: product.sizes,
+                      weightOptions: product.sizes.map((s: any) =>
+                        typeof s === "object" ? s.weight : String(s),
+                      ),
                     });
                     toast.success(
                       isFavorite
@@ -544,17 +626,17 @@ const ProductDetail = () => {
                 Size
               </h3>
               <div className="flex flex-wrap gap-2">
-                {product.sizes?.map((size: string) => (
+                {sizesArr.map((sizeObj, idx) => (
                   <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
+                    key={idx}
+                    onClick={() => setSelectedSizeIdx(idx)}
                     className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
-                      selectedSize === size
+                      selectedSizeIdx === idx
                         ? "bg-primary text-primary-foreground border-primary"
                         : "border-border text-foreground hover:border-primary"
                     }`}
                   >
-                    {size}
+                    {sizeObj.weight}
                   </button>
                 ))}
               </div>
@@ -563,22 +645,34 @@ const ProductDetail = () => {
             {/* Availability */}
             <p className="text-sm">
               Availability:{" "}
-              <span className="text-primary font-semibold">
-                {product.availability}
+              <span
+                className={`font-semibold ${
+                  product.stock > 0 ? "text-primary" : "text-destructive"
+                }`}
+              >
+                {product.stock > 0
+                  ? `In Stock (${product.stock})`
+                  : "Out of Stock"}
               </span>
             </p>
 
             {/* Price */}
             <div className="flex items-center gap-3 flex-wrap">
               <span className="text-3xl font-bold text-foreground">
-                ₹{product.price.toFixed(2)}
+                ₹{currentPrice.toFixed(2)}
               </span>
-              <span className="text-lg text-muted-foreground line-through">
-                ₹{product.originalPrice.toFixed(2)}
-              </span>
-              <Badge className="bg-[#DFF1E5] text-[#29A44F] text-sm px-4 py-2 rounded-md">
-                Save {product.discount}%
-              </Badge>
+              {product.originalPrice > currentPrice && (
+                <>
+                  <span className="text-lg text-muted-foreground line-through">
+                    ₹{product.originalPrice.toFixed(2)}
+                  </span>
+                  {currentDiscount > 0 && (
+                    <Badge className="bg-[#DFF1E5] text-[#29A44F] text-sm px-4 py-2 rounded-md">
+                      Save {currentDiscount}%
+                    </Badge>
+                  )}
+                </>
+              )}
             </div>
 
             {/* Action Buttons */}
@@ -586,7 +680,7 @@ const ProductDetail = () => {
               <Button
                 variant="outline"
                 onClick={handleAddToCart}
-                className="flex-1 h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-lg"
+                className="flex-1 bg-white h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-lg"
               >
                 Add to Cart
               </Button>
@@ -701,6 +795,50 @@ const ProductDetail = () => {
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
                     {product.ingredients}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-4" className="border-none">
+                  <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                    <span className="flex-1">Additional Information</span>
+                    <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                      <ChevronDown className="h-5 w-5" />
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm pb-5">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          Product ID
+                        </p>
+                        <p>{product.id}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          Category ID
+                        </p>
+                        <p>{product.categoryId}</p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          Created At
+                        </p>
+                        <p>
+                          {product.createdAt
+                            ? new Date(product.createdAt).toLocaleDateString()
+                            : "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          Updated At
+                        </p>
+                        <p>
+                          {product.updatedAt
+                            ? new Date(product.updatedAt).toLocaleDateString()
+                            : "N/A"}
+                        </p>
+                      </div>
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>

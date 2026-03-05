@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getCategories, Category } from "@/api/category.service";
 import { getProducts } from "@/api/product.service";
@@ -15,11 +15,34 @@ const ProductCard = ({ product }: { product: any }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isFavorite = isInWishlist(`product-category-${product.id}`);
-  const [selectedUnit, setSelectedUnit] = useState(
-    Array.isArray(product.product_weight)
-      ? product.product_weight[0]
-      : product.product_weight,
-  );
+  const weights = Array.isArray(product.product_weight)
+    ? product.product_weight
+    : product.product_weight
+      ? [product.product_weight]
+      : [];
+  const [selectedUnitIdx, setSelectedUnitIdx] = useState(0);
+  const selectedUnit = weights[selectedUnitIdx];
+  const selectedUnitWeight =
+    typeof selectedUnit === "object" ? selectedUnit.weight : selectedUnit;
+  const currentPrice =
+    typeof selectedUnit === "object" && selectedUnit.price
+      ? Number(selectedUnit.price)
+      : product.product_price;
+
+  let currentDiscount = product.discount || 0;
+  if (
+    typeof selectedUnit === "object" &&
+    selectedUnit.price &&
+    product.product_del_price > currentPrice
+  ) {
+    currentDiscount = Math.round(
+      ((product.product_del_price - currentPrice) / product.product_del_price) *
+        100,
+    );
+  } else if (currentPrice >= product.product_del_price) {
+    currentDiscount = 0;
+  }
+
   const [showUnits, setShowUnits] = useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -27,10 +50,10 @@ const ProductCard = ({ product }: { product: any }) => {
     addToCart({
       id: `product-cat-${product.id}`,
       name: product.product_name,
-      price: product.product_price,
+      price: currentPrice,
       image: product.product_images[0],
       quantity: 1,
-      weight: selectedUnit,
+      weight: selectedUnitWeight,
     });
     toast.success(`${product.product_name} added to cart!`);
   };
@@ -40,10 +63,10 @@ const ProductCard = ({ product }: { product: any }) => {
     addToCart({
       id: `product-cat-${product.id}`,
       name: product.product_name,
-      price: product.product_price,
+      price: currentPrice,
       image: product.product_images[0],
       quantity: 1,
-      weight: selectedUnit,
+      weight: selectedUnitWeight,
     });
     navigate("/cart");
   };
@@ -95,16 +118,16 @@ const ProductCard = ({ product }: { product: any }) => {
         </h3>
         <div className="flex flex-wrap items-center gap-2 mt-1">
           <span className="text-base sm:text-lg font-bold text-primary">
-            ₹{product.product_price}
+            ₹{currentPrice}
           </span>
-          {product.product_del_price && (
+          {product.product_del_price > currentPrice && (
             <span className="text-xs sm:text-sm line-through text-gray-400">
               ₹{product.product_del_price}
             </span>
           )}
-          {product.discount > 0 && (
+          {currentDiscount > 0 && (
             <span className="bg-green-600 text-white text-[10px] sm:text-xs px-2 py-0.5 rounded">
-              {product.discount}% OFF
+              {currentDiscount}% OFF
             </span>
           )}
         </div>
@@ -113,26 +136,26 @@ const ProductCard = ({ product }: { product: any }) => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setShowUnits(!showUnits);
+                if (weights.length > 1) setShowUnits(!showUnits);
               }}
               className="flex items-center gap-1 border rounded px-2 py-1 text-[11px] sm:text-xs"
             >
-              {selectedUnit}
-              <ChevronDown className="h-3 w-3" />
+              {selectedUnitWeight}
+              {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
             </button>
-            {showUnits && Array.isArray(product.product_weight) && (
+            {showUnits && weights.length > 1 && (
               <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow z-30 min-w-[80px]">
-                {product.product_weight.map((unit: string) => (
+                {weights.map((unit: any, idx: number) => (
                   <button
-                    key={unit}
+                    key={idx}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedUnit(unit);
+                      setSelectedUnitIdx(idx);
                       setShowUnits(false);
                     }}
                     className="block w-full px-3 py-2 text-xs text-left hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
                   >
-                    {unit}
+                    {typeof unit === "object" ? unit.weight : unit}
                   </button>
                 ))}
               </div>
@@ -191,13 +214,39 @@ const CategoryRow = ({
 }) => {
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (!isLoading && products.length > 0) {
+      interval = setInterval(() => {
+        if (scrollRef.current) {
+          const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+
+          if (scrollLeft + clientWidth >= scrollWidth - 10) {
+            // Scroll back to start
+            scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+          } else {
+            // Scroll right by about half the container width (matches 1 card on mobile)
+            scrollRef.current.scrollBy({
+              left: clientWidth / 2,
+              behavior: "smooth",
+            });
+          }
+        }
+      }, 3000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isLoading, products.length]);
 
   useEffect(() => {
     const fetchCategoryProducts = async () => {
       try {
         const res = await getProducts({
           category: category.category_name,
-          limit: 4,
+          limit: 5,
         });
         if (res.success) {
           setProducts(res.data || res.products || []);
@@ -219,13 +268,13 @@ const CategoryRow = ({
   const isReversed = index % 2 !== 0;
 
   return (
-    <div className="mb-20 last:mb-0">
+    <div className="mb-12 last:mb-0">
       <div
         className={`flex flex-col ${isReversed ? "lg:flex-row-reverse" : "lg:flex-row"} gap-8 lg:gap-16 items-stretch`}
       >
         {/* Category Info Sidebar */}
         <div className="w-full lg:w-1/4">
-          <div className="relative h-full min-h-[250px] sm:min-h-[300px] lg:min-h-full group overflow-hidden rounded-[32px] sm:rounded-[40px] border border-gray-100 bg-[#F9FBF9] p-6 sm:p-8 flex flex-col justify-end shadow-sm hover:shadow-md transition-all duration-500">
+          <div className="relative h-full min-h-[250px] sm:min-h-[300px] lg:min-h-full group overflow-hidden rounded-[32px] sm:rounded-[40px] border border-gray-100 bg-[#F9FBF9] p-5 sm:p-6 flex flex-col justify-end shadow-sm hover:shadow-md transition-all duration-500">
             {/* Background Image / Icon */}
             <div className="absolute top-0 right-0 p-4 sm:p-6 opacity-20 group-hover:opacity-30 transition-opacity">
               <img
@@ -240,7 +289,7 @@ const CategoryRow = ({
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#01722C] tracking-tight mb-3 sm:mb-4 leading-tight">
                 {category.category_name}
               </h2>
-              <p className="text-gray-500 text-xs sm:text-sm mb-6 sm:mb-8 leading-relaxed line-clamp-2 sm:line-clamp-3">
+              <p className="text-gray-500 text-xs sm:text-sm mb-4 sm:mb-6 leading-relaxed line-clamp-2 sm:line-clamp-3">
                 Experience the pure essence of{" "}
                 {category.category_name.toLowerCase()}, harvested with
                 traditional care for your modern wellness.
@@ -261,18 +310,21 @@ const CategoryRow = ({
 
         {/* Products Grid */}
         <div className="w-full lg:w-3/4">
-          <div className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-6 overflow-x-auto lg:overflow-visible pb-4 sm:pb-6 scrollbar-custom snap-x snap-mandatory">
+          <div
+            ref={scrollRef}
+            className="flex lg:grid lg:grid-cols-5 gap-1 sm:gap-2 overflow-x-auto lg:overflow-visible pb-4 sm:pb-6 scrollbar-custom snap-x snap-mandatory"
+          >
             {isLoading
-              ? Array.from({ length: 4 }).map((_, i) => (
+              ? Array.from({ length: 5 }).map((_, i) => (
                   <div
                     key={i}
-                    className="min-w-[240px] sm:min-w-[280px] lg:min-w-0 animate-pulse bg-gray-50 h-[380px] sm:h-[448px] rounded-2xl border border-gray-100"
+                    className="snap-start min-w-[calc(50%-2px)] sm:min-w-[calc(33.33%-4px)] lg:min-w-0 animate-pulse bg-gray-50 h-[380px] sm:h-[448px] rounded-2xl border border-gray-100"
                   />
                 ))
               : products.map((product) => (
                   <div
                     key={product.id}
-                    className="snap-start min-w-[260px] sm:min-w-[280px] lg:min-w-0"
+                    className="snap-start min-w-[calc(50%-2px)] sm:min-w-[calc(33.33%-4px)] lg:min-w-0 w-full"
                   >
                     <ProductCard product={product} />
                   </div>
@@ -305,7 +357,7 @@ const CategoryProductsSection = () => {
   }, []);
 
   return (
-    <section className="bg-white py-16 sm:py-24 relative">
+    <section className="bg-white py-10 sm:py-14 relative">
       {/* Decorative floral elements could be added here if needed */}
       <div className="px-4 sm:px-6 md:px-8 lg:px-12 max-w-full mx-auto">
         {isLoading && categories.length === 0 ? (
@@ -313,8 +365,8 @@ const CategoryProductsSection = () => {
             {Array.from({ length: 2 }).map((_, i) => (
               <div key={i} className="flex flex-col lg:flex-row gap-10">
                 <Skeleton className="w-full lg:w-1/4 h-[450px] rounded-[40px]" />
-                <div className="w-full lg:w-3/4 grid grid-cols-4 gap-6">
-                  {Array.from({ length: 4 }).map((_, j) => (
+                <div className="w-full lg:w-3/4 grid grid-cols-5 gap-6">
+                  {Array.from({ length: 5 }).map((_, j) => (
                     <Skeleton key={j} className="h-[450px] rounded-2xl" />
                   ))}
                 </div>
