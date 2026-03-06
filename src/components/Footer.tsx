@@ -139,7 +139,7 @@ const Footer = () => {
                   <Phone className="w-5 h-5 text-yellow-400" />
                   <div>
                     <p className="font-medium">Call us at</p>
-                    <p className="text-white/80">+91-8769115905</p>
+                    <p className="text-white/80">+91-8769215905, 8769115905</p>
                   </div>
                 </li>
 
@@ -148,7 +148,7 @@ const Footer = () => {
                   <div>
                     <p className="font-medium ">Email us at</p>
                     <p className="text-white/80 ">
-                      rajlaxmiorganicfoods@gmail.com
+                      contact@rajlakshmijaviks.com
                     </p>
                   </div>
                 </li>
@@ -158,7 +158,8 @@ const Footer = () => {
                   <div>
                     <p className="font-medium">Our Address</p>
                     <p className="text-white/80">
-                      11, Manish Bagh Colony, Indore, MP
+                      11, Manish Bag Colony, Near Vikram Tower, Sapna Sangeeta,
+                      Indore - 452001 M. P. INDIA
                     </p>
                   </div>
                 </li>
@@ -198,22 +199,22 @@ const Footer = () => {
                   <h4 className="text-xl font-semibold mb-6">Categories</h4>
                   <ul className="space-y-3 text-sm text-white/80">
                     <li>
-                      <Link to="/category/ghee-oil">Ghee & Oil</Link>
+                      <Link to="/categories?category=OILS%20%26%20GHEE">Ghee & Oil</Link>
                     </li>
                     <li>
-                      <Link to="/category/dry-fruits">Dry Fruits</Link>
+                      <Link to="/categories?category=DRY%20FRUITS">Dry Fruits</Link>
                     </li>
                     <li>
-                      <Link to="/category/pulses-grains">Pulses & Grains</Link>
+                      <Link to="/categories?category=PULSES">Pulses & Grains</Link>
                     </li>
                     <li>
-                      <Link to="/category/seeds">Seeds</Link>
+                      <Link to="/categories?category=SEEDS">Seeds</Link>
                     </li>
                     <li>
-                      <Link to="/category/spices">Spices</Link>
+                      <Link to="/categories?category=MASALA">Spices</Link>
                     </li>
                     <li>
-                      <Link to="/category/flours">Spices & Flours</Link>
+                      <Link to="/categories?category=MASALA">Spices & Flours</Link>
                     </li>
                   </ul>
                 </div>

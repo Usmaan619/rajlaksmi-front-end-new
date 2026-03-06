@@ -105,7 +105,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-related-${product.id}`,
+      id: `product-${product.id}`,
       name: pName,
       price: currentPrice,
       image: productImage,
@@ -118,7 +118,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-related-${product.id}`,
+      id: `product-${product.id}`,
       name: pName,
       price: currentPrice,
       image: productImage,
@@ -352,7 +352,7 @@ const RelatedProduct = ({
   }
 
   return (
-    <section className="py-12 lg:py-16 bg-gradient-to-b from-[#EBF4EE] to-white relative overflow-hidden mb-5">
+    <section className="py-12 lg:py-16 bg-gradient-to-br from-green-50 to-white relative overflow-hidden mb-5">
       <div className="mx-auto px-10 relative z-10">
         <h2 className="text-3xl font-bold text-[#01722C] mb-6">
           Related Products

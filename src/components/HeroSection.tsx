@@ -87,13 +87,13 @@ const HeroSection: React.FC = () => {
 
   if (loading) {
     return (
-      <section className="w-full aspect-[16/9] sm:aspect-[16/7] md:aspect-[1920/650] bg-[#F9F9F9] animate-pulse" />
+      <section className="w-full aspect-[16/9] sm:aspect-[16/6] md:aspect-[1920/550] bg-[#F9F9F9] animate-pulse" />
     );
   }
 
   return (
     <section className="relative w-full bg-white">
-      <div className="relative overflow-hidden w-full h-[220px] sm:h-[400px] md:h-[550px] lg:h-[650px]">
+      <div className="relative overflow-hidden w-full h-[220px] sm:h-[350px] md:h-[450px] lg:h-[550px]">
         <Carousel
           showThumbs={false}
           showStatus={false}
@@ -126,7 +126,7 @@ const HeroSection: React.FC = () => {
           {slides.map((item, index) => (
             <div
               key={index}
-              className="w-full h-[220px] sm:h-[400px] md:h-[550px] lg:h-[650px] relative overflow-hidden"
+              className="w-full h-[220px] sm:h-[350px] md:h-[450px] lg:h-[550px] relative overflow-hidden"
             >
               <img
                 src={item.desktop}

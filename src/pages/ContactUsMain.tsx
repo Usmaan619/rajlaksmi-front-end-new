@@ -94,14 +94,14 @@ const ContactMainPage = () => {
                 {/* Phone */}
                 <div className="flex items-start gap-3">
                   <Phone className="h-4 w-4 text-primary" />
-                  <a href="tel:+918769115905">+91-87691 15905</a>
+                  <a href="tel:+918769215905"> +91-8769215905, 8769115905</a>
                 </div>
 
                 {/* Email */}
                 <div className="flex items-start gap-3">
                   <Mail className="h-4 w-4 text-primary" />
-                  <a href="mailto:rajlaxmiorganicfoods@gmail.com">
-                    rajlaxmiorganicfoods@gmail.com
+                  <a href="mailto:contact@rajlakshmijaviks.com">
+                    contact@rajlakshmijaviks.com
                   </a>
                 </div>
 

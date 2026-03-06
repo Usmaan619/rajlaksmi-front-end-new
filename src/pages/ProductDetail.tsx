@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "@/api/axios";
 import {
   ArrowLeft,
@@ -13,13 +13,13 @@ import {
   Award,
   Leaf,
   ChevronDown,
+  Minus,
+  Plus,
 } from "lucide-react";
 import { Rating } from "react-simple-star-rating";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import productChana from "@/assets/product-chana.jpg";
 import productMaize from "@/assets/product-maize.jpg";
 import productNutmeg from "@/assets/product-nutmeg.jpg";
@@ -31,11 +31,9 @@ import paymentLogo2 from "@/assets/product-detail-visa/rupay.webp";
 import paymentLogo3 from "@/assets/product-detail-visa/master-card.webp";
 import paymentLogo4 from "@/assets/product-detail-visa/Bhim.webp";
 import paymentLogo5 from "@/assets/product-detail-visa/razor-pay.webp";
-import ReviewSection from "@/components/ReviewSection";
 import RelatedProduct from "@/components/RelatedProduct";
 import WriteReviewModal from "@/components/WriteReviewModal";
 import BentoGrid from "@/components/BentoGrid";
-import OurProductsSection from "@/components/OurProductsSection";
 import FAQSection from "@/components/FAQSection";
 import {
   Accordion,
@@ -161,6 +159,7 @@ import { sortWeights, getWeightValue } from "@/lib/utils";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { id } = useParams();
   const [apiProduct, setApiProduct] = useState<any>(null);
@@ -348,17 +347,43 @@ const ProductDetail = () => {
   const [copiedCode, setCopiedCode] = useState<number | null>(null);
   const [reviewPage, setReviewPage] = useState(0);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+
+  const handleDecreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const handleIncreaseQuantity = () => {
+    const stockLimit = product.stock > 0 ? product.stock : 99;
+    if (quantity < stockLimit) {
+      setQuantity(quantity + 1);
+    }
+  };
 
   const handleAddToCart = () => {
     addToCart({
-      id: `product-${product.name}-${selectedSizeInfo.weight}`,
+      id: `product-${product.id}`,
       name: product.name,
       price: currentPrice,
       image: product.images[0],
-      quantity: 1,
+      quantity: quantity,
       weight: selectedSizeInfo.weight,
     });
     toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleBuyNow = () => {
+    addToCart({
+      id: `product-${product.id}`,
+      name: product.name,
+      price: currentPrice,
+      image: product.images[0],
+      quantity: quantity,
+      weight: selectedSizeInfo.weight,
+    });
+    navigate("/cart");
   };
 
   const reviewsPerPage = 3;
@@ -659,12 +684,12 @@ const ProductDetail = () => {
             {/* Price */}
             <div className="flex items-center gap-3 flex-wrap">
               <span className="text-3xl font-bold text-foreground">
-                ₹{currentPrice.toFixed(2)}
+                ₹{(currentPrice * quantity).toFixed(2)}
               </span>
               {product.originalPrice > currentPrice && (
                 <>
                   <span className="text-lg text-muted-foreground line-through">
-                    ₹{product.originalPrice.toFixed(2)}
+                    ₹{(product.originalPrice * quantity).toFixed(2)}
                   </span>
                   {currentDiscount > 0 && (
                     <Badge className="bg-[#DFF1E5] text-[#29A44F] text-sm px-4 py-2 rounded-md">
@@ -675,16 +700,47 @@ const ProductDetail = () => {
               )}
             </div>
 
+            {/* Quantity Selector */}
+            <div className="flex flex-col gap-3">
+              <h3 className="text-sm font-semibold text-foreground">
+                Quantity
+              </h3>
+              <div className="flex items-center w-32 border border-border rounded-lg overflow-hidden h-12">
+                <button
+                  onClick={handleDecreaseQuantity}
+                  className="flex-1 flex items-center justify-center hover:bg-muted transition-colors border-r border-border h-full"
+                  disabled={quantity <= 1}
+                >
+                  <Minus className="h-4 w-4 text-foreground" />
+                </button>
+                <div className="flex-1 flex items-center justify-center font-semibold text-foreground">
+                  {quantity}
+                </div>
+                <button
+                  onClick={handleIncreaseQuantity}
+                  className="flex-1 flex items-center justify-center hover:bg-muted transition-colors border-l border-border h-full"
+                  disabled={quantity >= (product.stock > 0 ? product.stock : 99)}
+                >
+                  <Plus className="h-4 w-4 text-foreground" />
+                </button>
+              </div>
+            </div>
+
             {/* Action Buttons */}
             <div className="flex gap-3">
               <Button
                 variant="outline"
                 onClick={handleAddToCart}
-                className="flex-1 bg-white h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-lg"
+                disabled={product.stock <= 0}
+                className="flex-1 bg-white h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Add to Cart
               </Button>
-              <Button className="flex-1 h-12 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg">
+              <Button 
+                onClick={handleBuyNow}
+                disabled={product.stock <= 0}
+                className="flex-1 h-12 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 Buy it now
               </Button>
             </div>
@@ -946,7 +1002,7 @@ const ProductDetail = () => {
             <Button
               variant="outline"
               onClick={() => setIsReviewModalOpen(true)}
-              className="rounded-md border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8"
+              className="bg-white rounded-md border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8"
             >
               Write a review
             </Button>

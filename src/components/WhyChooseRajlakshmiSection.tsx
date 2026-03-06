@@ -26,9 +26,9 @@ const WhyChooseRajlakshmiSection = () => {
       />
 
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left - Overlapping Images */}
-          <div className="relative w-full max-w-xl mx-auto h-[320px] sm:h-[380px] lg:h-[420px]">
+          <div className="relative w-full max-w-md md:max-w-full lg:max-w-xl mx-auto h-[280px] sm:h-[350px] lg:h-[420px]">
             {/* Team image - back */}
             <div className="absolute top-0 right-0 w-[67%]">
               <img
@@ -49,19 +49,19 @@ const WhyChooseRajlakshmiSection = () => {
           </div>
 
           {/* Right - Content */}
-          <div className="space-y-5 text-center lg:text-left">
+          <div className="space-y-5 text-center md:text-left">
             <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-primary">
               Why Choose Rajlakshmi Javiks?
             </h2>
 
-            <p className="text-foreground/80 text-sm sm:text-base leading-relaxed max-w-xl mx-auto lg:mx-0">
+            <p className="text-foreground/80 text-sm sm:text-base leading-relaxed max-w-xl mx-auto md:mx-0">
               We believe food should be pure, natural, and safe. Our products
               are carefully grown without chemicals, ethically sourced from
               trusted farmers, and tested to meet high-quality standards.
             </p>
 
             <ul className="space-y-2 text-foreground/80 text-sm sm:text-base">
-              <li className="flex justify-center lg:justify-start items-center gap-2">
+              <li className="flex justify-center md:justify-start items-center gap-2">
                 <span className="text-primary">•</span>
                 Sustainably farmed
               </li>

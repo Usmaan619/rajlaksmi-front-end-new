@@ -80,7 +80,7 @@ const B2BMainPage = () => {
               onClick={scrollToForm}
               className="bg-[#01722C] hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
             >
-              Get a Free Quote
+              Get in touch
             </button>
           </div>
         </section>
@@ -139,7 +139,7 @@ const B2BMainPage = () => {
                     },
                     {
                       icon: <Users size={24} color="#29A44F" />,
-                      title: "24/7 Personal Care",
+                      title: "24/7 Customer Support/ Care",
                       desc: "Account manager for every partner",
                     },
                     {
@@ -166,7 +166,7 @@ const B2BMainPage = () => {
                   onClick={scrollToForm}
                   className="bg-[#01722C] hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl mt-6"
                 >
-                  Get a Free Quote
+                  Get in touch
                 </button>
               </div>
             </div>
@@ -471,7 +471,7 @@ const B2BMainPage = () => {
                   </div>
                   <div>
                     <h3 className="font-bold text-gray-800 mb-2">Phone</h3>
-                    <p className="text-gray-600">+91 8769115905</p>
+                    <p className="text-gray-600">+91-8769215905, 8769115905 </p>
                   </div>
                 </div>
 
@@ -482,7 +482,7 @@ const B2BMainPage = () => {
                   <div>
                     <h3 className="font-bold text-gray-800 mb-2">Email</h3>
                     <p className="text-gray-600">
-                      rajlaxmiorganicfoods@gmail.com
+                      contact@rajlakshmijaviks.com
                     </p>
                   </div>
                 </div>
@@ -521,8 +521,8 @@ const B2BMainPage = () => {
                         Corporate Office
                       </h4>
                       <p className="text-gray-600 text-sm leading-relaxed">
-                        11 Manish Baag, Sapna Sangeeta Road, Indore, Madhya
-                        Pradesh 452001
+                        11, Manish Bag Colony, Near Vikram Tower, Sapna
+                        Sangeeta, Indore - 452001 M. P. INDIA
                       </p>
                     </div>
                   </div>

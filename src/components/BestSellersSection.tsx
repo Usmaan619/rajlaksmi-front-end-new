@@ -46,7 +46,7 @@ const ProductCard = ({ product }: { product: any }) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-best-${product.id}`,
+      id: `product-${product.id}`,
       name: product.product_name,
       price: currentPrice,
       image: product.product_images[0],
@@ -59,7 +59,7 @@ const ProductCard = ({ product }: { product: any }) => {
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-best-${product.id}`,
+      id: `product-${product.id}`,
       name: product.product_name,
       price: currentPrice,
       image: product.product_images[0],
@@ -74,9 +74,7 @@ const ProductCard = ({ product }: { product: any }) => {
       onClick={() => navigate(`/product/${product.id}`)}
       className="
         w-full
-        lg:w-[290px]
         h-auto
-        lg:h-[448px]
         p-3 sm:p-4
         rounded-2xl
         border
@@ -252,17 +250,17 @@ const BestSellersSection = () => {
           className="
             grid
             grid-cols-2
-            sm:grid-cols-3
-            md:grid-cols-4
+            md:grid-cols-3
+            lg:grid-cols-4
+            xl:grid-cols-5
             gap-4 sm:gap-6
-            lg:[grid-template-columns:repeat(auto-fit,290px)]
           "
         >
           {isLoading
-            ? Array.from({ length: 4 }).map((_, i) => (
+            ? Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
-                  className="w-full lg:w-[290px] h-[448px] p-4 bg-muted animate-pulse rounded-2xl"
+                  className="w-full aspect-[2/3] p-4 bg-muted animate-pulse rounded-2xl"
                 />
               ))
             : products.map((product) => (

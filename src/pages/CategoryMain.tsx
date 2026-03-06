@@ -172,7 +172,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-cat-${product.id}`,
+      id: `product-${product.id}`,
       name: pName,
       price: currentPrice,
       image: productImage || producttest,
@@ -185,7 +185,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-cat-${product.id}`,
+      id: `product-${product.id}`,
       name: pName,
       price: currentPrice,
       image: productImage || producttest,
@@ -379,8 +379,6 @@ const CategoryMain = () => {
           fetched.sort((a, b) => (b.discount || 0) - (a.discount || 0));
         }
 
-        // Add 3 second artificial delay for visual skeleton impact as requested
-        await new Promise((resolve) => setTimeout(resolve, 2000));
         setProducts(fetched);
       } else {
         setError("Failed to fetch products");
@@ -520,7 +518,7 @@ const CategoryMain = () => {
 
           {/* Pagination */}
           {!loading && totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-12">
+            <div className="flex items-center justify-center gap-2 mt-12 py-2">
               <button
                 onClick={() => {
                   setCurrentPage((p) => Math.max(1, p - 1));

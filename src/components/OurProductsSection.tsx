@@ -70,7 +70,7 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
   return (
     <div
       onClick={() => navigate(`/product/${product.id}`)}
-      className="relative w-[260px] lg:w-[300px] h-[440px] lg:h-[490px] rounded-3xl overflow-hidden shadow-lg group cursor-pointer"
+      className="relative w-full h-[440px] lg:h-[490px] rounded-3xl overflow-hidden shadow-lg group cursor-pointer"
     >
       {/* Background Video */}
       <div
@@ -191,9 +191,9 @@ const OurProductsSection = () => {
         {/* Products Grid */}
         <div
           className="flex gap-4 overflow-x-auto pb-4 px-1 snap-x snap-mandatory
-             lg:grid lg:grid-cols-5
-             lg:gap-6 lg:px-0
-             lg:overflow-visible lg:justify-items-center
+             md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5
+             md:gap-6 md:px-0
+             md:overflow-visible md:justify-items-center
              mb-12"
         >
           {products.map((product) => (

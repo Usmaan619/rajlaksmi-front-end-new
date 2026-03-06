@@ -48,7 +48,7 @@ const ProductCard = ({ product }: { product: any }) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-cat-${product.id}`,
+      id: `product-${product.id}`,
       name: product.product_name,
       price: currentPrice,
       image: product.product_images[0],
@@ -61,7 +61,7 @@ const ProductCard = ({ product }: { product: any }) => {
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-cat-${product.id}`,
+      id: `product-${product.id}`,
       name: product.product_name,
       price: currentPrice,
       image: product.product_images[0],
@@ -74,7 +74,7 @@ const ProductCard = ({ product }: { product: any }) => {
   return (
     <Card
       onClick={() => navigate(`/product/${product.id}`)}
-      className="w-full lg:w-[280px] h-auto lg:h-[448px] p-3 sm:p-4 rounded-2xl border bg-popover flex flex-col gap-2 overflow-visible cursor-pointer group hover:shadow-lg transition-shadow"
+      className="w-full h-auto p-3 sm:p-4 rounded-2xl border bg-popover flex flex-col gap-2 overflow-visible cursor-pointer group hover:shadow-lg transition-shadow"
     >
       <div className="relative">
         <div className="aspect-square rounded-xl overflow-hidden bg-muted">
@@ -270,10 +270,10 @@ const CategoryRow = ({
   return (
     <div className="mb-12 last:mb-0">
       <div
-        className={`flex flex-col ${isReversed ? "lg:flex-row-reverse" : "lg:flex-row"} gap-8 lg:gap-16 items-stretch`}
+        className={`flex flex-col ${isReversed ? "md:flex-row-reverse" : "md:flex-row"} gap-8 lg:gap-16 items-stretch`}
       >
         {/* Category Info Sidebar */}
-        <div className="w-full lg:w-1/4">
+        <div className="w-full md:w-1/3 lg:w-1/4">
           <div className="relative h-full min-h-[250px] sm:min-h-[300px] lg:min-h-full group overflow-hidden rounded-[32px] sm:rounded-[40px] border border-gray-100 bg-[#F9FBF9] p-5 sm:p-6 flex flex-col justify-end shadow-sm hover:shadow-md transition-all duration-500">
             {/* Background Image / Icon */}
             <div className="absolute top-0 right-0 p-4 sm:p-6 opacity-20 group-hover:opacity-30 transition-opacity">
@@ -309,10 +309,10 @@ const CategoryRow = ({
         </div>
 
         {/* Products Grid */}
-        <div className="w-full lg:w-3/4">
+        <div className="w-full md:w-2/3 lg:w-3/4">
           <div
             ref={scrollRef}
-            className="flex lg:grid lg:grid-cols-5 gap-1 sm:gap-2 overflow-x-auto lg:overflow-visible pb-4 sm:pb-6 scrollbar-custom snap-x snap-mandatory"
+            className="flex md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-1 sm:gap-2 overflow-x-auto md:overflow-visible pb-4 sm:pb-6 scrollbar-custom snap-x snap-mandatory"
           >
             {isLoading
               ? Array.from({ length: 5 }).map((_, i) => (
@@ -324,7 +324,7 @@ const CategoryRow = ({
               : products.map((product) => (
                   <div
                     key={product.id}
-                    className="snap-start min-w-[calc(50%-2px)] sm:min-w-[calc(33.33%-4px)] lg:min-w-0 w-full"
+                    className="snap-start min-w-[calc(60%-2px)] sm:min-w-[calc(50%-4px)] md:min-w-0 w-full"
                   >
                     <ProductCard product={product} />
                   </div>

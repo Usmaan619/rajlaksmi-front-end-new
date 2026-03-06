@@ -28,7 +28,7 @@ const CertificationsBottomSection = ({
         </h2>
 
         {/* Certification Badges */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 mb-10 place-items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 lg:gap-12 mb-10 place-items-center">
           {certifications.map((item, index) => (
             <div
               key={index}

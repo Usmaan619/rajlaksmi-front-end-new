@@ -67,7 +67,7 @@ const CartPage = () => {
           {cart.map((item) => (
             <Card
               key={item.id}
-              className="overflow-hidden border-emerald-100 shadow-sm hover:shadow-md transition-shadow"
+              className="overflow-hidden border-emerald-100 shadow-sm hover:shadow-md transition-shadow bg-white"
             >
               <CardContent className="p-4 md:p-6">
                 <div className="flex flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
@@ -135,7 +135,7 @@ const CartPage = () => {
 
         {/* Order Summary */}
         <div className="lg:col-span-1">
-          <Card className="sticky top-24 border-emerald-200 shadow-xl bg-emerald-50/30 overflow-hidden">
+          <Card className="sticky top-24 border-emerald-200 shadow-xl bg-gradient-to-br from-green-50 to-white overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600" />
             <CardHeader>
               <CardTitle className="text-xl text-[#01722c]">

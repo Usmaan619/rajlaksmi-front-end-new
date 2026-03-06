@@ -130,7 +130,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-all-${product.id}`,
+      id: `product-${product.id}`,
       name: product.product_name,
       price: currentPrice,
       image: productImage,
@@ -143,7 +143,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart({
-      id: `product-all-${product.id}`,
+      id: `product-${product.id}`,
       name: product.product_name,
       price: currentPrice,
       image: productImage,
@@ -374,9 +374,6 @@ const AllProducts = () => {
               : p.weight_options,
         }));
 
-        // 3 second artificial delay for visual skeleton impact
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
         setProducts(mappedProducts);
         if (res.pagination) {
           setTotalPages(res.pagination.totalPages || 1);
@@ -583,7 +580,7 @@ const AllProducts = () => {
 
               {/* Pagination */}
               {!loading && !error && totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-12">
+                <div className="flex items-center justify-center gap-2 mt-12 py-2">
                   <Button
                     variant="outline"
                     size="icon"
