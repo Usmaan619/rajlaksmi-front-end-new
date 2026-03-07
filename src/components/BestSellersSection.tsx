@@ -233,7 +233,7 @@ const BestSellersSection = () => {
 
   return (
     <section className="bg-white py-8 sm:py-12 lg:py-16">
-      <div className="px-4 sm:px-6 md:px-8 lg:px-12">
+      <div className="px-3 sm:px-6 md:px-8 lg:px-12">
         {/* Heading */}
         <div className="mb-12 text-center">
           <p className="text-[#01722C] font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] mb-3">

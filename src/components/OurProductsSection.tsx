@@ -46,6 +46,13 @@ const products = [
     price: 899,
     videoUrl: "VideoSource",
   },
+  {
+    id: 6,
+    name: "A2 Ghee",
+    thumbnail: heroGhee,
+    price: 899,
+    videoUrl: "VideoSource",
+  },
 ];
 
 const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
@@ -70,7 +77,7 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
   return (
     <div
       onClick={() => navigate(`/product/${product.id}`)}
-      className="relative w-full h-[380px] lg:h-[460px] rounded-2xl overflow-hidden shadow-md group cursor-pointer transition-all duration-300 hover:shadow-xl"
+      className="relative w-[260px] lg:w-[300px] h-[440px] lg:h-[490px] rounded-2xl overflow-hidden shadow-md group cursor-pointer transition-all duration-300 hover:shadow-xl"
     >
       {/* Background Video */}
       <div
@@ -151,7 +158,7 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
 
         <button
           onClick={handleAddToCart}
-          className="w-full border border-green-700 text-green-700 rounded-full py-1.5 text-xs font-bold hover:bg-green-700 hover:text-white transition-colors duration-300"
+          className="w-full border border-green-700 text-green-700 rounded-md py-1.5 text-xs font-bold hover:bg-green-700 hover:text-white transition-colors duration-300"
         >
           ADD TO CART
         </button>
@@ -160,8 +167,8 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
   );
 };
 
-const CARD_WIDTH = 220;       // matches w-[220px]
-const CARD_GAP = 12;          // matches gap-3
+const CARD_WIDTH = 220; // matches w-[220px]
+const CARD_GAP = 12; // matches gap-3
 const AUTO_SLIDE_INTERVAL = 3000; // slightly slower for better readability
 
 const OurProductsSection = () => {
@@ -201,17 +208,14 @@ const OurProductsSection = () => {
     }, AUTO_SLIDE_INTERVAL);
   }, [stopAutoSlide]);
 
-  const scrollToIndex = useCallback(
-    (index: number) => {
-      if (!scrollRef.current) return;
-      scrollRef.current.scrollTo({
-        left: index * (CARD_WIDTH + CARD_GAP),
-        behavior: "smooth",
-      });
-      setCurrentIndex(index);
-    },
-    [],
-  );
+  const scrollToIndex = useCallback((index: number) => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollTo({
+      left: index * (CARD_WIDTH + CARD_GAP),
+      behavior: "smooth",
+    });
+    setCurrentIndex(index);
+  }, []);
 
   // Auto-slide only on mobile
   useEffect(() => {
@@ -232,7 +236,9 @@ const OurProductsSection = () => {
       );
       setCurrentIndex(index);
     }
-    setTimeout(() => { if (isMobile) startAutoSlide(); }, 1500);
+    setTimeout(() => {
+      if (isMobile) startAutoSlide();
+    }, 1500);
   };
 
   return (
@@ -254,7 +260,7 @@ const OurProductsSection = () => {
       "
       />
 
-      <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 relative z-10">
+      <div className="mx-auto px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 relative z-10">
         {/* Section Header */}
         <div className="mb-8 text-center">
           <h2 className="font-heading text-3xl lg:text-4xl font-bold text-primary">
@@ -268,7 +274,7 @@ const OurProductsSection = () => {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           className="flex gap-3 overflow-x-auto pb-6 px-1 snap-x snap-mandatory
-             md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5
+             md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6
              md:gap-6 md:px-0
              md:overflow-visible md:justify-items-center
              mb-6"
@@ -276,7 +282,7 @@ const OurProductsSection = () => {
         >
           {products.map((product) => (
             <div
-              className="snap-start flex-shrink-0 w-[220px] md:w-full"
+              className="snap-start flex-shrink-0 w-[260px] md:w-full"
               key={product.id}
             >
               <VideoProductCard product={product} />
