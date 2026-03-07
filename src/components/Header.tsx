@@ -25,6 +25,26 @@ import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
 import { getCategories, Category } from "@/api/category.service";
 
+const categoryOrder = [
+  "PULSES",
+  "MILLET",
+  "RICE  WHEAT",
+  "MASALA",
+  "SWEETS",
+  "HONEY",
+  "DRY FRUITS",
+  "SEEDS",
+  "OTHER ITEMS",
+  "OILS  GHEE",
+  "RLJ PRODUCTS",
+  "HOME MADE AACHAR",
+  "KHAKHRA",
+  "KHAPLI WHEAT KHAKHRA (EMMER WHEAT)",
+  "MILLETS KHAKHRA",
+  "FASTING / UPVAS SPECIAL - GLUTEN FREE KHAKHRA",
+  "ROASTED MILLET DRY BHAKRI",
+];
+
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -38,7 +58,16 @@ const Header = () => {
     const fetchCategories = async () => {
       try {
         const res = await getCategories();
-        if (res.success) setCategories(res.data || []);
+        if (res.success && res.data) {
+          const sorted = [...res.data].sort((a, b) => {
+            const indexA = categoryOrder.indexOf(a.category_name);
+            const indexB = categoryOrder.indexOf(b.category_name);
+            const finalIndexA = indexA === -1 ? 999 : indexA;
+            const finalIndexB = indexB === -1 ? 999 : indexB;
+            return finalIndexA - finalIndexB;
+          });
+          setCategories(sorted);
+        }
       } catch (err) {
         console.error("Failed to fetch categories", err);
       }

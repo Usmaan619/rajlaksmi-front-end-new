@@ -182,22 +182,22 @@ const Footer = () => {
                   <h4 className="text-xl font-semibold mb-6">Categories</h4>
                   <ul className="space-y-3 text-sm text-white/80">
                     <li>
-                      <Link to="/categories?category=OILS%20%26%20GHEE">Ghee & Oil</Link>
+                      <Link to="/categories?category=PULSES">PULSES</Link>
                     </li>
                     <li>
-                      <Link to="/categories?category=DRY%20FRUITS">Dry Fruits</Link>
+                      <Link to="/categories?category=MILLET">MILLET</Link>
                     </li>
                     <li>
-                      <Link to="/categories?category=PULSES">Pulses & Grains</Link>
+                      <Link to="/categories?category=RICE%20%20WHEAT">RICE & WHEAT</Link>
                     </li>
                     <li>
-                      <Link to="/categories?category=SEEDS">Seeds</Link>
+                      <Link to="/categories?category=MASALA">MASALA</Link>
                     </li>
                     <li>
-                      <Link to="/categories?category=MASALA">Spices</Link>
+                      <Link to="/categories?category=DRY%20FRUITS">DRY FRUITS</Link>
                     </li>
                     <li>
-                      <Link to="/categories?category=MASALA">Spices & Flours</Link>
+                      <Link to="/categories?category=OILS%20%20GHEE">OILS & GHEE</Link>
                     </li>
                   </ul>
                 </div>

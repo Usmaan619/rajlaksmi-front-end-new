@@ -11,6 +11,7 @@ import dryfruitsImg from "@/assets/category-dryfruits.jpg";
 import spicesImg from "@/assets/category-spices.jpg";
 import gheeImg from "@/assets/category-ghee.jpg";
 import superfoodsImg from "@/assets/category-superfoods.jpg";
+import allCategoriesImg from "@/assets/category-grains.jpg"; // Using grains as default for all
 
 type CategoryItem = {
   name: string;
@@ -19,15 +20,44 @@ type CategoryItem = {
   bgColor: string;
 };
 
+const categoryOrder = [
+  "PULSES",
+  "MILLET",
+  "RICE  WHEAT",
+  "MASALA",
+  "SWEETS",
+  "HONEY",
+  "DRY FRUITS",
+  "SEEDS",
+  "OTHER ITEMS",
+  "OILS  GHEE",
+  "RLJ PRODUCTS",
+  "HOME MADE AACHAR",
+  "KHAKHRA",
+  "KHAPLI WHEAT KHAKHRA (EMMER WHEAT)",
+  "MILLETS KHAKHRA",
+  "FASTING / UPVAS SPECIAL - GLUTEN FREE KHAKHRA",
+  "ROASTED MILLET DRY BHAKRI",
+];
+
 const categoryImages: Record<string, string> = {
-  "Organic Grains": grainsImg,
-  "Organic Flours": floursImg,
-  "Organic Oils": oilsImg,
-  "Organic Seeds": seedsImg,
-  "Organic Dry Fruits": dryfruitsImg,
-  "Organic Spices": spicesImg,
-  "Organic Ghee": gheeImg,
-  "Organic Superfoods": superfoodsImg,
+  "PULSES": grainsImg,
+  "MILLET": superfoodsImg,
+  "RICE  WHEAT": grainsImg,
+  "MASALA": spicesImg,
+  "SWEETS": superfoodsImg,
+  "HONEY": superfoodsImg,
+  "DRY FRUITS": dryfruitsImg,
+  "SEEDS": seedsImg,
+  "OTHER ITEMS": superfoodsImg,
+  "OILS  GHEE": gheeImg,
+  "RLJ PRODUCTS": superfoodsImg,
+  "HOME MADE AACHAR": spicesImg,
+  "KHAKHRA": floursImg,
+  "KHAPLI WHEAT KHAKHRA (EMMER WHEAT)": floursImg,
+  "MILLETS KHAKHRA": floursImg,
+  "FASTING / UPVAS SPECIAL - GLUTEN FREE KHAKHRA": floursImg,
+  "ROASTED MILLET DRY BHAKRI": floursImg,
 };
 
 const pastelColors = [
@@ -50,17 +80,43 @@ const CategoriesSection = () => {
       try {
         const res = await getCategories();
         if (res.success && res.data?.length) {
+          // 1. Map all categories from API
           const mapped: CategoryItem[] = res.data.map(
-            (cat: Category, index: number) => ({
+            (cat: Category) => ({
               name: cat.category_name,
-              href: `/categories?category=${encodeURIComponent(
-                cat.category_name,
-              )}`,
+              href: `/categories?category=${encodeURIComponent(cat.category_name)}`,
               image: categoryImages[cat.category_name] || grainsImg,
-              bgColor: pastelColors[index % pastelColors.length],
-            }),
+              bgColor: "", // will assign after sorting
+            })
           );
-          setCategories(mapped);
+
+          // 2. Sort based on categoryOrder
+          const sorted = mapped.sort((a, b) => {
+            const indexA = categoryOrder.indexOf(a.name);
+            const indexB = categoryOrder.indexOf(b.name);
+            
+            // If not found, put at the end
+            const finalIndexA = indexA === -1 ? 999 : indexA;
+            const finalIndexB = indexB === -1 ? 999 : indexB;
+            
+            return finalIndexA - finalIndexB;
+          });
+
+          // 3. Assign background colors after sorting
+          const colored = sorted.map((cat, index) => ({
+            ...cat,
+            bgColor: pastelColors[index % pastelColors.length],
+          }));
+
+          // 4. Add "All Categories" at the beginning
+          const allCategories: CategoryItem = {
+            name: "All Categories",
+            href: "/categories",
+            image: allCategoriesImg,
+            bgColor: "bg-gray-100",
+          };
+
+          setCategories([allCategories, ...colored]);
         }
       } catch (err) {
         console.error("Failed to fetch categories:", err);
