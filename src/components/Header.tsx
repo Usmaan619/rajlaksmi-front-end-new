@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 import {
   Search,
   Heart,
@@ -53,6 +54,17 @@ const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      setMobileMenuOpen(false);
+    }
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -178,13 +190,25 @@ const Header = () => {
 
           {/* Right Icons */}
           <div className="flex items-center gap-2 lg:gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden sm:flex text-foreground hover:text-primary hover:bg-accent"
+            <form
+              onSubmit={handleSearch}
+              className="hidden sm:flex items-center relative"
             >
-              <Search className="h-5 w-5" />
-            </Button>
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-4 pr-10 py-1.5 rounded-full border border-border bg-popover text-sm focus:outline-none focus:ring-1 focus:ring-primary w-40 lg:w-60 transition-all duration-300"
+              />
+              <button
+                type="submit"
+                className="absolute right-3 text-muted-foreground hover:text-primary transition-colors"
+              >
+                <Search className="h-4 w-4" />
+              </button>
+            </form>
+
             <Link to="/wishlist">
               <Button
                 variant="ghost"
@@ -323,6 +347,26 @@ const Header = () => {
                 ),
               )}
               <div className="px-4 pt-4 flex flex-col gap-2">
+                <form
+                  onSubmit={handleSearch}
+                  className="relative flex items-center mb-2"
+                >
+                  <Input
+                    placeholder="Search products..."
+                    className="pr-10 bg-white"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <Button
+                    type="submit"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 text-muted-foreground"
+                  >
+                    <Search className="h-4 w-4" />
+                  </Button>
+                </form>
+
                 {isAuthenticated ? (
                   <>
                     <div className="flex items-center gap-3 px-4 py-3 bg-accent/50 rounded-lg">
@@ -376,14 +420,6 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 justify-start"
-                    >
-                      <Search className="h-4 w-4 mr-2" />
-                      Search
-                    </Button>
                     <Link
                       to="/login"
                       className="flex-1"
