@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { ExternalLink, Heart } from "lucide-react";
 import heroGhee from "@/assets/hero-ghee.jpg";
 import dealGhee from "@/assets/deal-ghee.jpg";
@@ -70,7 +70,7 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
   return (
     <div
       onClick={() => navigate(`/product/${product.id}`)}
-      className="relative w-full h-[440px] lg:h-[490px] rounded-3xl overflow-hidden shadow-lg group cursor-pointer"
+      className="relative w-full h-[380px] lg:h-[460px] rounded-2xl overflow-hidden shadow-md group cursor-pointer transition-all duration-300 hover:shadow-xl"
     >
       {/* Background Video */}
       <div
@@ -130,14 +130,14 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
 
       {/* Floating Info Box */}
       <div
-        className="absolute bottom-3 left-3 right-3 bg-white rounded-2xl shadow-xl p-3"
+        className="absolute bottom-2 left-2 right-2 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-2.5"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 mb-2">
           <img
             src={product.thumbnail}
             alt={product.name}
-            className="w-12 h-12 rounded-lg object-cover"
+            className="w-10 h-10 rounded-lg object-cover"
           />
           <div>
             <h3 className="font-semibold text-green-700 text-sm">
@@ -151,7 +151,7 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
 
         <button
           onClick={handleAddToCart}
-          className="w-full border border-green-700 text-green-700 rounded-full py-2 text-sm font-semibold hover:bg-green-700 hover:text-white transition"
+          className="w-full border border-green-700 text-green-700 rounded-full py-1.5 text-xs font-bold hover:bg-green-700 hover:text-white transition-colors duration-300"
         >
           ADD TO CART
         </button>
@@ -160,9 +160,83 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
   );
 };
 
+const CARD_WIDTH = 220;       // matches w-[220px]
+const CARD_GAP = 12;          // matches gap-3
+const AUTO_SLIDE_INTERVAL = 3000; // slightly slower for better readability
+
 const OurProductsSection = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const autoSlideTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Detect mobile (< md = 768px)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const stopAutoSlide = useCallback(() => {
+    if (autoSlideTimer.current) {
+      clearInterval(autoSlideTimer.current);
+      autoSlideTimer.current = null;
+    }
+  }, []);
+
+  const startAutoSlide = useCallback(() => {
+    stopAutoSlide();
+    autoSlideTimer.current = setInterval(() => {
+      setCurrentIndex((prev) => {
+        const next = (prev + 1) % products.length;
+        if (scrollRef.current) {
+          scrollRef.current.scrollTo({
+            left: next * (CARD_WIDTH + CARD_GAP),
+            behavior: "smooth",
+          });
+        }
+        return next;
+      });
+    }, AUTO_SLIDE_INTERVAL);
+  }, [stopAutoSlide]);
+
+  const scrollToIndex = useCallback(
+    (index: number) => {
+      if (!scrollRef.current) return;
+      scrollRef.current.scrollTo({
+        left: index * (CARD_WIDTH + CARD_GAP),
+        behavior: "smooth",
+      });
+      setCurrentIndex(index);
+    },
+    [],
+  );
+
+  // Auto-slide only on mobile
+  useEffect(() => {
+    if (isMobile) {
+      startAutoSlide();
+    } else {
+      stopAutoSlide();
+    }
+    return () => stopAutoSlide();
+  }, [isMobile, startAutoSlide, stopAutoSlide]);
+
+  const handleTouchStart = () => stopAutoSlide();
+
+  const handleTouchEnd = () => {
+    if (scrollRef.current) {
+      const index = Math.round(
+        scrollRef.current.scrollLeft / (CARD_WIDTH + CARD_GAP),
+      );
+      setCurrentIndex(index);
+    }
+    setTimeout(() => { if (isMobile) startAutoSlide(); }, 1500);
+  };
+
   return (
-    <section className="py-12  lg:py-16 bg-gradient-to-br from-green-50 to-white relative overflow-hidden">
+    <section className="py-12 lg:py-16 bg-gradient-to-br from-green-50 to-white relative overflow-hidden">
       {/* Bottom Background Image */}
       <img
         src={ourProductVideoImg}
@@ -188,20 +262,49 @@ const OurProductsSection = () => {
           </h2>
         </div>
 
-        {/* Products Grid */}
+        {/* Products Grid / Auto-Slide on Mobile */}
         <div
-          className="flex gap-4 overflow-x-auto pb-4 px-1 snap-x snap-mandatory
-             md:grid md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5
+          ref={scrollRef}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          className="flex gap-3 overflow-x-auto pb-6 px-1 snap-x snap-mandatory
+             md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5
              md:gap-6 md:px-0
              md:overflow-visible md:justify-items-center
-             mb-12"
+             mb-6"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {products.map((product) => (
-            <div className="snap-start flex-shrink-0" key={product.id}>
+            <div
+              className="snap-start flex-shrink-0 w-[220px] md:w-full"
+              key={product.id}
+            >
               <VideoProductCard product={product} />
             </div>
           ))}
         </div>
+
+        {/* Dot Indicators — mobile only */}
+        {isMobile && (
+          <div className="flex justify-center gap-2 mb-6 md:hidden">
+            {products.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  stopAutoSlide();
+                  scrollToIndex(i);
+                  setTimeout(() => startAutoSlide(), 1500);
+                }}
+                className={`rounded-full transition-all duration-300 ${
+                  i === currentIndex
+                    ? "w-6 h-2 bg-green-600"
+                    : "w-2 h-2 bg-green-300"
+                }`}
+                aria-label={`Go to product ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
