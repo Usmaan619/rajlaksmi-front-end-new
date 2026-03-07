@@ -34,10 +34,10 @@ const AboutUsPage = () => {
         {/* Header Section with decorative elements */}
         <section className="text-center py-12 px-4 relative overflow-hidden">
           <h1 className="text-3xl md:text-4xl font-bold text-green-700 relative z-10">
-            Certifications & Quality Assurance
+            About Us
           </h1>
           <p className="text-gray-600 mt-3 text-base md:text-lg relative z-10">
-            Your Trust, Our Responsibility
+            Rajlakshmi Javiks International — Purity You Can Trust
           </p>
         </section>
 
@@ -47,19 +47,22 @@ const AboutUsPage = () => {
             <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
               <div className="flex-1 order-2 md:order-1">
                 <h2 className="text-2xl md:text-3xl font-bold text-green-800 mb-6">
-                  About Rajlakshmi Javiks
+                  Our Story
                 </h2>
                 <p className="text-gray-700 text-base leading-relaxed mb-5">
-                  At Rajlakshmi Javiks, we are committed to delivering pure,
-                  organic, and chemical-free food products to every household.
-                  Our journey began with a simple mission: to provide families
-                  with healthy, natural, and traditionally processed food —
-                  grown with care and delivered with trust.
+                  Established in 2019 in Indore, Madhya Pradesh, Rajlakshmi
+                  Javiks International has grown to become a trusted retail
+                  trader and wholesaler of premium organic and natural food
+                  products. We specialize in providing the highest quality A2
+                  Gir Cow Ghee Vedik Bilona, along with a wide range of oils,
+                  dry fruits, grains, pulses, and spices.
                 </p>
                 <p className="text-gray-700 text-base leading-relaxed mb-8">
-                  We believe that good health starts with pure food. That's why
-                  all our products are carefully sourced from organic farms,
-                  free from preservatives, chemicals, and artificial additives.
+                  Our commitment to authentic, lab-tested quality has earned us
+                  a 4.3-star rating on IndiaMART. We take pride in sourcing
+                  directly from nature ensuring that every product reaching your
+                  doorstep is 100% pure, chemical-free, and full of natural
+                  goodness.
                 </p>
                 <Button className="bg-[#01722C] hover:bg-green-700 text-white rounded-md px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all">
                   Explore Our Products
@@ -113,15 +116,15 @@ const AboutUsPage = () => {
                 Who We Are
               </h2>
               <p className="text-gray-700 text-base leading-relaxed mb-5">
-                Rajlakshmi Javiks is an organic food brand focused on providing
-                healthy and pure food products. We are a team of passionate
-                individuals who believe in promoting health and wellness through
-                organic, chemical-free products.
+                Rajlakshmi Javiks International is more than just a brand; it's
+                a promise of health and wellness. Based at 11, Manish Bag Colony
+                Rd, Indore, we serve health-conscious consumers across India
+                with sustainably sourced Indian food items.
               </p>
               <p className="text-gray-700 text-base leading-relaxed">
-                Every product we offer is carefully selected, processed
-                hygienically, and quality-checked to ensure purity, nutrition,
-                and authentic taste.
+                Whether it's our Organic Kashmiri Saffron or our traditionally
+                churned A2 Ghee, our team ensures that every item is processed
+                hygienically and quality-checked before PAN India delivery.
               </p>
             </div>
           </div>

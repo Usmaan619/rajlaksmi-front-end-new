@@ -31,6 +31,7 @@ import paymentLogo2 from "@/assets/product-detail-visa/rupay.webp";
 import paymentLogo3 from "@/assets/product-detail-visa/master-card.webp";
 import paymentLogo4 from "@/assets/product-detail-visa/Bhim.webp";
 import paymentLogo5 from "@/assets/product-detail-visa/razor-pay.webp";
+import Seo from "@/components/Seo";
 import RelatedProduct from "@/components/RelatedProduct";
 import WriteReviewModal from "@/components/WriteReviewModal";
 import BentoGrid from "@/components/BentoGrid";
@@ -461,7 +462,21 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
+      <Seo
+        title={`${product.name} | Buy 100% Pure Organic – Rajlakshmi Javiks`}
+        description={product.subtitle || product.description}
+        url={window.location.href}
+        image={product.images[0]}
+      />
+
+      <h1 className="sr-only">
+        {product.name} is a high-quality organic product by Rajlakshmi Javiks.
+        Perfect for healthy cooking, Ayurveda remedies, and sustainable living.
+        Our {product.name} is lab-tested and chemically pure.
+      </h1>
+
+      <div className="min-h-screen bg-white">
       <main className="container mx-auto px-4 py-6 lg:py-10">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6">
@@ -1023,6 +1038,7 @@ const ProductDetail = () => {
       <BentoGrid />
       <FAQSection />
     </div>
+    </>
   );
 };
 

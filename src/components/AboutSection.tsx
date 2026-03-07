@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import aboutFarmersImage from "@/assets/category/farmer.png";
 import aboutFarmersBgImage from "@/assets/aboutus/aboutusbgfarmerImg.png";
 
@@ -37,19 +38,21 @@ const AboutSection = () => {
               </p>
 
               <p className="text-foreground/80 text-sm lg:text-base leading-relaxed">
-                Rajlakshmi Javiks ek bharosemand organic brand hai jo aap tak
-                100% natural aur chemical-free food products pahunchane ke liye
-                samarpit hai. Humare products seedhe un kisanon aur farms se
-                aate hain jahan paramparik aur sustainable farming techniques ka
-                use kiya jata hai.
+                Rajlakshmi Javiks International is a retail trader and wholesaler based
+                in Indore, Madhya Pradesh, specializing in organic and natural food
+                products. Established in 2019, we offer pure organic A2 cow
+                ghee, oils, dry fruits, grains, pulses, and spices, all with
+                lab-tested quality and available for PAN India delivery.
               </p>
 
-              <Button
-                variant="outline"
-                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
-              >
-                Read more
-              </Button>
+              <Link to="/about">
+                <Button
+                  variant="outline"
+                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
+                >
+                  Read more
+                </Button>
+              </Link>
             </div>
 
             {/* Main Image */}
