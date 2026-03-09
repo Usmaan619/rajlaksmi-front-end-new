@@ -134,9 +134,7 @@ const CategoriesSection = () => {
           <p className="text-[#01722C] font-semibold text-xs uppercase tracking-[0.3em] mb-4">
             Pure & Authentic
           </p>
-          <p className="text-[#01722C]/60 text-[10px] sm:text-xs font-bold tracking-[0.1em] uppercase text-center">
-            Purity & Integrity in Every Pack
-          </p>
+
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
             Shop by Category
           </h2>

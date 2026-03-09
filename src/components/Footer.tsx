@@ -132,7 +132,9 @@ const Footer = () => {
                   <Mail className="w-5 h-5 text-yellow-400 mt-1 shrink-0" />
                   <div>
                     <p className="font-medium text-white">Email us at</p>
-                    <p className="text-white/80">contact@rajlakshmijaviks.com</p>
+                    <p className="text-white/80">
+                      contact@rajlakshmijaviks.com
+                    </p>
                   </div>
                 </li>
 
@@ -188,16 +190,22 @@ const Footer = () => {
                       <Link to="/categories?category=MILLET">MILLET</Link>
                     </li>
                     <li>
-                      <Link to="/categories?category=RICE%20%20WHEAT">RICE & WHEAT</Link>
+                      <Link to="/categories?category=RICE%20%20WHEAT">
+                        RICE & WHEAT
+                      </Link>
                     </li>
                     <li>
                       <Link to="/categories?category=MASALA">MASALA</Link>
                     </li>
                     <li>
-                      <Link to="/categories?category=DRY%20FRUITS">DRY FRUITS</Link>
+                      <Link to="/categories?category=DRY%20FRUITS">
+                        DRY FRUITS
+                      </Link>
                     </li>
                     <li>
-                      <Link to="/categories?category=OILS%20%20GHEE">OILS & GHEE</Link>
+                      <Link to="/categories?category=OILS%20%20GHEE">
+                        OILS & GHEE
+                      </Link>
                     </li>
                   </ul>
                 </div>

@@ -38,11 +38,12 @@ const AboutSection = () => {
               </p>
 
               <p className="text-foreground/80 text-sm lg:text-base leading-relaxed">
-                Rajlakshmi Javiks International is a retail trader and wholesaler based
-                in Indore, Madhya Pradesh, specializing in organic and natural food
-                products. Established in 2019, we offer pure organic A2 cow
-                ghee, oils, dry fruits, grains, pulses, and spices, all with
-                lab-tested quality and available for PAN India delivery.
+                Rajlakshmi Javiks International is a retail trader and
+                wholesaler based in Indore, Madhya Pradesh, specializing in
+                organic and natural food products. Established in 2019, we offer
+                pure organic A2 cow ghee, oils, dry fruits, grains, pulses, and
+                spices, all with lab-tested quality and available for PAN India
+                delivery.
               </p>
 
               <Link to="/about">

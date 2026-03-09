@@ -14,7 +14,7 @@ import { AuthProvider } from "./context/AuthContext";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <HelmetProvider>
+<HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />

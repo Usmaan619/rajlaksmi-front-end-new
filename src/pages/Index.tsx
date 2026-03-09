@@ -36,28 +36,28 @@ const Index = () => {
       </h1>
 
       <div className="min-h-screen flex flex-col">
-      <main className="flex-1">
-        <HeroSection />
-        <CertificationsSection />
-        <FarmerDivider />
-        <CategoriesSection />
-        <BestSellersSection />
-        <FarmerDividerExclusive />
-        <ExclusiveDealsSection />
-        <OurProductsSection />
-        <CategoryProductsSection />
-        <BlogsSection />
-        <SellingSection />
-        <WhyChooseRajlakshmiSection />
-        <AboutSection />
-        <ContactSection />
-        <TestimonialSection />
-        <CertificationsBottomSection
+        <main className="flex-1">
+          <HeroSection />
+          <CertificationsSection />
+          <FarmerDivider />
+          <CategoriesSection />
+          <BestSellersSection />
+          <FarmerDividerExclusive />
+          <ExclusiveDealsSection />
+          <OurProductsSection />
+          <CategoryProductsSection />
+          <BlogsSection />
+          <SellingSection />
+          <WhyChooseRajlakshmiSection />
+          <AboutSection />
+          <ContactSection />
+          <TestimonialSection />
+          {/* <CertificationsBottomSection
           className="bg-[#F0FFF0] "
           btnCss="bg-white mb"
-        />
-      </main>
-    </div>
+        /> */}
+        </main>
+      </div>
     </>
   );
 };
