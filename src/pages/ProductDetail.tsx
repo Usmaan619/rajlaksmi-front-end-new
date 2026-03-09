@@ -157,6 +157,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { getProductReviews } from "@/api/feedback.service";
 import { sortWeights, getWeightValue } from "@/lib/utils";
+import { MOCK_PRODUCTS } from "@/data/mockProducts";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
@@ -200,9 +201,32 @@ const ProductDetail = () => {
         const res = await api.get(`/products/get-product/${id}`);
         if (res.data?.success) {
           setApiProduct(res.data.products);
+        } else {
+          // If API fails, try to find in mock data
+          const mock = MOCK_PRODUCTS.find(p => String(p.id) === String(id));
+          if (mock) {
+            setApiProduct({
+              ...mock,
+              product_price: mock.price,
+              product_del_price: mock.mrp,
+              product_weight: mock.weight_options,
+              product_images: typeof mock.product_images === 'string' ? JSON.parse(mock.product_images) : mock.product_images
+            });
+          }
         }
       } catch (err) {
         console.error("Error loading product detail data:", err);
+        // Fallback to mock data on error
+        const mock = MOCK_PRODUCTS.find(p => String(p.id) === String(id));
+        if (mock) {
+          setApiProduct({
+            ...mock,
+            product_price: mock.price,
+            product_del_price: mock.mrp,
+            product_weight: mock.weight_options,
+            product_images: typeof mock.product_images === 'string' ? JSON.parse(mock.product_images) : mock.product_images
+          });
+        }
       } finally {
         setIsLoading(false);
       }

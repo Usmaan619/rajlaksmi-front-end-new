@@ -7,6 +7,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { getHomeProducts } from "@/api/product.service";
 import { Skeleton } from "@/components/ui/skeleton";
+import { MOCK_PRODUCTS } from "@/data/mockProducts";
 
 const ProductCard = ({ product }: { product: any }) => {
   const navigate = useNavigate();
@@ -219,11 +220,28 @@ const BestSellersSection = () => {
     const fetchBestSellers = async () => {
       try {
         const res = await getHomeProducts();
-        if (res.success) {
+        if (res.success && res.data && res.data.length > 0) {
           setProducts(res.data);
+        } else {
+          // Fallback to mock data for demonstration
+          setProducts(MOCK_PRODUCTS.slice(0, 5).map(p => ({
+            ...p,
+            product_images: typeof p.product_images === 'string' ? JSON.parse(p.product_images) : p.product_images,
+            product_weight: typeof p.weight_options === 'string' ? JSON.parse(p.weight_options) : p.weight_options,
+            product_price: p.price,
+            product_del_price: p.mrp
+          })));
         }
       } catch (err) {
         console.error("Failed to fetch best sellers:", err);
+        // Fallback on error
+        setProducts(MOCK_PRODUCTS.slice(0, 5).map(p => ({
+          ...p,
+          product_images: typeof p.product_images === 'string' ? JSON.parse(p.product_images) : p.product_images,
+          product_weight: typeof p.weight_options === 'string' ? JSON.parse(p.weight_options) : p.weight_options,
+          product_price: p.price,
+          product_del_price: p.mrp
+        })));
       } finally {
         setIsLoading(false);
       }

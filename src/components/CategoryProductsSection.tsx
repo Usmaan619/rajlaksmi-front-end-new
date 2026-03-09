@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
+import { MOCK_PRODUCTS } from "@/data/mockProducts";
 
 // Reuse the ProductCard style from BestSellersSection
 const ProductCard = ({ product }: { product: any }) => {
@@ -248,14 +249,44 @@ const CategoryRow = ({
           category: category.category_name,
           limit: 5,
         });
-        if (res.success) {
+        if (res.success && res.data && res.data.length > 0) {
           setProducts(res.data || res.products || []);
+        } else if (res.success && res.products && res.products.length > 0) {
+          setProducts(res.products);
+        } else {
+          // Fallback to mock data for demonstration
+          setProducts(MOCK_PRODUCTS.filter(p => p.category_name === category.category_name).map(p => ({
+            ...p,
+            product_images: typeof p.product_images === 'string' ? JSON.parse(p.product_images) : p.product_images,
+            product_weight: typeof p.weight_options === 'string' ? JSON.parse(p.weight_options) : p.weight_options,
+            product_price: p.price,
+            product_del_price: p.mrp
+          })));
+          
+          // If no mock data for this category, just show some random ones
+          if (MOCK_PRODUCTS.filter(p => p.category_name === category.category_name).length === 0) {
+             setProducts(MOCK_PRODUCTS.slice(0, 5).map(p => ({
+              ...p,
+              product_images: typeof p.product_images === 'string' ? JSON.parse(p.product_images) : p.product_images,
+              product_weight: typeof p.weight_options === 'string' ? JSON.parse(p.weight_options) : p.weight_options,
+              product_price: p.price,
+              product_del_price: p.mrp
+            })));
+          }
         }
       } catch (err) {
         console.error(
           `Failed to fetch products for ${category.category_name}:`,
           err,
         );
+        // Fallback on error
+        setProducts(MOCK_PRODUCTS.slice(0, 5).map(p => ({
+          ...p,
+          product_images: typeof p.product_images === 'string' ? JSON.parse(p.product_images) : p.product_images,
+          product_weight: typeof p.weight_options === 'string' ? JSON.parse(p.weight_options) : p.weight_options,
+          product_price: p.price,
+          product_del_price: p.mrp
+        })));
       } finally {
         setIsLoading(false);
       }

@@ -23,6 +23,7 @@ import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import { sortWeights } from "@/lib/utils";
+import { MOCK_PRODUCTS } from "@/data/mockProducts";
 
 import Seo from "@/components/Seo";
 
@@ -411,9 +412,20 @@ const AllProducts = () => {
         } else {
           setTotalPages(1);
         }
-      } else {
-        setError("Failed to fetch products");
-      }
+        } else {
+          // If API fails or returns no products, use mock data for designers
+          const mappedMock = MOCK_PRODUCTS.map((p: any) => ({
+            ...p,
+            price: p.product_price !== undefined ? p.product_price : p.price,
+            mrp: p.product_del_price !== undefined ? p.product_del_price : p.mrp,
+            weight_options:
+              p.product_weight !== undefined
+                ? p.product_weight
+                : p.weight_options,
+          }));
+          setProducts(mappedMock);
+          setTotalPages(1);
+        }
     } catch (err: any) {
       setError(err.message || "Something went wrong while fetching products");
     } finally {
