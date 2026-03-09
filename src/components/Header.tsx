@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   ChevronDown,
+  Package,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { useAuth } from "@/context/AuthContext";
 import { getCategories, Category } from "@/api/category.service";
+import HeaderProfile from "./Header/HeaderProfile";
 
 const categoryOrder = [
   "PULSES",
@@ -238,63 +240,7 @@ const Header = () => {
               </Button>
             </Link>
 
-            {isAuthenticated ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger className="outline-none">
-                  <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity ml-2">
-                    <Avatar className="h-8 w-8 border border-primary/20">
-                      <AvatarImage
-                        src={user?.profile_image}
-                        alt={user?.full_name}
-                      />
-                      <AvatarFallback className="bg-primary/10 text-primary text-xs">
-                        {user?.full_name
-                          ?.split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .toUpperCase() || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="hidden md:block text-sm font-medium text-foreground">
-                      {user?.full_name?.split(" ")[0]}
-                    </span>
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 mt-2">
-                  <div className="flex items-center justify-start gap-2 p-2 px-3 border-b border-border/50">
-                    <div className="flex flex-col space-y-0.5">
-                      <p className="text-sm font-medium">{user?.full_name}</p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {user?.email}
-                      </p>
-                    </div>
-                  </div>
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile" className="cursor-pointer w-full">
-                      Profile
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/orders" className="cursor-pointer w-full">
-                      My Orders
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={handleLogout}
-                    className="text-destructive focus:text-destructive cursor-pointer"
-                  >
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Link to="/login" className="hidden sm:block">
-                <Button className="bg-primary hover:bg-forest-light text-primary-foreground gap-2">
-                  <User size={18} />
-                  <span>Login</span>
-                </Button>
-              </Link>
-            )}
+            <HeaderProfile />
 
             {/* Mobile Menu Button */}
             <Button

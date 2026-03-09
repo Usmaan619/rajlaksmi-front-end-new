@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
@@ -53,8 +54,8 @@ const FAQSection = () => {
           >
             <AccordionTrigger className="text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
               <span className="flex-1">{faq.question}</span>
-              <span className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white text-xl leading-none transition-transform duration-200 [[data-state=open]_&]:rotate-45">
-                +
+              <span className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white text-xl leading-none transition-transform duration-200 [[data-state=open]_&]:rotate-180">
+                <ChevronDown size={18} />
               </span>
             </AccordionTrigger>
             <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">

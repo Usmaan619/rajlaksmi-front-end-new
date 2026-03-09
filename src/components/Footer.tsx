@@ -241,9 +241,9 @@ const Footer = () => {
           {/* Copyright */}
           <div className="mt-4 pt-4 border-t border-white/10 text-center text-xs text-white/60">
             <p>Copyright 2026 © Rajlakshmi Javiks International</p>
-            <p>
+            {/* <p>
               Web Design by <span className="text-white">11_Future_Tech</span>
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

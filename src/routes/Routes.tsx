@@ -2,6 +2,8 @@ import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import AppWrapper from "@/AppWrapper";
 import { Loader2 } from "lucide-react";
+import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
 
 // Lazy-loaded components
 const Index = lazy(() =>
@@ -88,6 +90,7 @@ const CheckoutPage = lazy(() => import("@/pages/CheckoutPage"));
 const WishlistPage = lazy(() => import("@/pages/WishlistPage"));
 const PaymentSuccess = lazy(() => import("@/pages/PaymentSuccess"));
 const PaymentFailed = lazy(() => import("@/pages/PaymentFailed"));
+const OrderDetailsPage = lazy(() => import("@/pages/OrderDetailsPage"));
 
 const PageLoader = () => (
   <div className="h-screen w-full flex items-center justify-center bg-white/80 backdrop-blur-md fixed inset-0 z-[9999]">
@@ -102,17 +105,27 @@ const PageLoader = () => (
 
 const MainRoutes = () => (
   <AppWrapper>
-    <Suspense fallback={<PageLoader />}>
+    <Suspense fallback={null}>
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<SignupPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
+        {/* Public Routes - Only accessible when NOT logged in */}
+        <Route element={<PublicRoute />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<SignupPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        </Route>
+
         <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/wishlist" element={<WishlistPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/orders" element={<OrdersPage />} />
+
+        {/* Protected Routes - Only accessible when logged in */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/orders/:id" element={<OrderDetailsPage />} />
+        </Route>
         <Route path="/products" element={<AllProducts />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/certifications" element={<Certifications />} />

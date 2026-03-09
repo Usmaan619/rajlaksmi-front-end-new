@@ -106,7 +106,11 @@ const OrdersPage = () => {
   const filteredOrders =
     filter === "all"
       ? orders
-      : orders.filter((o) => getStatusKey(o.status) === filter.toLowerCase());
+      : orders.filter(
+          (o) =>
+            getStatusKey(o.status || (o as any).STATUS) ===
+            filter.toLowerCase(),
+        );
 
   if (loading) {
     return (
@@ -120,7 +124,7 @@ const OrdersPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8 mb-8">
       <div className="max-w-5xl mx-auto space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -192,10 +196,14 @@ const OrdersPage = () => {
                       </div>
                       <Badge
                         variant="outline"
-                        className={`h-9 px-4 gap-2 font-bold rounded-full capitalize ${statusColors[getStatusKey(order.status)]}`}
+                        className={`h-9 px-4 gap-2 font-bold rounded-full capitalize ${statusColors[getStatusKey(order.status || (order as any).STATUS)]}`}
                       >
-                        {statusIcons[getStatusKey(order.status)]}
-                        {order.status}
+                        {
+                          statusIcons[
+                            getStatusKey(order.status || (order as any).STATUS)
+                          ]
+                        }
+                        {order.status || (order as any).STATUS || "Pending"}
                       </Badge>
                     </div>
                   </div>
@@ -318,7 +326,7 @@ const OrdersPage = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-12 ">
           <Card className="border-none shadow-md rounded-2xl bg-[#01722c] text-white overflow-hidden p-6 relative">
             <div className="space-y-4 relative z-10">
               <h3 className="text-xl font-bold uppercase tracking-wide">
@@ -332,6 +340,7 @@ const OrdersPage = () => {
               <Button
                 variant="secondary"
                 size="sm"
+                onClick={() => navigate("/returns")}
                 className="font-medium gap-2 rounded-md transition-all hover:bg-white text-[#01722c]"
               >
                 View Policy <ExternalLink size={16} />
@@ -355,6 +364,7 @@ const OrdersPage = () => {
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => navigate("/shipping")}
                 className="font-medium gap-2 rounded-md border-primary bg-white text-primary hover:bg-primary/5"
               >
                 Shipping Details <ExternalLink size={16} />

@@ -1,7 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -23,6 +25,16 @@ import { formatWeight } from "@/lib/utils";
 const CartPage = () => {
   const { cart, removeFromCart, updateQuantity, cartTotal, cartCount } =
     useCart();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCheckout = (e: React.MouseEvent) => {
+    if (!isAuthenticated) {
+      e.preventDefault();
+      toast.error("Please log in to proceed to checkout");
+      navigate("/login");
+    }
+  };
 
   if (cart.length === 0) {
     return (
@@ -170,7 +182,11 @@ const CartPage = () => {
                     You've saved enough for free eco-packaging on this order!
                   </p>
                 </div>
-                <Link to="/checkout" className="block w-full">
+                <Link
+                  to="/checkout"
+                  className="block w-full"
+                  onClick={handleCheckout}
+                >
                   <Button className="w-full bg-[#01722c] hover:bg-emerald-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg transition-all transform hover:translate-y-[-2px]">
                     Proceed to Checkout <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>

@@ -152,7 +152,7 @@ const ContactSection = () => {
                 <Label text="First Name" />
                 <Input
                   {...register("firstName")}
-                  placeholder="Raaj"
+                  placeholder="First Name"
                   className="h-12 bg-transparent"
                 />
                 <p className="text-red-500 text-xs">
@@ -164,7 +164,7 @@ const ContactSection = () => {
                 <Label text="Last Name" />
                 <Input
                   {...register("lastName")}
-                  placeholder="Sharma"
+                  placeholder="Last Name"
                   className="h-12 bg-transparent"
                 />
                 <p className="text-red-500 text-xs">
@@ -180,7 +180,7 @@ const ContactSection = () => {
                 <Input
                   type="email"
                   {...register("email")}
-                  placeholder="xxxxxx01@gmail.com"
+                  placeholder="E-mail"
                   className="h-12 bg-transparent"
                 />
                 <p className="text-red-500 text-xs">{errors.email?.message}</p>
@@ -191,7 +191,7 @@ const ContactSection = () => {
                 <Input
                   type="tel"
                   {...register("mobile")}
-                  placeholder="+91-xxxxx xxxxx"
+                  placeholder="Mobile No."
                   className="h-12 bg-transparent"
                 />
                 <p className="text-red-500 text-xs">{errors.mobile?.message}</p>
