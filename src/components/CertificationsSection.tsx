@@ -1,16 +1,23 @@
 import React from "react";
+import FssaiLogo from "@/assets/certified/FSSAI.webp";
+import IndiaOrganicLogo from "@/assets/certified/100_ Naturals.webp";
+import Usda from "@/assets/certified/GUARANTED ORIGINAL.webp";
+import Apeda from "@/assets/certified/APEDA.webp";
+import impandexpot from "@/assets/certified/ICE.webp";
 
-// Images
-import FssaiLogo from "@/assets/certified/FSSAI.svg";
-import IndiaOrganicLogo from "@/assets/certified/Natural-icon.png";
-import Usda from "@/assets/certified/Orignal-icon.png";
-import Apeda from "@/assets/certified/apeda-seeklogo.com.svg";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 const logos = [
   { src: FssaiLogo, alt: "FSSAI certified" },
   { src: IndiaOrganicLogo, alt: "India Organic" },
   { src: Usda, alt: "USDA Organic" },
   { src: Apeda, alt: "APEDA certified" },
+  { src: impandexpot, alt: "Import and Export certified" },
 ];
 
 const CertificationsSection: React.FC = () => {
@@ -33,26 +40,51 @@ const CertificationsSection: React.FC = () => {
           </p>
         </div>
 
-        {/* Logos */}
-        <div className="relative">
-          {/* decorative bg */}
-          <div className="absolute inset-0 bg-[#01722C]/5 blur-3xl rounded-full -z-10" />
+        {/* MOBILE SLIDER */}
+        <div className="block md:hidden">
+          <Carousel
+            opts={{ loop: true }}
+            plugins={[
+              Autoplay({
+                delay: 2000,
+                stopOnInteraction: false,
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent>
+              {logos.map((logo, index) => (
+                <CarouselItem key={index} className="basis-1/2">
+                  <div className="p-3">
+                    <div className="flex items-center justify-center p-6 bg-white rounded-2xl shadow-sm border border-gray-100">
+                      <img
+                        src={logo.src}
+                        alt={logo.alt}
+                        loading="lazy"
+                        className="h-16 object-contain"
+                      />
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </div>
 
-          {/* GRID */}
-          <div className="grid grid-cols-4 gap-2 sm:gap-6 md:gap-10 items-center justify-items-center">
-            {logos.map((logo, index) => (
-              <div key={index} className="w-full flex justify-center">
-                <div className="w-full flex items-center justify-center p-2 sm:p-4 md:p-6 bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
-                  <img
-                    src={logo.src}
-                    alt={logo.alt}
-                    loading="lazy"
-                    className="h-8 sm:h-12 md:h-14 lg:h-16 w-auto object-contain"
-                  />
-                </div>
+        {/* DESKTOP GRID */}
+        <div className="hidden md:grid grid-cols-3 lg:grid-cols-5 gap-6 items-stretch justify-center">
+          {logos.map((logo, index) => (
+            <div key={index} className="flex group">
+              <div className="w-full flex items-center justify-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100 group-hover:shadow-lg group-hover:border-[#01722C]/20 transition-all duration-300">
+                <img
+                  src={logo.src}
+                  alt={logo.alt}
+                  loading="lazy"
+                  className="h-16 object-contain transition-all duration-500"
+                />
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

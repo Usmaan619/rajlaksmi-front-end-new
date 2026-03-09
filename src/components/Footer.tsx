@@ -76,12 +76,12 @@ const Footer = () => {
               type="email"
               placeholder="Your E-mail"
               {...register("email")}
-              className="h-10 md:h-12 w-full md:w-64 lg:w-72 border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 px-4 text-sm"
+              className="bg-white h-10 md:h-12 w-full md:w-64 lg:w-72 border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 px-4 text-sm"
             />
             <Button
               type="submit"
               disabled={loading}
-              className="h-10 md:h-12 px-5 md:px-8 bg-gray-200 text-gray-800 hover:bg-gray-300 rounded-none font-medium text-xs md:text-sm transition-colors"
+              className="h-10 md:h-12 px-5 md:px-8 bg-white text-gray-800 hover:bg-gray-300 rounded-none font-medium text-xs md:text-sm transition-colors"
             >
               {loading ? "Sending..." : "Send"}
             </Button>

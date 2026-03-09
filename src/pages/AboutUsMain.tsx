@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ChapatiImg from "@/assets/aboutus/chapati-aboutis.png";
@@ -7,6 +7,7 @@ import farmerImage from "@/assets/WhyChooseRajlakshmiSection/1.png";
 import teamImage from "@/assets/WhyChooseRajlakshmiSection/2.png";
 import farmerBgImg from "@/assets/aboutus/farmer-bell-left.png";
 const AboutUsPage = () => {
+  const navigate = useNavigate();
   const differentiators = [
     {
       title: "100% Organic & Naturally Grown",
@@ -30,7 +31,7 @@ const AboutUsPage = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-b from-green-50/30 to-white">
+      <div className="min-h-screen bg-white">
         {/* Header Section with decorative elements */}
         <section className="text-center py-12 px-4 relative overflow-hidden">
           <h1 className="text-3xl md:text-4xl font-bold text-green-700 relative z-10">
@@ -43,7 +44,7 @@ const AboutUsPage = () => {
 
         {/* About Rajlakshmi Javiks - with image on RIGHT */}
         <section className="max-w-7xl mx-auto px-6 py-16">
-          <div className="bg-green-50/40 rounded-3xl p-8 md:p-12">
+          <div className="bg-gradient-to-br from-green-50 to-white rounded-3xl p-8 md:p-12">
             <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
               <div className="flex-1 order-2 md:order-1">
                 <h2 className="text-2xl md:text-3xl font-bold text-green-800 mb-6">
@@ -131,7 +132,7 @@ const AboutUsPage = () => {
         </section>
 
         {/* What Makes Us Different */}
-        <section className="bg-[#f1fdf1]  to-white py-16 px-4 mt-12">
+        <section className="bg-gradient-to-br from-green-50 to-white py-16 px-4 mt-12">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-green-800 mb-12 text-center">
               What Makes Rajlakshmi Javiks Different
@@ -291,6 +292,7 @@ hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             </p>
 
             <button
+              onClick={() => navigate(`/certifications`)}
               className="
         px-6
         py-2
@@ -335,18 +337,11 @@ transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
-                  className="bg-green-700 hover:bg-green-800 text-white rounded-md px-8 py-5 text-lg 
+                  onClick={() => navigate(`/product`)}
+                  className="bg-[#01722C] hover:bg-green-700 text-white rounded-md px-8 py-5 text-lg 
 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   Shop Now
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  className="border border-green-700 text-green-700 hover:bg-green-50 rounded-md px-8 py-5 text-lg 
-  transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                >
-                  <Link to="/certifications">Explore Categories</Link>
                 </Button>
               </div>
             </div>
@@ -358,6 +353,8 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
 };
 
 const TransparencySection = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-12 lg:py-20 bg-white relative overflow-hidden">
       {/* Background decorative image */}
@@ -396,6 +393,7 @@ const TransparencySection = () => {
 
             <div className="pt-2">
               <Button
+                onClick={() => navigate(`/contact`)}
                 variant="outline"
                 className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
               >

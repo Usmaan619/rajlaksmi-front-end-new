@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import {
-  CheckCircle,
-  Download,
-  Phone,
-} from "lucide-react";
+import { CheckCircle, ChevronDown, Download, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import labrepotImage from "@/assets/labreport/labreport.png";
@@ -22,8 +18,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useNavigate } from "react-router-dom";
 
 const LabReportsPage = () => {
+  const navigate = useNavigate();
   const [expandedFaq, setExpandedFaq] = useState(null);
 
   const faqs = [
@@ -168,7 +166,7 @@ const LabReportsPage = () => {
               <div className="pt-2">
                 <Button
                   variant="outline"
-                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
+                  className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
                 >
                   Read more
                 </Button>
@@ -179,7 +177,7 @@ const LabReportsPage = () => {
       </section>
 
       {/* What Do Our Lab Reports Cover */}
-      <section className="py-16 px-4 bg-[#F0FFF0]">
+      <section className="py-16 px-4 bg-gradient-to-br from-green-50 to-white">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left - Content */}
@@ -528,8 +526,8 @@ const LabReportsPage = () => {
                   >
                     <AccordionTrigger className="text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
                       <span className="flex-1">{faq.question}</span>
-                      <span className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white text-xl leading-none transition-transform duration-200 [[data-state=open]_&]:rotate-45">
-                        +
+                      <span className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white text-xl leading-none transition-transform duration-200 [[data-state=open]_&]:rotate-180">
+                        <ChevronDown size={18} />
                       </span>
                     </AccordionTrigger>
 

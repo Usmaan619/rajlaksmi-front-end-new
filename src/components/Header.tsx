@@ -233,7 +233,7 @@ const Header = () => {
               >
                 <ShoppingCart className="h-5 w-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 bg-[#f4b42b] text-primary-foreground text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
                     {cartCount}
                   </span>
                 )}
@@ -368,12 +368,12 @@ const Header = () => {
                   <>
                     <Link
                       to="/login"
-                      className="flex-1"
+                      className="flex-1 "
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <Button
                         size="sm"
-                        className="w-full bg-primary justify-start"
+                        className="w-full bg-primary justify-start rounded-lg"
                       >
                         <User className="h-4 w-4 mr-2" />
                         Login
