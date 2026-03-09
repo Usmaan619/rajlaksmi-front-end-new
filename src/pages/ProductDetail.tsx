@@ -477,155 +477,159 @@ const ProductDetail = () => {
       </h1>
 
       <div className="min-h-screen bg-white">
-      <main className="container mx-auto px-4 py-6 lg:py-10">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-6">
-          <Link
-            to="/products"
-            className="flex items-center gap-2 text-primary hover:underline text-sm font-medium"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to previous page
-          </Link>
-          <span className="text-muted-foreground text-sm">
-            | Listed in category:
-          </span>
-          <Link
-            to="/products"
-            className="text-primary hover:underline text-sm font-medium"
-          >
-            {product.category}
-          </Link>
-        </div>
-
-        {/* Product Top Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Image Gallery */}
-          <div>
-            {/* Main Image */}
-            <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted mb-4">
-              <img
-                src={product.images[selectedImage]}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
-              <button
-                onClick={prevImage}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-popover/80 shadow-soft flex items-center justify-center hover:bg-popover transition-colors"
-              >
-                <ChevronLeft className="h-5 w-5 text-foreground" />
-              </button>
-              <button
-                onClick={nextImage}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-popover/80 shadow-soft flex items-center justify-center hover:bg-popover transition-colors"
-              >
-                <ChevronRight className="h-5 w-5 text-foreground" />
-              </button>
-            </div>
-
-            {/* Thumbnail Strip */}
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {product.images.map((img, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${
-                    selectedImage === index ? "border-primary" : "border-border"
-                  }`}
-                >
-                  <img
-                    src={img}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
+        <main className="container mx-auto px-4 py-6 lg:py-10">
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 mb-6">
+            <Link
+              to="/products"
+              className="flex items-center gap-2 text-primary hover:underline text-sm font-medium"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to previous page
+            </Link>
+            <span className="text-muted-foreground text-sm">
+              | Listed in category:
+            </span>
+            <Link
+              to="/products"
+              className="text-primary hover:underline text-sm font-medium"
+            >
+              {product.category}
+            </Link>
           </div>
 
-          {/* Product Info */}
-          <div className="space-y-5">
-            <div className="flex flex-wrap items-center gap-2 mb-1">
-              {product.bestSeller && (
-                <Badge className="bg-golden hover:bg-golden/90 text-white border-none py-1 px-3">
-                  Best Seller
-                </Badge>
-              )}
-              {product.isFeatured && (
-                <Badge className="bg-primary hover:bg-primary/90 text-white border-none py-1 px-3">
-                  Featured
-                </Badge>
-              )}
-            </div>
-            <h1 className="font-heading text-2xl lg:text-3xl font-bold text-foreground">
-              {product.name}
-            </h1>
-            <p className="text-muted-foreground text-sm">{product.subtitle}</p>
+          {/* Product Top Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Image Gallery */}
+            <div>
+              {/* Main Image */}
+              <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted mb-4">
+                <img
+                  src={product.images[selectedImage]}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+                <button
+                  onClick={prevImage}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-popover/80 shadow-soft flex items-center justify-center hover:bg-popover transition-colors"
+                >
+                  <ChevronLeft className="h-5 w-5 text-foreground" />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-popover/80 shadow-soft flex items-center justify-center hover:bg-popover transition-colors"
+                >
+                  <ChevronRight className="h-5 w-5 text-foreground" />
+                </button>
+              </div>
 
-            {/* Rating */}
-            <div className="flex items-center gap-3 flex-wrap">
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star
-                    key={star}
-                    className={`h-5 w-5 ${star <= Math.floor(product.rating) ? "fill-golden text-golden" : "text-border"}`}
-                  />
+              {/* Thumbnail Strip */}
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {product.images.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${
+                      selectedImage === index
+                        ? "border-primary"
+                        : "border-border"
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
                 ))}
               </div>
-              <span className="text-sm font-semibold text-foreground">
-                {product.rating}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                from {product.reviews} Reviews
-              </span>
-              {/* Icons */}
-              <div className="ml-auto flex items-center gap-2">
-                <button
-                  onClick={() => {
-                    toggleWishlist({
-                      id: `product-detail-${product.name}`,
-                      name: product.name,
-                      price: product.price,
-                      image: product.images[0],
-                      originalPrice: product.originalPrice,
-                      discount: product.discount,
-                      weightOptions: product.sizes.map((s: any) =>
-                        typeof s === "object" ? s.weight : String(s),
-                      ),
-                    });
-                    toast.success(
-                      isFavorite
-                        ? `Removed from Wishlist`
-                        : `Added to Wishlist`,
-                    );
-                  }}
-                  className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
-                >
-                  <Heart
-                    className={`h-4 w-4 ${isFavorite ? "fill-destructive text-destructive" : "text-muted-foreground"}`}
-                  />
-                </button>
-                <button
-                  onClick={handleShare}
-                  title="Share product"
-                  className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
-                >
-                  <Share2 className="h-4 w-4 text-muted-foreground" />
-                </button>
+            </div>
+
+            {/* Product Info */}
+            <div className="space-y-5">
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                {product.bestSeller && (
+                  <Badge className="bg-golden hover:bg-golden/90 text-white border-none py-1 px-3">
+                    Best Seller
+                  </Badge>
+                )}
+                {product.isFeatured && (
+                  <Badge className="bg-primary hover:bg-primary/90 text-white border-none py-1 px-3">
+                    Featured
+                  </Badge>
+                )}
               </div>
-            </div>
+              <h1 className="font-heading text-2xl lg:text-3xl font-bold text-foreground">
+                {product.name}
+              </h1>
+              <p className="text-muted-foreground text-sm">
+                {product.subtitle}
+              </p>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2">
-              {product.tags.map((tag) => (
-                <span key={tag} className="text-xs text-muted-foreground">
-                  {tag} |
+              {/* Rating */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`h-5 w-5 ${star <= Math.floor(product.rating) ? "fill-golden text-golden" : "text-border"}`}
+                    />
+                  ))}
+                </div>
+                <span className="text-sm font-semibold text-foreground">
+                  {product.rating}
                 </span>
-              ))}
-            </div>
+                <span className="text-sm text-muted-foreground">
+                  from {product.reviews} Reviews
+                </span>
+                {/* Icons */}
+                <div className="ml-auto flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      toggleWishlist({
+                        id: `product-detail-${product.name}`,
+                        name: product.name,
+                        price: product.price,
+                        image: product.images[0],
+                        originalPrice: product.originalPrice,
+                        discount: product.discount,
+                        weightOptions: product.sizes.map((s: any) =>
+                          typeof s === "object" ? s.weight : String(s),
+                        ),
+                      });
+                      toast.success(
+                        isFavorite
+                          ? `Removed from Wishlist`
+                          : `Added to Wishlist`,
+                      );
+                    }}
+                    className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
+                  >
+                    <Heart
+                      className={`h-4 w-4 ${isFavorite ? "fill-destructive text-destructive" : "text-muted-foreground"}`}
+                    />
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    title="Share product"
+                    className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
+                  >
+                    <Share2 className="h-4 w-4 text-muted-foreground" />
+                  </button>
+                </div>
+              </div>
 
-            {/* Offers */}
-            {/* <div>
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2">
+                {product.tags.map((tag) => (
+                  <span key={tag} className="text-xs text-muted-foreground">
+                    {tag} |
+                  </span>
+                ))}
+              </div>
+
+              {/* Offers */}
+              {/* <div>
               <h3 className="text-sm font-semibold text-foreground mb-3">
                 Offers Available
               </h3>
@@ -660,384 +664,388 @@ const ProductDetail = () => {
               </div>
             </div> */}
 
-            {/* Size Selector */}
-            <div>
-              <h3 className="text-sm font-semibold text-foreground mb-3">
-                Size
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {sizesArr.map((sizeObj, idx) => (
+              {/* Size Selector */}
+              <div>
+                <h3 className="text-sm font-semibold text-foreground mb-3">
+                  Size
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {sizesArr.map((sizeObj, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedSizeIdx(idx)}
+                      className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
+                        selectedSizeIdx === idx
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "border-border text-foreground hover:border-primary"
+                      }`}
+                    >
+                      {sizeObj.weight}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Availability */}
+              <p className="text-sm">
+                Availability:{" "}
+                <span
+                  className={`font-semibold ${
+                    product.stock > 0 ? "text-primary" : "text-destructive"
+                  }`}
+                >
+                  {product.stock > 0
+                    ? `In Stock (${product.stock})`
+                    : "Out of Stock"}
+                </span>
+              </p>
+
+              {/* Price */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-3xl font-bold text-foreground">
+                  ₹{(currentPrice * quantity).toFixed(2)}
+                </span>
+                {product.originalPrice > currentPrice && (
+                  <>
+                    <span className="text-lg text-muted-foreground line-through">
+                      ₹{(product.originalPrice * quantity).toFixed(2)}
+                    </span>
+                    {currentDiscount > 0 && (
+                      <Badge className="bg-[#DFF1E5] text-[#29A44F] text-sm px-4 py-2 rounded-md">
+                        Save {currentDiscount}%
+                      </Badge>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* Quantity Selector */}
+              <div className="flex flex-col gap-3">
+                <h3 className="text-sm font-semibold text-foreground">
+                  Quantity
+                </h3>
+                <div className="flex items-center w-32 border border-border rounded-lg overflow-hidden h-12">
                   <button
-                    key={idx}
-                    onClick={() => setSelectedSizeIdx(idx)}
-                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
-                      selectedSizeIdx === idx
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "border-border text-foreground hover:border-primary"
-                    }`}
+                    onClick={handleDecreaseQuantity}
+                    className="flex-1 flex items-center justify-center hover:bg-muted transition-colors border-r border-border h-full"
+                    disabled={quantity <= 1}
                   >
-                    {sizeObj.weight}
+                    <Minus className="h-4 w-4 text-foreground" />
                   </button>
+                  <div className="flex-1 flex items-center justify-center font-semibold text-foreground">
+                    {quantity}
+                  </div>
+                  <button
+                    onClick={handleIncreaseQuantity}
+                    className="flex-1 flex items-center justify-center hover:bg-muted transition-colors border-l border-border h-full"
+                    disabled={
+                      quantity >= (product.stock > 0 ? product.stock : 99)
+                    }
+                  >
+                    <Plus className="h-4 w-4 text-foreground" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={handleAddToCart}
+                  disabled={product.stock <= 0}
+                  className="flex-1 bg-white h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Add to Cart
+                </Button>
+                <Button
+                  onClick={handleBuyNow}
+                  disabled={product.stock <= 0}
+                  className="flex-1 h-12 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Buy it now
+                </Button>
+              </div>
+
+              <div className="mt-5 pt-4 border-t border-border">
+                <h4 className="text-center text-sm font-semibold mb-3 text-[#FDBC2D]">
+                  Guaranteed Safe Checkout
+                </h4>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 p-4 border border-border rounded-lg">
+                  {PAYMENT_LOGOS.map((logo, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-center border border-border rounded-md p-2 min-h-[60px] bg-white"
+                    >
+                      <img
+                        src={logo}
+                        alt={`Payment method ${idx + 1}`}
+                        className="w-full max-h-10 object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trust Badges */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { icon: Truck, label: "Fast Shipping" },
+                  { icon: Shield, label: "Secure Payment" },
+                  { icon: Award, label: "Quality Product" },
+                  { icon: Leaf, label: "Natural Ingredients" },
+                ].map(({ icon: Icon, label }) => (
+                  <div
+                    key={label}
+                    className="flex flex-col items-center gap-2 text-center"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <span className="text-xs font-medium text-foreground">
+                      {label}
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Availability */}
-            <p className="text-sm">
-              Availability:{" "}
-              <span
-                className={`font-semibold ${
-                  product.stock > 0 ? "text-primary" : "text-destructive"
-                }`}
-              >
-                {product.stock > 0
-                  ? `In Stock (${product.stock})`
-                  : "Out of Stock"}
-              </span>
-            </p>
-
-            {/* Price */}
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-3xl font-bold text-foreground">
-                ₹{(currentPrice * quantity).toFixed(2)}
-              </span>
-              {product.originalPrice > currentPrice && (
-                <>
-                  <span className="text-lg text-muted-foreground line-through">
-                    ₹{(product.originalPrice * quantity).toFixed(2)}
-                  </span>
-                  {currentDiscount > 0 && (
-                    <Badge className="bg-[#DFF1E5] text-[#29A44F] text-sm px-4 py-2 rounded-md">
-                      Save {currentDiscount}%
-                    </Badge>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* Quantity Selector */}
-            <div className="flex flex-col gap-3">
-              <h3 className="text-sm font-semibold text-foreground">
-                Quantity
-              </h3>
-              <div className="flex items-center w-32 border border-border rounded-lg overflow-hidden h-12">
-                <button
-                  onClick={handleDecreaseQuantity}
-                  className="flex-1 flex items-center justify-center hover:bg-muted transition-colors border-r border-border h-full"
-                  disabled={quantity <= 1}
+          {/* Product Description Section */}
+          <div className="mt-12 lg:mt-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+              <div>
+                <h2 className="font-heading text-2xl lg:text-3xl font-bold text-primary mb-6">
+                  Product Details
+                </h2>
+                <Accordion
+                  type="single"
+                  collapsible
+                  className="w-full"
+                  defaultValue="item-1"
                 >
-                  <Minus className="h-4 w-4 text-foreground" />
-                </button>
-                <div className="flex-1 flex items-center justify-center font-semibold text-foreground">
-                  {quantity}
+                  <AccordionItem
+                    value="item-1"
+                    className="border-b border-[hsl(120,20%,85%)]"
+                  >
+                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                      <span className="flex-1">Description</span>
+                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                        <ChevronDown className="h-5 w-5" />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
+                      {product.description}
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem
+                    value="item-2"
+                    className="border-b border-[hsl(120,20%,85%)]"
+                  >
+                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                      <span className="flex-1">Health Benefits</span>
+                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                        <ChevronDown className="h-5 w-5" />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">
+                      <ul className="space-y-2">
+                        {product.healthBenefits.map((benefit: string) => (
+                          <li key={benefit} className="flex items-start gap-2">
+                            <span className="text-primary mt-1">•</span>
+                            {benefit}
+                          </li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem
+                    value="item-3"
+                    className="border-b border-[hsl(120,20%,85%)]"
+                  >
+                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                      <span className="flex-1">Ingredients</span>
+                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                        <ChevronDown className="h-5 w-5" />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
+                      {product.ingredients}
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-4" className="border-none">
+                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                      <span className="flex-1">Additional Information</span>
+                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                        <ChevronDown className="h-5 w-5" />
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground text-sm pb-5">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="font-semibold text-foreground">
+                            Product ID
+                          </p>
+                          <p>{product.id}</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground">
+                            Category ID
+                          </p>
+                          <p>{product.categoryId}</p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground">
+                            Created At
+                          </p>
+                          <p>
+                            {product.createdAt
+                              ? new Date(product.createdAt).toLocaleDateString()
+                              : "N/A"}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground">
+                            Updated At
+                          </p>
+                          <p>
+                            {product.updatedAt
+                              ? new Date(product.updatedAt).toLocaleDateString()
+                              : "N/A"}
+                          </p>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+
+              {/* Description Image */}
+              <div className="flex items-start justify-center">
+                <div className="rounded-2xl overflow-hidden shadow-card w-full md:w-[450px] md:h-[450px]">
+                  <img
+                    src={product.images[0]}
+                    alt="Product close-up"
+                    className="w-full h-auto md:h-full object-cover"
+                  />
                 </div>
-                <button
-                  onClick={handleIncreaseQuantity}
-                  className="flex-1 flex items-center justify-center hover:bg-muted transition-colors border-l border-border h-full"
-                  disabled={quantity >= (product.stock > 0 ? product.stock : 99)}
-                >
-                  <Plus className="h-4 w-4 text-foreground" />
-                </button>
               </div>
             </div>
+          </div>
+          {/* Customer Reviews Section */}
+          <div className="mt-16 lg:mt-20">
+            <h2 className="font-heading text-2xl lg:text-3xl font-bold text-primary text-center mb-10 ">
+              Customer Reviews
+            </h2>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {reviews.map((review, index) => (
+                <div
+                  key={review.id}
+                  className="bg-card rounded-xl p-6 shadow-md border border-border"
+                >
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-14 h-14 rounded-full bg-muted overflow-hidden flex-shrink-0">
+                      <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/20 flex items-center justify-center">
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="w-8 h-8 text-muted-foreground/50"
+                        >
+                          <circle cx="12" cy="8" r="4" fill="currentColor" />
+                          <path
+                            d="M12 14c-6 0-8 3-8 6v1h16v-1c0-3-2-6-8-6z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="flex gap-0.5 ml-auto">
+                      <Rating
+                        initialValue={review.rating}
+                        readonly
+                        allowFraction
+                        size={18}
+                        fillColor="orange"
+                        className="flex"
+                        SVGclassName="inline-block"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed italic">
+                    "{review.feedback || review.quote}"
+                  </p>
+                  <div>
+                    <p className="font-semibold text-foreground">
+                      {review.name}
+                    </p>
+                    <p className="text-xs text-primary font-medium">
+                      {review.title || "Verified Customer"}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Review Navigation */}
+            <div className="flex items-center justify-center gap-4 mb-6">
               <Button
                 variant="outline"
-                onClick={handleAddToCart}
-                disabled={product.stock <= 0}
-                className="flex-1 bg-white h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                size="icon"
+                onClick={() => setReviewPage((p) => Math.max(0, p - 1))}
+                disabled={reviewPage === 0}
+                className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
               >
-                Add to Cart
+                <ChevronLeft className="w-5 h-5" />
               </Button>
-              <Button 
-                onClick={handleBuyNow}
-                disabled={product.stock <= 0}
-                className="flex-1 h-12 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Buy it now
-              </Button>
-            </div>
-
-            <div className="mt-5 pt-4 border-t border-border">
-              <h4 className="text-center text-sm font-semibold mb-3 text-[#FDBC2D]">
-                Guaranteed Safe Checkout
-              </h4>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 p-4 border border-border rounded-lg">
-                {PAYMENT_LOGOS.map((logo, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center justify-center border border-border rounded-md p-2 min-h-[60px] bg-white"
-                  >
-                    <img
-                      src={logo}
-                      alt={`Payment method ${idx + 1}`}
-                      className="w-full max-h-10 object-contain"
-                      loading="lazy"
-                    />
-                  </div>
+              <div className="flex gap-2">
+                {Array.from({ length: totalReviewPages }).map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setReviewPage(i)}
+                    className={`w-2.5 h-2.5 rounded-full transition-colors ${i === reviewPage ? "bg-primary" : "bg-muted-foreground/30"}`}
+                  />
                 ))}
               </div>
-            </div>
-
-            {/* Trust Badges */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {[
-                { icon: Truck, label: "Fast Shipping" },
-                { icon: Shield, label: "Secure Payment" },
-                { icon: Award, label: "Quality Product" },
-                { icon: Leaf, label: "Natural Ingredients" },
-              ].map(({ icon: Icon, label }) => (
-                <div
-                  key={label}
-                  className="flex flex-col items-center gap-2 text-center"
-                >
-                  <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center">
-                    <Icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <span className="text-xs font-medium text-foreground">
-                    {label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Product Description Section */}
-        <div className="mt-12 lg:mt-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            <div>
-              <h2 className="font-heading text-2xl lg:text-3xl font-bold text-primary mb-6">
-                Product Details
-              </h2>
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full"
-                defaultValue="item-1"
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() =>
+                  setReviewPage((p) => Math.min(totalReviewPages - 1, p + 1))
+                }
+                disabled={reviewPage === totalReviewPages - 1}
+                className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
               >
-                <AccordionItem
-                  value="item-1"
-                  className="border-b border-[hsl(120,20%,85%)]"
-                >
-                  <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
-                    <span className="flex-1">Description</span>
-                    <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
-                      <ChevronDown className="h-5 w-5" />
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
-                    {product.description}
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem
-                  value="item-2"
-                  className="border-b border-[hsl(120,20%,85%)]"
-                >
-                  <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
-                    <span className="flex-1">Health Benefits</span>
-                    <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
-                      <ChevronDown className="h-5 w-5" />
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">
-                    <ul className="space-y-2">
-                      {product.healthBenefits.map((benefit: string) => (
-                        <li key={benefit} className="flex items-start gap-2">
-                          <span className="text-primary mt-1">•</span>
-                          {benefit}
-                        </li>
-                      ))}
-                    </ul>
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem
-                  value="item-3"
-                  className="border-b border-[hsl(120,20%,85%)]"
-                >
-                  <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
-                    <span className="flex-1">Ingredients</span>
-                    <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
-                      <ChevronDown className="h-5 w-5" />
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
-                    {product.ingredients}
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-4" className="border-none">
-                  <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
-                    <span className="flex-1">Additional Information</span>
-                    <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
-                      <ChevronDown className="h-5 w-5" />
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground text-sm pb-5">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          Product ID
-                        </p>
-                        <p>{product.id}</p>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          Category ID
-                        </p>
-                        <p>{product.categoryId}</p>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          Created At
-                        </p>
-                        <p>
-                          {product.createdAt
-                            ? new Date(product.createdAt).toLocaleDateString()
-                            : "N/A"}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">
-                          Updated At
-                        </p>
-                        <p>
-                          {product.updatedAt
-                            ? new Date(product.updatedAt).toLocaleDateString()
-                            : "N/A"}
-                        </p>
-                      </div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                <ChevronRight className="w-5 h-5" />
+              </Button>
             </div>
 
-            {/* Description Image */}
-            <div className="flex items-start justify-center">
-              <div className="rounded-2xl overflow-hidden shadow-card max-w-md w-full">
-                <img
-                  src={productChana}
-                  alt="Product close-up"
-                  className="w-full h-auto object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Customer Reviews Section */}
-        <div className="mt-16 lg:mt-20">
-          <h2 className="font-heading text-2xl lg:text-3xl font-bold text-primary text-center mb-10 ">
-            Customer Reviews
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {reviews.map((review, index) => (
-              <div
-                key={review.id}
-                className="bg-card rounded-xl p-6 shadow-md border border-border"
+            {/* Write a Review Button */}
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                onClick={() => setIsReviewModalOpen(true)}
+                className="bg-white rounded-md border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8"
               >
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-14 h-14 rounded-full bg-muted overflow-hidden flex-shrink-0">
-                    <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/20 flex items-center justify-center">
-                      <svg
-                        viewBox="0 0 24 24"
-                        className="w-8 h-8 text-muted-foreground/50"
-                      >
-                        <circle cx="12" cy="8" r="4" fill="currentColor" />
-                        <path
-                          d="M12 14c-6 0-8 3-8 6v1h16v-1c0-3-2-6-8-6z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="flex gap-0.5 ml-auto">
-                    <Rating
-                      initialValue={review.rating}
-                      readonly
-                      allowFraction
-                      size={18}
-                      fillColor="orange"
-                      className="flex"
-                      SVGclassName="inline-block"
-                    />
-                  </div>
-                </div>
-                <p className="text-muted-foreground text-sm mb-4 leading-relaxed italic">
-                  "{review.feedback || review.quote}"
-                </p>
-                <div>
-                  <p className="font-semibold text-foreground">{review.name}</p>
-                  <p className="text-xs text-primary font-medium">
-                    {review.title || "Verified Customer"}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Review Navigation */}
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setReviewPage((p) => Math.max(0, p - 1))}
-              disabled={reviewPage === 0}
-              className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </Button>
-            <div className="flex gap-2">
-              {Array.from({ length: totalReviewPages }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setReviewPage(i)}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors ${i === reviewPage ? "bg-primary" : "bg-muted-foreground/30"}`}
-                />
-              ))}
+                Write a review
+              </Button>
             </div>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() =>
-                setReviewPage((p) => Math.min(totalReviewPages - 1, p + 1))
-              }
-              disabled={reviewPage === totalReviewPages - 1}
-              className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </Button>
           </div>
 
-          {/* Write a Review Button */}
-          <div className="flex justify-center">
-            <Button
-              variant="outline"
-              onClick={() => setIsReviewModalOpen(true)}
-              className="bg-white rounded-md border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8"
-            >
-              Write a review
-            </Button>
-          </div>
-        </div>
-
-        <WriteReviewModal
-          productId={id || ""}
-          isOpen={isReviewModalOpen}
-          onClose={() => setIsReviewModalOpen(false)}
-          onSuccess={fetchReviews}
+          <WriteReviewModal
+            productId={id || ""}
+            isOpen={isReviewModalOpen}
+            onClose={() => setIsReviewModalOpen(false)}
+            onSuccess={fetchReviews}
+          />
+        </main>
+        <RelatedProduct
+          category={apiProduct?.category_name}
+          currentProductId={id}
         />
-      </main>
-      <RelatedProduct
-        category={apiProduct?.category_name}
-        currentProductId={id}
-      />
-      <BentoGrid />
-      <FAQSection />
-    </div>
+        <BentoGrid />
+        <FAQSection />
+      </div>
     </>
   );
 };
