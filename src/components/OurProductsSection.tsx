@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-import { ExternalLink, Heart } from "lucide-react";
+import { ExternalLink, Heart, ChevronLeft, ChevronRight } from "lucide-react";
 import heroGhee from "@/assets/hero-ghee.jpg";
 import dealGhee from "@/assets/deal-ghee.jpg";
 import VideoSource from "@/assets/Video/gauswarn.mp4";
@@ -8,59 +8,116 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
+import { getYoutubeShorts } from "@/api/youtube.service";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
-const products = [
+export interface ProductVideo {
+  id: string | number;
+  name: string;
+  thumbnail: string;
+  price: number;
+  videoUrl: string;
+}
+
+const fallbackProducts: ProductVideo[] = [
   {
     id: 1,
     name: "A2 Ghee",
     thumbnail: heroGhee,
     price: 899,
     // Using a sample video URL - in production, replace with actual product videos
-    videoUrl: VideoSource,
+    videoUrl: "",
   },
   {
     id: 2,
     name: "A2 Ghee",
     thumbnail: dealGhee,
     price: 899,
-    videoUrl: "VideoSource",
+    videoUrl: "",
   },
   {
     id: 3,
     name: "A2 Ghee",
     thumbnail: heroGhee,
     price: 899,
-    videoUrl: "VideoSource",
+    videoUrl: "",
   },
   {
     id: 4,
     name: "A2 Ghee",
     thumbnail: dealGhee,
     price: 899,
-    videoUrl: "VideoSource",
+    videoUrl: "",
   },
   {
     id: 5,
     name: "A2 Ghee",
     thumbnail: heroGhee,
     price: 899,
-    videoUrl: "VideoSource",
-  },
-  {
-    id: 6,
-    name: "A2 Ghee",
-    thumbnail: heroGhee,
-    price: 899,
-    videoUrl: "VideoSource",
+    videoUrl: "",
   },
 ];
 
-const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
+const VideoProductCard = ({
+  product,
+  isActive,
+}: {
+  product: ProductVideo;
+  isActive: boolean;
+}) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isFavorite = isInWishlist(`product-video-${product.id}`);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const getYoutubeId = (url: string) => {
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
+
+  const youtubeId = getYoutubeId(product.videoUrl);
+  const isYoutube = !!youtubeId;
+
+  // 10s playing restriction logic
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isActive || isHovered) {
+      setIsPlaying(true);
+      // Automatically stop video after exactly 10 seconds
+      timer = setTimeout(() => {
+        setIsPlaying(false);
+      }, 10000);
+    } else {
+      setIsPlaying(false);
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isActive, isHovered]);
+
+  // Handle native video playback based on 10s restricted isPlaying state
+  useEffect(() => {
+    if (!isYoutube && videoRef.current) {
+      if (isPlaying) {
+        // Reset to start on new play command to ensure a full 10s loop portion
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(() => {});
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isPlaying, isYoutube]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -77,13 +134,17 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
   return (
     <div
       onClick={() => navigate(`/product/${product.id}`)}
-      className="relative w-[260px] lg:w-[300px] h-[440px] lg:h-[490px] rounded-2xl overflow-hidden shadow-md group cursor-pointer transition-all duration-300 hover:shadow-xl"
+      className={`relative w-[260px] lg:w-[300px] h-[440px] lg:h-[490px] rounded-2xl overflow-hidden shadow-md group cursor-pointer transition-all duration-700 bg-white mx-auto ${
+        isActive
+          ? "scale-100 shadow-2xl border border-green-600/20 z-20"
+          : "scale-[0.85] opacity-30 blur-[0.5px] grayscale-[0.8]"
+      } hover:scale-[1.05] hover:opacity-100 hover:blur-none hover:grayscale-0 hover:z-30 will-change-transform`}
     >
       {/* Background Video */}
       <div
         className="relative w-full h-full"
-        onMouseEnter={() => videoRef.current?.play()}
-        onMouseLeave={() => videoRef.current?.pause()}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Thumbnail */}
         <img
@@ -92,15 +153,29 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        {/* Video */}
-        <video
-          ref={videoRef}
-          src={product.videoUrl}
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        />
+        {/* Video Content */}
+        {isYoutube ? (
+          isPlaying && (
+            <iframe
+              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtubeId}&modestbranding=1&rel=0&enablejsapi=1&showinfo=0`}
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title={product.name}
+            />
+          )
+        ) : (
+          <video
+            ref={videoRef}
+            src={product.videoUrl}
+            muted
+            loop
+            playsInline
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+              isPlaying ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        )}
 
         {/* Top-right icon */}
         <button
@@ -167,79 +242,102 @@ const VideoProductCard = ({ product }: { product: (typeof products)[0] }) => {
   );
 };
 
-const CARD_WIDTH = 220; // matches w-[220px]
-const CARD_GAP = 12; // matches gap-3
-const AUTO_SLIDE_INTERVAL = 3000; // slightly slower for better readability
-
 const OurProductsSection = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const autoSlideTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [products, setProducts] = useState<ProductVideo[]>(fallbackProducts);
+  const [api, setApi] = useState<CarouselApi>();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [count, setCount] = useState(0);
 
-  // Detect mobile (< md = 768px)
+  // Fetch YouTube shorts from API
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+    const fetchShorts = async () => {
+      try {
+        const responseData = await getYoutubeShorts();
 
-  const stopAutoSlide = useCallback(() => {
-    if (autoSlideTimer.current) {
-      clearInterval(autoSlideTimer.current);
-      autoSlideTimer.current = null;
-    }
-  }, []);
+        // Flexible data extraction dependent on how the backend sends it
+        const items = Array.isArray(responseData)
+          ? responseData
+          : responseData?.data || responseData?.shorts || [];
 
-  const startAutoSlide = useCallback(() => {
-    stopAutoSlide();
-    autoSlideTimer.current = setInterval(() => {
-      setCurrentIndex((prev) => {
-        const next = (prev + 1) % products.length;
-        if (scrollRef.current) {
-          scrollRef.current.scrollTo({
-            left: next * (CARD_WIDTH + CARD_GAP),
-            behavior: "smooth",
-          });
+        if (items.length > 0) {
+          const formattedProducts: ProductVideo[] = items
+            .map((item: any) => ({
+              id: item._id || item.id || Math.random().toString(),
+              // Map backend's title or name for the video
+              name: item.title || item.name || "A2 Ghee",
+              // Map backend's thumbnail if exists, else generic fallback
+              thumbnail: item.thumbnail || item.image || heroGhee,
+              // Ensure price or use default fallback if shorts API doesn't have prices
+              price: item.price || 899,
+              videoUrl: item.short_id
+                ? `https://www.youtube.com/shorts/${item.short_id}`
+                : item.videoUrl || item.url || item.link || "",
+            }))
+            .filter((p: ProductVideo) => p.videoUrl); // Ensure only items with videoUrl
+
+          if (formattedProducts.length > 0) {
+            setProducts(formattedProducts);
+          }
         }
-        return next;
-      });
-    }, AUTO_SLIDE_INTERVAL);
-  }, [stopAutoSlide]);
+      } catch (error) {
+        console.error("Failed to fetch youtube shorts:", error);
+      }
+    };
 
-  const scrollToIndex = useCallback((index: number) => {
-    if (!scrollRef.current) return;
-    scrollRef.current.scrollTo({
-      left: index * (CARD_WIDTH + CARD_GAP),
-      behavior: "smooth",
-    });
-    setCurrentIndex(index);
+    fetchShorts();
   }, []);
 
-  // Auto-slide only on mobile
+  // Handle Carousel Re-initialization when dynamic API data replaces fallback
   useEffect(() => {
-    if (isMobile) {
-      startAutoSlide();
-    } else {
-      stopAutoSlide();
+    if (api) {
+      setTimeout(() => {
+        api.reInit();
+      }, 100);
     }
-    return () => stopAutoSlide();
-  }, [isMobile, startAutoSlide, stopAutoSlide]);
+  }, [api, products.length]);
 
-  const handleTouchStart = () => stopAutoSlide();
+  // Track active slide and total count
+  useEffect(() => {
+    if (!api) return;
 
-  const handleTouchEnd = () => {
-    if (scrollRef.current) {
-      const index = Math.round(
-        scrollRef.current.scrollLeft / (CARD_WIDTH + CARD_GAP),
-      );
-      setCurrentIndex(index);
-    }
-    setTimeout(() => {
-      if (isMobile) startAutoSlide();
-    }, 1500);
-  };
+    const updateActiveIndex = () => {
+      setActiveIndex(api.selectedScrollSnap());
+    };
+
+    setCount(api.scrollSnapList().length);
+    updateActiveIndex();
+
+    api.on("select", updateActiveIndex);
+    return () => {
+      api.off("select", updateActiveIndex);
+    };
+  }, [api]);
+
+  // Auto-scroll logic matching video 10s rule
+  useEffect(() => {
+    if (!api) return;
+
+    let intervalId = setInterval(() => {
+      api.scrollNext();
+    }, 10000); // 10 seconds per video before sliding
+
+    const resetInterval = () => {
+      clearInterval(intervalId);
+      intervalId = setInterval(() => {
+        api.scrollNext();
+      }, 10000);
+    };
+
+    api.on("pointerDown", () => clearInterval(intervalId));
+    api.on("pointerUp", resetInterval);
+    api.on("select", resetInterval);
+
+    return () => clearInterval(intervalId);
+  }, [api]);
+
+  const scrollPrev = useCallback(() => api?.scrollPrev(), [api]);
+  const scrollNext = useCallback(() => api?.scrollNext(), [api]);
+  const scrollTo = useCallback((index: number) => api?.scrollTo(index), [api]);
 
   return (
     <section className="py-12 lg:py-16 bg-gradient-to-br from-green-50 to-white relative overflow-hidden">
@@ -260,57 +358,77 @@ const OurProductsSection = () => {
       "
       />
 
-      <div className="mx-auto px-3 sm:px-6 md:px-8 lg:px-10 xl:px-12 relative z-10">
+      <div className="mx-auto px-4 md:px-8 lg:px-12 relative z-10 w-full max-w-[1400px]">
         {/* Section Header */}
         <div className="mb-8 text-center">
-          <h2 className="font-heading text-3xl lg:text-4xl font-bold text-primary">
+          <p className="text-[#01722C] font-semibold text-xs sm:text-sm uppercase tracking-[0.3em] mb-3">
+            Pure Indulgence
+          </p>
+          <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
             Our Products
           </h2>
+          <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
         </div>
 
-        {/* Products Grid / Auto-Slide on Mobile */}
-        <div
-          ref={scrollRef}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-          className="flex gap-3 overflow-x-auto pb-6 px-1 snap-x snap-mandatory
-             md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6
-             md:gap-6 md:px-0
-             md:overflow-visible md:justify-items-center
-             mb-6"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {products.map((product) => (
-            <div
-              className="snap-start flex-shrink-0 w-[260px] md:w-full"
-              key={product.id}
+        {/* Carousel Container */}
+        <div className="relative w-full mx-auto">
+          <Carousel
+            opts={{
+              align: "center",
+              loop: true,
+            }}
+            setApi={setApi}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4 md:-ml-6">
+              {products.map((product, index) => (
+                <CarouselItem
+                  key={product.id}
+                  className="pl-4 md:pl-6 basis-full sm:basis-[80%] md:basis-[45%] lg:basis-[30%] py-8"
+                >
+                  <VideoProductCard
+                    product={product}
+                    isActive={activeIndex === index}
+                  />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+
+          {/* Navigation Arrows like Testimonial */}
+          <div className="hidden sm:flex absolute top-1/2 -left-2 md:-left-8 lg:-left-12 -translate-y-1/2 z-30">
+            <button
+              onClick={scrollPrev}
+              className="w-12 h-12 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-green-700 hover:bg-green-700 hover:text-white transition-all duration-300"
             >
-              <VideoProductCard product={product} />
-            </div>
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+          </div>
+          <div className="hidden sm:flex absolute top-1/2 -right-2 md:-right-8 lg:-right-12 -translate-y-1/2 z-30">
+            <button
+              onClick={scrollNext}
+              className="w-12 h-12 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-green-700 hover:bg-green-700 hover:text-white transition-all duration-300"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
+          </div>
+        </div>
+
+        {/* Dot Indicators */}
+        <div className="flex justify-center gap-2 mt-8 z-10 relative">
+          {Array.from({ length: count }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => scrollTo(i)}
+              className={`transition-all duration-500 rounded-full ${
+                i === activeIndex
+                  ? "w-8 h-2.5 bg-[#01722C]"
+                  : "w-2.5 h-2.5 bg-[#01722C]/20 hover:bg-[#01722C]/40"
+              }`}
+              aria-label={`Go to product ${i + 1}`}
+            />
           ))}
         </div>
-
-        {/* Dot Indicators — mobile only */}
-        {isMobile && (
-          <div className="flex justify-center gap-2 mb-6 md:hidden">
-            {products.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  stopAutoSlide();
-                  scrollToIndex(i);
-                  setTimeout(() => startAutoSlide(), 1500);
-                }}
-                className={`rounded-full transition-all duration-300 ${
-                  i === currentIndex
-                    ? "w-6 h-2 bg-green-600"
-                    : "w-2 h-2 bg-green-300"
-                }`}
-                aria-label={`Go to product ${i + 1}`}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );
