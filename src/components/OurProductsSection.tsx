@@ -261,18 +261,30 @@ const OurProductsSection = () => {
 
         if (items.length > 0) {
           const formattedProducts: ProductVideo[] = items
-            .map((item: any) => ({
-              id: item._id || item.id || Math.random().toString(),
-              // Map backend's title or name for the video
-              name: item.title || item.name || "A2 Ghee",
-              // Map backend's thumbnail if exists, else generic fallback
-              thumbnail: item.thumbnail || item.image || heroGhee,
-              // Ensure price or use default fallback if shorts API doesn't have prices
-              price: item.price || 899,
-              videoUrl: item.short_id
+            .map((item: any) => {
+              const videoUrl = item.short_id
                 ? `https://www.youtube.com/shorts/${item.short_id}`
-                : item.videoUrl || item.url || item.link || "",
-            }))
+                : item.videoUrl || item.url || item.link || "";
+
+              const regExp =
+                /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+              const match = videoUrl.match(regExp);
+              const youtubeId =
+                match && match[2].length === 11 ? match[2] : null;
+
+              return {
+                id: item._id || item.id || Math.random().toString(),
+                // Map backend's title or name for the video
+                name: item.title || item.name || "A2 Ghee",
+                // Map backend's thumbnail if exists, else generic fallback or YouTube thumbnail
+                thumbnail: youtubeId
+                  ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+                  : item.thumbnail || item.image || heroGhee,
+                // Ensure price or use default fallback if shorts API doesn't have prices
+                price: item.price || 899,
+                videoUrl,
+              };
+            })
             .filter((p: ProductVideo) => p.videoUrl); // Ensure only items with videoUrl
 
           if (formattedProducts.length > 0) {
