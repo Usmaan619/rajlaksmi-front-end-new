@@ -157,7 +157,7 @@ const VideoProductCard = ({
         {isYoutube ? (
           isPlaying && (
             <iframe
-              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtubeId}&modestbranding=1&rel=0&enablejsapi=1&showinfo=0`}
+              src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtubeId}&modestbranding=1&rel=0&enablejsapi=1&showinfo=0`}
               className="absolute inset-0 w-full h-full object-cover pointer-events-none border-0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -193,7 +193,7 @@ const VideoProductCard = ({
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
-              id: `product-video-${product.id}`,
+              id: `${product.id}`,
               name: product.name,
               price: product.price,
               image: product.thumbnail,

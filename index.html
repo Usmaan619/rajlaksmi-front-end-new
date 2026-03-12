@@ -2,41 +2,87 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Rajlakshmi javiks international</title>
-    <meta name="description" content="Rajlakshmi javiks international" />
-    <meta name="author" content="Lovable" />
 
-    <!-- TODO: Update og:title to match your application name -->
-    <meta property="og:title" content="Rajlakshmi javiks international" />
-    <meta property="og:description" content="Rajlakshmi javiks international" />
+    <!-- Responsive -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary SEO -->
+    <title>Rajlakshmi Javiks International | Organic & Natural Products</title>
+
+    <meta
+      name="description"
+      content="Rajlakshmi Javiks International offers premium organic and natural products with certified quality, trusted globally."
+    />
+
+    <meta
+      name="keywords"
+      content="organic products, javik products, natural food, rajlakshmi javiks international"
+    />
+    <meta name="author" content="Rajlakshmi Javiks International" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://rajlakshmijaviksinternational.com/" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Open Graph (Facebook, LinkedIn etc) -->
+    <meta property="og:title" content="Rajlakshmi Javiks International" />
+    <meta
+      property="og:description"
+      content="Premium organic and natural products from Rajlakshmi Javiks International."
+    />
     <meta property="og:type" content="website" />
     <meta
-      property="og:image"
-      content="https://lovable.dev/opengraph-image-p98pqg.png"
+      property="og:url"
+      content="https://rajlakshmijaviksinternational.com/"
     />
+    <meta property="og:image" content="/og-image.jpg" />
 
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@Lovable" />
+    <meta name="twitter:title" content="Rajlakshmi Javiks International" />
     <meta
-      name="twitter:image"
-      content="https://lovable.dev/opengraph-image-p98pqg.png"
+      name="twitter:description"
+      content="Premium organic and natural products."
+    />
+    <meta name="twitter:image" content="/og-image.jpg" />
+
+    <!-- Performance: Preconnect for fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
     />
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B6M3DSVNX7"></script>
+    <!-- Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-B6M3DSVNX7"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-B6M3DSVNX7');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-B6M3DSVNX7");
     </script>
   </head>
 
   <body>
+    <!-- React Root -->
     <div id="root"></div>
+
+    <!-- React Entry -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

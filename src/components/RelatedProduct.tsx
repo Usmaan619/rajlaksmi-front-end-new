@@ -153,7 +153,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
-              id: `product-related-${product.id}`,
+              id: `${product.id}`,
               name: pName,
               price: pPrice,
               image: productImage,

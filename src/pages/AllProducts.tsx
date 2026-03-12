@@ -196,7 +196,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
-              id: `product-all-${product.id}`,
+              id: product.id,
               name: product.product_name,
               price: currentPrice,
               image: productImage,
@@ -541,216 +541,220 @@ const AllProducts = () => {
 
       <h1 className="sr-only">
         Rajlakshmi Javiks offers a wide collection of pure organic food products
-        sourced directly from farmers. Our range includes Bilona A2 Gir Cow Ghee,
-        ancient millets, organic pulses, cold-pressed oils, and natural honey.
-        All products are 100% pure, lab-tested, and free from preservatives,
-        ensuring the best health for your family.
+        sourced directly from farmers. Our range includes Bilona A2 Gir Cow
+        Ghee, ancient millets, organic pulses, cold-pressed oils, and natural
+        honey. All products are 100% pure, lab-tested, and free from
+        preservatives, ensuring the best health for your family.
       </h1>
 
       <div className="min-h-screen flex flex-col bg-white">
-      <main className="flex-1 mt-5">
-        <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
-          {/* Title + mobile filter */}
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#01722C]">
-              All Products
-            </h2>
+        <main className="flex-1 mt-5">
+          <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
+            {/* Title + mobile filter */}
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#01722C]">
+                All Products
+              </h2>
 
-            {/* Mobile Filter Button */}
-            <Button
-              variant="outline"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setMobileFilterOpen(true)}
-            >
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Products */}
-            <div className="flex-1">
-              {loading ? (
-                <div
-                  className="
-                    grid
-                    grid-cols-2
-                    sm:grid-cols-3
-                    md:grid-cols-4
-                    gap-4
-                    lg:gap-6
-                    lg:justify-center
-                    lg:[grid-template-columns:repeat(auto-fit,290px)]
-                  "
-                >
-                  {Array.from({ length: 8 }).map((_, i) => (
-                    <ProductSkeleton key={i} />
-                  ))}
-                </div>
-              ) : error ? (
-                <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <p className="text-destructive font-medium mb-4">{error}</p>
-                  <Button onClick={fetchAllProducts}>Try Again</Button>
-                </div>
-              ) : products?.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <Search className="h-12 w-12 text-muted-foreground mb-4 opacity-20" />
-                  <h3 className="text-xl font-semibold mb-2">
-                    No products found
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    Try adjusting your filters or search terms
-                  </p>
-                  <Button variant="outline" onClick={handleClearFilters}>
-                    Clear all filters
-                  </Button>
-                </div>
-              ) : (
-                <div
-                  className="
-                    grid
-                    grid-cols-2
-                    sm:grid-cols-3
-                    md:grid-cols-4
-                    gap-4
-                    lg:gap-6
-                    lg:justify-center
-                    lg:[grid-template-columns:repeat(auto-fit,290px)]
-                  "
-                >
-                  {products?.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
-                </div>
-              )}
-
-              {/* Pagination */}
-              {!loading && !error && totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-12 py-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                    disabled={currentPage === 1}
-                    onClick={() => {
-                      const newPage = currentPage - 1;
-                      setCurrentPage(newPage);
-                      setSearchParams({
-                        ...Object.fromEntries(searchParams.entries()),
-                        page: newPage.toString(),
-                      });
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </Button>
-
-                  {Array.from({ length: totalPages }, (_, i) => {
-                    const pageNum = i + 1;
-                    // Dynamic pagination: show current, first, last, and neighbors
-                    if (
-                      pageNum === 1 ||
-                      pageNum === totalPages ||
-                      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-                    ) {
-                      return (
-                        <Button
-                          key={pageNum}
-                          variant={
-                            currentPage === pageNum ? "default" : "ghost"
-                          }
-                          className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
-                            currentPage === pageNum
-                              ? "bg-primary text-white shadow-md scale-110"
-                              : "hover:text-primary hover:bg-primary/5"
-                          }`}
-                          onClick={() => {
-                            setCurrentPage(pageNum);
-                            setSearchParams({
-                              ...Object.fromEntries(searchParams.entries()),
-                              page: pageNum.toString(),
-                            });
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                        >
-                          {pageNum}
-                        </Button>
-                      );
-                    } else if (
-                      (pageNum === 2 && currentPage > 3) ||
-                      (pageNum === totalPages - 1 &&
-                        currentPage < totalPages - 2)
-                    ) {
-                      return (
-                        <span
-                          key={pageNum}
-                          className="px-1 text-muted-foreground"
-                        >
-                          ...
-                        </span>
-                      );
-                    }
-                    return null;
-                  })}
-
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                    disabled={currentPage === totalPages}
-                    onClick={() => {
-                      const newPage = currentPage + 1;
-                      setCurrentPage(newPage);
-                      setSearchParams({
-                        ...Object.fromEntries(searchParams.entries()),
-                        page: newPage.toString(),
-                      });
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            {/* Desktop Sidebar */}
-            <aside className="hidden lg:block w-72 shrink-0">
-              <div className="sticky top-28">
-                <FilterContent />
-              </div>
-            </aside>
-          </div>
-        </div>
-      </main>
-
-      {/* Mobile Filter Modal */}
-      {mobileFilterOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex">
-          <div className="bg-white w-80 h-full p-6 overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Filters</h3>
+              {/* Mobile Filter Button */}
               <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setMobileFilterOpen(false)}
+                variant="outline"
+                size="icon"
+                className="lg:hidden"
+                onClick={() => setMobileFilterOpen(true)}
               >
-                Close
+                <Search className="h-4 w-4" />
               </Button>
             </div>
-            <FilterContent />
+
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Products */}
+              <div className="flex-1">
+                {loading ? (
+                  <div
+                    className="
+                    grid
+                    grid-cols-2
+                    sm:grid-cols-3
+                    md:grid-cols-4
+                    gap-4
+                    lg:gap-6
+                    lg:justify-center
+                    lg:[grid-template-columns:repeat(auto-fit,290px)]
+                  "
+                  >
+                    {Array.from({ length: 8 }).map((_, i) => (
+                      <ProductSkeleton key={i} />
+                    ))}
+                  </div>
+                ) : error ? (
+                  <div className="flex flex-col items-center justify-center py-20 text-center">
+                    <p className="text-destructive font-medium mb-4">{error}</p>
+                    <Button onClick={fetchAllProducts}>Try Again</Button>
+                  </div>
+                ) : products?.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-20 text-center">
+                    <Search className="h-12 w-12 text-muted-foreground mb-4 opacity-20" />
+                    <h3 className="text-xl font-semibold mb-2">
+                      No products found
+                    </h3>
+                    <p className="text-muted-foreground mb-6">
+                      Try adjusting your filters or search terms
+                    </p>
+                    <Button variant="outline" onClick={handleClearFilters}>
+                      Clear all filters
+                    </Button>
+                  </div>
+                ) : (
+                  <div
+                    className="
+                    grid
+                    grid-cols-2
+                    sm:grid-cols-3
+                    md:grid-cols-4
+                    gap-4
+                    lg:gap-6
+                    lg:justify-center
+                    lg:[grid-template-columns:repeat(auto-fit,290px)]
+                  "
+                  >
+                    {products?.map((product) => (
+                      <ProductCard key={product.id} product={product} />
+                    ))}
+                  </div>
+                )}
+
+                {/* Pagination */}
+                {!loading && !error && totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-2 mt-12 py-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                      disabled={currentPage === 1}
+                      onClick={() => {
+                        const newPage = currentPage - 1;
+                        setCurrentPage(newPage);
+                        setSearchParams({
+                          ...Object.fromEntries(searchParams.entries()),
+                          page: newPage.toString(),
+                        });
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </Button>
+
+                    {Array.from({ length: totalPages }, (_, i) => {
+                      const pageNum = i + 1;
+                      // Dynamic pagination: show current, first, last, and neighbors
+                      if (
+                        pageNum === 1 ||
+                        pageNum === totalPages ||
+                        (pageNum >= currentPage - 1 &&
+                          pageNum <= currentPage + 1)
+                      ) {
+                        return (
+                          <Button
+                            key={pageNum}
+                            variant={
+                              currentPage === pageNum ? "default" : "ghost"
+                            }
+                            className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
+                              currentPage === pageNum
+                                ? "bg-primary text-white shadow-md scale-110"
+                                : "hover:text-primary hover:bg-primary/5"
+                            }`}
+                            onClick={() => {
+                              setCurrentPage(pageNum);
+                              setSearchParams({
+                                ...Object.fromEntries(searchParams.entries()),
+                                page: pageNum.toString(),
+                              });
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                          >
+                            {pageNum}
+                          </Button>
+                        );
+                      } else if (
+                        (pageNum === 2 && currentPage > 3) ||
+                        (pageNum === totalPages - 1 &&
+                          currentPage < totalPages - 2)
+                      ) {
+                        return (
+                          <span
+                            key={pageNum}
+                            className="px-1 text-muted-foreground"
+                          >
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
+                    })}
+
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                      disabled={currentPage === totalPages}
+                      onClick={() => {
+                        const newPage = currentPage + 1;
+                        setCurrentPage(newPage);
+                        setSearchParams({
+                          ...Object.fromEntries(searchParams.entries()),
+                          page: newPage.toString(),
+                        });
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop Sidebar */}
+              <aside className="hidden lg:block w-72 shrink-0">
+                <div className="sticky top-28">
+                  <FilterContent />
+                </div>
+              </aside>
+            </div>
           </div>
+        </main>
 
-          {/* Click outside to close */}
-          <div className="flex-1" onClick={() => setMobileFilterOpen(false)} />
-        </div>
-      )}
+        {/* Mobile Filter Modal */}
+        {mobileFilterOpen && (
+          <div className="fixed inset-0 z-50 bg-black/40 flex">
+            <div className="bg-white w-80 h-full p-6 overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Filters</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setMobileFilterOpen(false)}
+                >
+                  Close
+                </Button>
+              </div>
+              <FilterContent />
+            </div>
 
-      <WhyChooseRajlakshmiSection />
-      <ContactSection />
-      <TestimonialSection />
-      <CertificationsBottomSection className="bg-[#F0FFF0]" />
-    </div>
+            {/* Click outside to close */}
+            <div
+              className="flex-1"
+              onClick={() => setMobileFilterOpen(false)}
+            />
+          </div>
+        )}
+
+        <WhyChooseRajlakshmiSection />
+        <ContactSection />
+        <TestimonialSection />
+        <CertificationsBottomSection className="bg-[#F0FFF0]" />
+      </div>
     </>
   );
 };

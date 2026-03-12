@@ -132,7 +132,10 @@ const Header = () => {
     },
     { name: "B2B", href: "/b2b" },
     { name: "Certifications", href: "/certifications" },
-    { name: "Track Order", href: "/track-order" },
+    {
+      name: "Track Order",
+      href: "https://panel.shipmozo.com/track-order/LBYfQgGFRljv1A249H87",
+    },
     { name: "Contact Us", href: "/contact" },
   ];
 

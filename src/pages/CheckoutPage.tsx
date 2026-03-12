@@ -598,13 +598,7 @@ const CheckoutPage = () => {
                       className="flex justify-between items-center mb-4 last:mb-0"
                     >
                       <div className="flex items-center gap-2 sm:gap-3">
-                        <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-lg bg-emerald-50 overflow-hidden flex-shrink-0">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
+                        
                         <div>
                           <p className="text-sm font-bold text-slate-800 line-clamp-1">
                             {item.name}

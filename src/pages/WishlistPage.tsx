@@ -72,14 +72,19 @@ const WishlistPage = () => {
             <Card
               key={item.id}
               className="overflow-hidden border-none shadow-md hover:shadow-lg transition-shadow group relative cursor-pointer"
-              onClick={() => navigate(`/product/${item.id}`)}
+              onClick={()=>{
+
+                console.log('item.id: ', item.id);
+                console.log('item: ', item);
+                navigate(`/product/${item.id}`)
+              }}
             >
               {/* Image Section */}
               <div className="relative aspect-square overflow-hidden bg-white flex items-center justify-center p-4">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
 
                 {/* Remove from wishlist button */}

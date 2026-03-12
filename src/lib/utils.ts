@@ -63,6 +63,7 @@ export function getWeightValue(weight: any | undefined | null): number {
   // Extract numeric part (supports decimals like 1.5kg, 500ml)
   const numMatch = str.match(/^([\d.]+)/);
   if (!numMatch) return 0;
+
   const num = parseFloat(numMatch[1]);
 
   // Detect unit

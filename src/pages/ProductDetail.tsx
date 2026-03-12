@@ -234,12 +234,8 @@ const ProductDetail = () => {
           ? apiProduct.product_images
           : DEFAULT_PRODUCT.images,
         sizes: (() => {
+          if (!apiProduct.product_weight) return [];
           let parsed;
-          if (!apiProduct.product_weight)
-            return DEFAULT_PRODUCT.sizes.map((s) => ({
-              weight: s.weight,
-              price: "",
-            }));
           if (Array.isArray(apiProduct.product_weight)) {
             parsed = apiProduct.product_weight;
           } else {
@@ -247,26 +243,33 @@ const ProductDetail = () => {
               parsed = JSON.parse(apiProduct.product_weight);
               if (!Array.isArray(parsed)) parsed = [parsed];
             } catch {
-              if (
-                typeof apiProduct.product_weight === "string" &&
-                (apiProduct.product_weight.includes("Size") ||
-                  apiProduct.product_weight.includes("KG"))
-              ) {
-                const matches = apiProduct.product_weight.match(
-                  /\d+(\.\d+)?(kg|g|gm|ml|l|ltr)/gi,
-                );
-                parsed = matches && matches.length > 0 ? matches : [];
-              } else {
-                parsed = [apiProduct.product_weight];
-              }
+              parsed = [apiProduct.product_weight];
             }
           }
-          const mapped: { weight: string; price: string }[] = parsed.map(
-            (item: any) =>
-              typeof item === "object" && item !== null && "weight" in item
-                ? item
-                : { weight: String(item), price: "" },
-          );
+
+          // Ensure each item is an object with at least a weight property
+          const mapped: {
+            weight: string;
+            price: number;
+            purchase_price: number;
+            del_price: number;
+          }[] = parsed.map((item: any) => {
+            if (typeof item === "object" && item !== null) {
+              return {
+                weight: String(item.weight || ""),
+                price: Number(item.price) || 0,
+                purchase_price: Number(item.purchase_price) || 0,
+                del_price: Number(item.del_price) || 0,
+              };
+            }
+            return {
+              weight: String(item),
+              price: Number(apiProduct.product_price) || 0,
+              purchase_price: Number(apiProduct.product_purchase_price) || 0,
+              del_price: Number(apiProduct.product_del_price) || 0,
+            };
+          });
+
           return mapped.sort(
             (a, b) => getWeightValue(a.weight) - getWeightValue(b.weight),
           );
@@ -326,22 +329,27 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSizeIdx, setSelectedSizeIdx] = useState(0);
 
-  // sizes is always {weight, price}[] after our mapping
-  const sizesArr = product.sizes as { weight: string; price: string }[];
-  const selectedSizeInfo: { weight: string; price: string } = sizesArr[
-    selectedSizeIdx
-  ] || { weight: "1kg", price: "" };
+  // sizes is always {weight, price, del_price...}[] after our mapping
+  const sizesArr = product.sizes as {
+    weight: string;
+    price: number;
+    del_price: number;
+  }[];
+  const selectedSizeInfo = sizesArr[selectedSizeIdx] || {
+    weight: "N/A",
+    price: product.price,
+    del_price: product.originalPrice,
+  };
 
-  const currentPrice = selectedSizeInfo.price
-    ? Number(selectedSizeInfo.price)
-    : product.price;
+  const currentPrice = selectedSizeInfo.price || product.price;
+  const currentDelPrice = selectedSizeInfo.del_price || product.originalPrice;
 
   let currentDiscount = product.discount;
-  if (selectedSizeInfo.price && product.originalPrice > currentPrice) {
+  if (currentDelPrice > currentPrice) {
     currentDiscount = Math.round(
-      ((product.originalPrice - currentPrice) / product.originalPrice) * 100,
+      ((currentDelPrice - currentPrice) / currentDelPrice) * 100,
     );
-  } else if (currentPrice >= product.originalPrice) {
+  } else {
     currentDiscount = 0;
   }
   const isFavorite = isInWishlist(`product-detail-${product.name}`);
@@ -587,7 +595,7 @@ const ProductDetail = () => {
                   <button
                     onClick={() => {
                       toggleWishlist({
-                        id: `product-detail-${product.name}`,
+                        id: product.name,
                         name: product.name,
                         price: product.price,
                         image: product.images[0],
@@ -629,40 +637,40 @@ const ProductDetail = () => {
               </div>
 
               {/* Offers */}
-              {/* <div>
-              <h3 className="text-sm font-semibold text-foreground mb-3">
-                Offers Available
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {product.offers.map((offer, index) => (
-                  <div
-                    key={index}
-                    className="border border-primary/30 rounded-lg p-3 bg-accent/20"
-                  >
-                    <p className="text-primary font-bold text-xs mb-1">
-                      {offer.title}
-                    </p>
-                    <p className="text-muted-foreground text-[11px] leading-tight mb-2">
-                      {offer.desc}
-                    </p>
-                    <div className="flex items-center gap-1">
-                      <span className="text-[11px] text-muted-foreground">
-                        Use Code:
-                      </span>
-                      <span className="text-primary font-semibold text-xs">
-                        {offer.code}
-                      </span>
-                      <button
-                        onClick={() => handleCopyCode(offer.code, index)}
-                        className="ml-auto text-primary hover:text-primary/80 text-xs font-medium flex items-center gap-0.5"
-                      >
-                        {copiedCode === index ? "Copied!" : "Copy"}
-                      </button>
+              <div>
+                <h3 className="text-sm font-semibold text-foreground mb-3">
+                  Offers Available
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {product.offers.map((offer, index) => (
+                    <div
+                      key={index}
+                      className="border border-primary/30 rounded-lg p-3 bg-accent/20"
+                    >
+                      <p className="text-primary font-bold text-xs mb-1">
+                        {offer.title}
+                      </p>
+                      <p className="text-muted-foreground text-[11px] leading-tight mb-2">
+                        {offer.desc}
+                      </p>
+                      <div className="flex items-center gap-1">
+                        <span className="text-[11px] text-muted-foreground">
+                          Use Code:
+                        </span>
+                        <span className="text-primary font-semibold text-xs">
+                          {offer.code}
+                        </span>
+                        <button
+                          onClick={() => handleCopyCode(offer.code, index)}
+                          className="ml-auto text-primary hover:text-primary/80 text-xs font-medium flex items-center gap-0.5"
+                        >
+                          {copiedCode === index ? "Copied!" : "Copy"}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div> */}
 
               {/* Size Selector */}
               <div>
@@ -705,10 +713,10 @@ const ProductDetail = () => {
                 <span className="text-3xl font-bold text-foreground">
                   ₹{(currentPrice * quantity).toFixed(2)}
                 </span>
-                {product.originalPrice > currentPrice && (
+                {currentDelPrice > currentPrice && (
                   <>
                     <span className="text-lg text-muted-foreground line-through">
-                      ₹{(product.originalPrice * quantity).toFixed(2)}
+                      ₹{(currentDelPrice * quantity).toFixed(2)}
                     </span>
                     {currentDiscount > 0 && (
                       <Badge className="bg-[#DFF1E5] text-[#29A44F] text-sm px-4 py-2 rounded-md">

@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  lazy,
-  Suspense,
-} from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
@@ -13,7 +6,6 @@ import banner1Img from "@/assets/banner-main-page/banner2.png";
 import banner2Img from "@/assets/banner-main-page/banner1.png";
 
 import { getHomeBannerAPI } from "@/api/contact.service";
-
 import { Carousel } from "react-responsive-carousel";
 
 /* =========================
@@ -24,9 +16,10 @@ const FALLBACK_BANNERS = [banner1Img, banner2Img];
 /* =========================
    CLOUDINARY OPTIMIZER
 ========================= */
-const optimizeImage = (url: any, width = 1400) => {
-  if (!url || typeof url !== "string") return url;
+const optimizeImage = (url: string, width = 1905) => {
+  if (!url) return "";
   if (url.includes("res.cloudinary.com")) {
+    // Ensuring we use the requested width for optimization
     return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
   }
   return url;
@@ -36,13 +29,12 @@ const HeroSection: React.FC = () => {
   const [bannerUrls, setBannerUrls] = useState<string[]>(FALLBACK_BANNERS);
   const [loading, setLoading] = useState(true);
 
+  /* =========================
+     FETCH BANNERS
+  ========================= */
   const fetchBanners = useCallback(async () => {
     try {
       const res = await getHomeBannerAPI();
-
-      // Axios typically returns response body in res.data
-      // My service returns res.data, so res here is the response body
-      // If the body is { success: true, data: { ... } }, then:
       const rawData = res?.data || res;
 
       const urls = [
@@ -50,13 +42,9 @@ const HeroSection: React.FC = () => {
         rawData?.banner2,
         rawData?.banner3,
         rawData?.banner4,
-      ].filter((url) => typeof url === "string" && url.length > 0);
+      ].filter(Boolean);
 
-      if (urls.length > 0) {
-        setBannerUrls(urls);
-      } else {
-        setBannerUrls(FALLBACK_BANNERS);
-      }
+      setBannerUrls(urls.length ? urls : FALLBACK_BANNERS);
     } catch (error) {
       console.error("Banner fetch error:", error);
       setBannerUrls(FALLBACK_BANNERS);
@@ -69,80 +57,100 @@ const HeroSection: React.FC = () => {
     fetchBanners();
   }, [fetchBanners]);
 
+  /* =========================
+     SLIDES
+  ========================= */
   const slides = useMemo(
     () =>
       bannerUrls.map((url, index) => ({
-        desktop: optimizeImage(url, 1400),
+        desktop: optimizeImage(url, 1905),
         mobile: optimizeImage(url, 768),
         alt: `Banner ${index + 1}`,
       })),
     [bannerUrls],
   );
 
+  /* =========================
+     PRELOAD FIRST IMAGE
+  ========================= */
   useEffect(() => {
     if (!slides.length) return;
+
     const img = new Image();
     img.src = slides[0].desktop;
   }, [slides]);
 
+  /* =========================
+     SKELETON
+  ========================= */
   if (loading) {
     return (
-      <section className="w-full aspect-[16/9] sm:aspect-[16/6] md:aspect-[1920/550] bg-[#F9F9F9] animate-pulse" />
+      <section className="w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[1905/550] bg-gray-100 animate-pulse" />
     );
   }
 
+  /* =========================
+     MAIN
+  ========================= */
   return (
-    <section className="relative w-full bg-white">
-      <div className="relative overflow-hidden w-full h-[220px] sm:h-[350px] md:h-[450px] lg:h-[550px]">
+    <section className="relative w-full bg-white overflow-hidden">
+      <div className="relative w-full">
         <Carousel
           showThumbs={false}
           showStatus={false}
           showArrows={false}
-          infiniteLoop={true}
-          autoPlay={true}
-          interval={5000}
-          transitionTime={800}
-          swipeable={true}
-          emulateTouch={true}
+          infiniteLoop
+          autoPlay
+          interval={6000}
+          transitionTime={700}
+          swipeable
+          emulateTouch
           stopOnHover={false}
+          className="main-carousel"
           renderIndicator={(onClickHandler, isSelected, index, label) => (
             <li
-              className={`inline-block mx-1.5 h-1 md:h-1.5 rounded-full transition-all duration-500 cursor-pointer ${
+              className={`inline-block mx-1 rounded-full transition-all duration-500 cursor-pointer
+              ${
                 isSelected
-                  ? "bg-[#01722C] w-8 md:w-12"
-                  : "bg-black/10 hover:bg-black/20 w-3 md:w-4"
+                  ? "bg-[#01722C] w-6 md:w-8 h-1 md:h-1.5"
+                  : "bg-black/20 hover:bg-black/30 w-2 md:w-3 h-1"
               }`}
               onClick={onClickHandler}
               onKeyDown={onClickHandler}
-              value={index}
               key={index}
               role="button"
               tabIndex={0}
               title={`${label} ${index + 1}`}
-              aria-label={`${label} ${index + 1}`}
             />
           )}
         >
           {slides.map((item, index) => (
-            <div
-              key={index}
-              className="w-full h-[220px] sm:h-[350px] md:h-[450px] lg:h-[550px] relative overflow-hidden"
-            >
-              <img
-                src={item.desktop}
-                alt={item.alt}
-                className="w-full h-full object-cover pointer-events-none select-none"
-                onError={(e) => {
-                  console.error("Banner image failed to load:", item.desktop);
-                  e.currentTarget.src = FALLBACK_BANNERS[0];
-                }}
-              />
+            <div key={index} className="relative w-full h-full ">
+              <picture className="w-full h-full">
+                {/* Mobile */}
+                <source media="(max-width:768px)" srcSet={item.mobile} />
+                {/* Desktop */}
+                <img
+                  src={item.desktop}
+                  alt={item.alt}
+                  width="1905"
+                  height="550"
+                  loading="eager"
+                  // @ts-ignore - fetchPriority is supported in React 18.2+
+                  fetchPriority="high"
+                  decoding="async"
+                  className="w-full h-full"
+                  onError={(e) => {
+                    e.currentTarget.src = FALLBACK_BANNERS[0];
+                  }}
+                />
+              </picture>
             </div>
           ))}
         </Carousel>
 
-        {/* Aesthetic bottom shadow for premium feel */}
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/30 to-transparent pointer-events-none z-10" />
+        {/* bottom gradient decoration */}
+        <div className="absolute inset-x-0 bottom-0 h-10 md:h-24 bg-gradient-to-t from-white/60 to-transparent pointer-events-none" />
       </div>
     </section>
   );
