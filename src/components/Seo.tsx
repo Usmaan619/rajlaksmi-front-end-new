@@ -13,6 +13,14 @@ const Seo = ({
   url,
   image = "https://rajlakshmijaviks.com/logo.png",
 }: SeoProps) => {
+  // Normalize URL to standardized domain for canonicals
+  const canonicalUrl = url.startsWith("http")
+    ? url.replace(
+        /https?:\/\/(www\.)?(rajlakshmijaviksinternational\.com|rajlakshmijaviks\.com)/,
+        "https://rajlakshmijaviks.com"
+      )
+    : `https://rajlakshmijaviks.com${url.startsWith("/") ? url : `/${url}`}`;
+
   return (
     <Helmet>
       {/* Title */}
@@ -24,7 +32,7 @@ const Seo = ({
       <meta name="author" content="Rajlakshmi Javiks International" />
       
       {/* Canonical */}
-      <link rel="canonical" href={url} />
+      <link rel="canonical" href={canonicalUrl} />
 
       {/* Open Graph */}
       <meta property="og:type" content="website" />
@@ -32,7 +40,7 @@ const Seo = ({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
-      <meta property="og:url" content={url} />
+      <meta property="og:url" content={canonicalUrl} />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />

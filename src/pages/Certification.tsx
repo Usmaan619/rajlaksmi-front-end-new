@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Seo from "@/components/Seo";
 
 import fassaiImg from "@/assets/bottomCertified/fssaiLogo.png";
 import labtestedImg from "@/assets/bottomCertified/labtested.png";
@@ -48,6 +49,11 @@ const Certifications = () => {
 
   return (
     <>
+      <Seo
+        title="Our Certifications | Rajlakshmi Javiks International – Organic & Quality Certified"
+        description="View our organic certifications, FSSAI compliance, and lab testing quality assurance. We prioritize transparency and safety for all our organic food products."
+        url="/certifications"
+      />
       <div className="min-h-screen bg-white ">
         {/* Header */}
         <section className="px-6 py-10 md:px-16 lg:px-24">
@@ -142,7 +148,7 @@ const Certifications = () => {
               </ul>
               <div>
                 <button className="bg-[hsl(140,60%,30%)] text-white text-sm px-5 py-2 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors">
-                  Read more
+                  Read more about our quality control
                 </button>
               </div>
             </div>

@@ -51,7 +51,7 @@ const AboutSection = () => {
                   variant="outline"
                   className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6 mt-3"
                 >
-                  Read more
+                  Read more about us
                 </Button>
               </Link>
             </div>

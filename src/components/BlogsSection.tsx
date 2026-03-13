@@ -176,7 +176,7 @@ const BlogsSection = () => {
                     </p>
 
                     <button className="mt-auto text-[#01722C] font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all duration-200">
-                      Read more
+                      Read more about this story
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>

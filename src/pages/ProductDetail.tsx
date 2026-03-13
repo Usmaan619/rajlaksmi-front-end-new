@@ -450,7 +450,7 @@ const ProductDetail = () => {
       <Seo
         title={`${product.name} | Buy 100% Pure Organic – Rajlakshmi Javiks`}
         description={product.subtitle || product.description}
-        url={window.location.href}
+        url={`https://rajlakshmijaviks.com/product/${id}`}
         image={product.images[0]}
       />
 

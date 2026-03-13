@@ -6,6 +6,8 @@ import ChapatiImg from "@/assets/aboutus/chapati-aboutis.png";
 import farmerImage from "@/assets/WhyChooseRajlakshmiSection/1.png";
 import teamImage from "@/assets/WhyChooseRajlakshmiSection/2.png";
 import farmerBgImg from "@/assets/aboutus/farmer-bell-left.png";
+import Seo from "@/components/Seo";
+
 const AboutUsPage = () => {
   const navigate = useNavigate();
   const differentiators = [
@@ -28,9 +30,13 @@ const AboutUsPage = () => {
       title: "Hygienically processed & packed",
     },
   ];
-
   return (
     <>
+      <Seo
+        title="About Us | Rajlakshmi Javiks International – Our Journey & Values"
+        description="Learn about Rajlakshmi Javiks International, our mission to provide 100% pure organic food, and our commitment to ethical farming since 2019."
+        url="/about"
+      />
       <div className="min-h-screen bg-white">
         {/* Header Section with decorative elements */}
         <section className="text-center py-12 px-4 relative overflow-hidden">

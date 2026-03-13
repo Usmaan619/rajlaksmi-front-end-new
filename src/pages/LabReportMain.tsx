@@ -19,6 +19,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useNavigate } from "react-router-dom";
+import Seo from "@/components/Seo";
 
 const LabReportsPage = () => {
   const navigate = useNavigate();
@@ -74,7 +75,13 @@ const LabReportsPage = () => {
     { number: "5", desc: "Approved batches are processed and packed" },
   ];
   return (
-    <div className="min-h-screen bg-white">
+    <>
+      <Seo
+        title="Lab Reports & Quality Testing | Rajlakshmi Javiks International"
+        description="Access our lab reports and quality testing results. We ensure every batch of organic ghee, pulses, and grains is safe, pure, and chemical-free."
+        url="/lab-reports"
+      />
+      <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="py-12 px-4  to-white">
         <div className="max-w-6xl mx-auto">
@@ -168,7 +175,7 @@ const LabReportsPage = () => {
                   variant="outline"
                   className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
                 >
-                  Read more
+                  Read more about our testing process
                 </Button>
               </div>
             </div>
@@ -542,6 +549,7 @@ const LabReportsPage = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

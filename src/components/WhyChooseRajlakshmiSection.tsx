@@ -87,7 +87,7 @@ const WhyChooseRajlakshmiSection = () => {
                 variant="outline"
                 className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
               >
-                Read more
+                Read more about our story
               </Button>
             </div>
           </div>
