@@ -9,14 +9,36 @@ import {
   Plus,
   CheckCircle2,
   ShoppingBag,
-  CreditCard,
   Truck,
   Loader2,
-  Key,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const addressSchema = z.object({
+  full_name: z.string().min(2, "Name must be at least 2 characters"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  address_line1: z.string().min(5, "Address must be at least 5 characters"),
+  address_line2: z.string().optional(),
+  city: z.string().min(2, "City is required"),
+  state: z.string().min(2, "State is required"),
+  pincode: z.string().min(6, "Pincode must be at least 6 digits"),
+  country: z.string().min(2, "Country is required"),
+});
+
+type AddressFormValues = z.infer<typeof addressSchema>;
 import {
   Card,
   CardContent,
@@ -26,14 +48,12 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   getAddressesAPI,
   saveAddressAPI,
   deleteAddressAPI,
   Address,
 } from "@/api/user.service";
-import { placeOrderAPI } from "@/api/order.service";
 import api from "@/api/axios";
 import { formatWeight } from "@/lib/utils";
 import RLJLOGOJAVIK from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
@@ -59,16 +79,18 @@ const CheckoutPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
-  // New Address Form State
-  const [newAddress, setNewAddress] = useState({
-    full_name: "",
-    phone: "",
-    address_line1: "",
-    address_line2: "",
-    city: "",
-    state: "",
-    pincode: "",
-    country: "",
+  const addressForm = useForm<AddressFormValues>({
+    resolver: zodResolver(addressSchema),
+    defaultValues: {
+      full_name: "",
+      phone: "",
+      address_line1: "",
+      address_line2: "",
+      city: "",
+      state: "",
+      pincode: "",
+      country: "India",
+    },
   });
 
   useEffect(() => {
@@ -110,12 +132,12 @@ const CheckoutPage = () => {
     }
   };
 
-  const handleSaveAddress = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onAddressSubmit = async (values: AddressFormValues) => {
     if (!user?.id) return;
     try {
       const data = await saveAddressAPI({
-        ...newAddress,
+        ...values,
+        address_line2: values.address_line2 || "",
         user_id: user.id,
         is_default: addresses.length === 0,
       });
@@ -123,16 +145,7 @@ const CheckoutPage = () => {
         toast.success("Address saved!");
         setIsAddingAddress(false);
         fetchAddresses();
-        setNewAddress({
-          full_name: "",
-          phone: "",
-          address_line1: "",
-          address_line2: "",
-          city: "",
-          state: "",
-          pincode: "",
-          country: "",
-        });
+        addressForm.reset();
       }
     } catch (error) {
       toast.error("Failed to save address");
@@ -403,136 +416,159 @@ const CheckoutPage = () => {
                     </Button>
                   </div>
                 ) : (
-                  <form onSubmit={handleSaveAddress} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <Label>Full Name</Label>
-                        <Input
-                          required
-                          value={newAddress.full_name}
-                          onChange={(e) =>
-                            setNewAddress({
-                              ...newAddress,
-                              full_name: e.target.value,
-                            })
-                          }
-                          placeholder="Ex: John Doe"
-                        />
+                  <div className="space-y-6">
+                    <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg flex items-center gap-3">
+                      <div className="bg-amber-100 p-1.5 rounded-full">
+                        <Truck className="h-4 w-4 text-amber-600" />
                       </div>
-                      <div className="space-y-1">
-                        <Label>Phone Number</Label>
-                        <Input
-                          required
-                          value={newAddress.phone}
-                          onChange={(e) =>
-                            setNewAddress({
-                              ...newAddress,
-                              phone: e.target.value,
-                            })
-                          }
-                          placeholder="10 digit mobile number"
-                        />
-                      </div>
+                      <p className="text-sm font-medium text-amber-800">
+                        Please fill in correct details for a smooth delivery.
+                      </p>
                     </div>
-                    <div className="space-y-1">
-                      <Label>Address Line 1</Label>
-                      <Input
-                        required
-                        value={newAddress.address_line1}
-                        onChange={(e) =>
-                          setNewAddress({
-                            ...newAddress,
-                            address_line1: e.target.value,
-                          })
-                        }
-                        placeholder="House No, Building Name, Street"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <Label>Address Line 2 (Optional)</Label>
-                      <Input
-                        value={newAddress.address_line2}
-                        onChange={(e) =>
-                          setNewAddress({
-                            ...newAddress,
-                            address_line2: e.target.value,
-                          })
-                        }
-                        placeholder="Landmark, Area, etc."
-                      />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="space-y-1">
-                        <Label>City</Label>
-                        <Input
-                          required
-                          value={newAddress.city}
-                          onChange={(e) =>
-                            setNewAddress({
-                              ...newAddress,
-                              city: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>State</Label>
-                        <Input
-                          required
-                          value={newAddress.state}
-                          onChange={(e) =>
-                            setNewAddress({
-                              ...newAddress,
-                              state: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>Pincode</Label>
-                        <Input
-                          required
-                          value={newAddress.pincode}
-                          onChange={(e) =>
-                            setNewAddress({
-                              ...newAddress,
-                              pincode: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <Label>Country</Label>
-                        <Input
-                          required
-                          value={newAddress.country}
-                          onChange={(e) =>
-                            setNewAddress({
-                              ...newAddress,
-                              country: e.target.value,
-                            })
-                          }
-                          placeholder="Ex: India"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex gap-3 pt-2">
-                      <Button
-                        type="submit"
-                        className="flex-1 bg-[#01722c] hover:bg-[#01722c]"
+
+                    <Form {...addressForm}>
+                      <form
+                        onSubmit={addressForm.handleSubmit(onAddressSubmit)}
+                        className="space-y-4"
                       >
-                        Save Address
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setIsAddingAddress(false)}
-                        className="flex-1"
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </form>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={addressForm.control}
+                            name="full_name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Full Name</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="Ex: John Doe" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        <FormField
+                          control={addressForm.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Phone Number</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="10 digit mobile number"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <FormField
+                        control={addressForm.control}
+                        name="address_line1"
+                        render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Address Line 1</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="House No, Building Name, Street"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                      />
+                      <FormField
+                        control={addressForm.control}
+                        name="address_line2"
+                        render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Address Line 2 (Optional)</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="Landmark, Area, etc."
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                      />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                          control={addressForm.control}
+                          name="city"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>City</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={addressForm.control}
+                          name="state"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>State</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                          control={addressForm.control}
+                          name="pincode"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Pincode</FormLabel>
+                              <FormControl>
+                                <Input {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={addressForm.control}
+                          name="country"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Country</FormLabel>
+                              <FormControl>
+                                <Input {...field} placeholder="Ex: India" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="flex gap-3 pt-2">
+                        <Button
+                          type="submit"
+                          className="flex-1 bg-[#01722c] hover:bg-[#01722c]"
+                        >
+                          Save Address
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setIsAddingAddress(false)}
+                          className="flex-1"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </form>
+                    </Form>
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -598,7 +634,6 @@ const CheckoutPage = () => {
                       className="flex justify-between items-center mb-4 last:mb-0"
                     >
                       <div className="flex items-center gap-2 sm:gap-3">
-                        
                         <div>
                           <p className="text-sm font-bold text-slate-800 line-clamp-1">
                             {item.name}

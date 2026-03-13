@@ -3,7 +3,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "@/api/axios";
 import {
   ArrowLeft,
-  Star,
   Heart,
   Share2,
   ChevronLeft,

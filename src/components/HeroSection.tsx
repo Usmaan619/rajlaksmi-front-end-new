@@ -136,8 +136,8 @@ const HeroSection: React.FC = () => {
                   width="1905"
                   height="550"
                   loading="eager"
-                  // @ts-ignore - fetchPriority is supported in React 18.2+
-                  fetchPriority="high"
+                  // @ts-ignore - fetchpriority is the native attribute name
+                  fetchpriority="high"
                   decoding="async"
                   className="w-full h-full"
                   onError={(e) => {

@@ -25,7 +25,40 @@ import {
   Plus,
   ShoppingBag,
   CheckCircle2,
+  Truck,
 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const profileSchema = z.object({
+  full_name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  mobile_number: z.string().min(10, "Mobile number must be at least 10 digits"),
+  profile_image: z.string().optional(),
+});
+
+const addressSchema = z.object({
+  full_name: z.string().min(2, "Name must be at least 2 characters"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  address_line1: z.string().min(5, "Address must be at least 5 characters"),
+  address_line2: z.string().optional(),
+  city: z.string().min(2, "City is required"),
+  state: z.string().min(2, "State is required"),
+  pincode: z.string().min(6, "Pincode must be at least 6 digits"),
+  country: z.string().min(2, "Country is required"),
+});
+
+type ProfileFormValues = z.infer<typeof profileSchema>;
+type AddressFormValues = z.infer<typeof addressSchema>;
 import {
   Dialog,
   DialogContent,
@@ -49,28 +82,35 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [profileData, setProfileData] = useState({
-    full_name: user?.full_name || (user as any)?.name || "",
-    email: user?.email || "",
-    mobile_number: user?.mobile_number || "",
-    profile_image: user?.profile_image || "",
+
+  const profileForm = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileSchema),
+    defaultValues: {
+      full_name: user?.full_name || (user as any)?.name || "",
+      email: user?.email || "",
+      mobile_number: user?.mobile_number || "",
+      profile_image: user?.profile_image || "",
+    },
   });
 
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [addressForm, setAddressForm] = useState({
-    full_name: "",
-    phone: "",
-    address_line1: "",
-    address_line2: "",
-    city: "",
-    state: "",
-    pincode: "",
-    country: "",
+  const addressForm = useForm<AddressFormValues>({
+    resolver: zodResolver(addressSchema),
+    defaultValues: {
+      full_name: "",
+      phone: "",
+      address_line1: "",
+      address_line2: "",
+      city: "",
+      state: "",
+      pincode: "",
+      country: "",
+    },
   });
 
   useEffect(() => {
     if (user) {
-      setProfileData({
+      profileForm.reset({
         full_name: user.full_name || (user as any).name || "",
         email: user.email || "",
         mobile_number: user.mobile_number || "",
@@ -78,7 +118,7 @@ const ProfilePage = () => {
       });
       fetchAddresses();
     }
-  }, [user]);
+  }, [user, profileForm]);
 
   const fetchAddresses = async () => {
     if (!user?.id) return;
@@ -94,13 +134,12 @@ const ProfilePage = () => {
     }
   };
 
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleUpdateProfile = async (values: ProfileFormValues) => {
     setLoading(true);
     try {
-      const res = await updateProfileAPI(profileData);
+      const res = await updateProfileAPI(values);
       if (res.success) {
-        updateUser(res.user || profileData);
+        updateUser(res.user || values);
         toast.success("Profile updated successfully");
       } else {
         toast.error(res.message || "Update failed");
@@ -122,19 +161,19 @@ const ProfilePage = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result as string;
-        setProfileData({ ...profileData, profile_image: base64String });
+        profileForm.setValue("profile_image", base64String);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSaveAddress = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSaveAddress = async (values: AddressFormValues) => {
     if (!user?.id) return;
     setLoading(true);
     try {
       const res = await saveAddressAPI({
-        ...addressForm,
+        ...values,
+        address_line2: values.address_line2 || "",
         user_id: user.id,
         is_default: addresses.length === 0,
       });
@@ -142,16 +181,7 @@ const ProfilePage = () => {
         toast.success("Address saved successfully");
         setIsDialogOpen(false);
         fetchAddresses();
-        setAddressForm({
-          full_name: "",
-          phone: "",
-          address_line1: "",
-          address_line2: "",
-          city: "",
-          state: "",
-          pincode: "",
-          country: "",
-        });
+        addressForm.reset();
       } else {
         toast.error(res.message || "Failed to save address");
       }
@@ -194,7 +224,7 @@ const ProfilePage = () => {
           <div className="relative group">
             <Avatar className="h-32 w-32 border-4 border-primary/10 transition-transform group-hover:scale-105">
               <AvatarImage
-                src={profileData.profile_image}
+                src={profileForm.watch("profile_image")}
                 alt={user?.full_name}
                 className="object-cover"
               />
@@ -253,69 +283,86 @@ const ProfilePage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-6">
-                <form onSubmit={handleUpdateProfile} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="full_name">Full Name</Label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                        <Input
-                          id="full_name"
-                          value={profileData.full_name}
-                          onChange={(e) =>
-                            setProfileData({
-                              ...profileData,
-                              full_name: e.target.value,
-                            })
-                          }
-                          className="pl-10 h-11 bg-slate-50 border-slate-200 focus-visible:ring-primary"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                        <Input
-                          id="email"
-                          disabled
-                          value={profileData.email}
-                          className="pl-10 h-11 bg-slate-100 border-none cursor-not-allowed opacity-70"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="mobile">Mobile Number</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                      <Input
-                        id="mobile"
-                        value={profileData.mobile_number}
-                        onChange={(e) =>
-                          setProfileData({
-                            ...profileData,
-                            mobile_number: e.target.value,
-                          })
-                        }
-                        placeholder="Enter 10-digit mobile number"
-                        className="pl-10 h-11 bg-slate-50 border-slate-200 focus-visible:ring-primary"
+                <Form {...profileForm}>
+                  <form
+                    onSubmit={profileForm.handleSubmit(handleUpdateProfile)}
+                    className="space-y-4"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={profileForm.control}
+                        name="full_name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Full Name</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                                <Input
+                                  {...field}
+                                  className="pl-10 h-11 bg-slate-50 border-slate-200 focus-visible:ring-primary"
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={profileForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email Address</FormLabel>
+                            <FormControl>
+                              <div className="relative">
+                                <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                                <Input
+                                  {...field}
+                                  disabled
+                                  className="pl-10 h-11 bg-slate-100 border-none cursor-not-allowed opacity-70"
+                                />
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
                     </div>
-                  </div>
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full md:w-auto bg-primary hover:bg-forest  h-auto text-base font-medium shadow-lg shadow-primary/20 transition-all rounded-md"
-                  >
-                    {loading ? (
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    ) : (
-                      <Save className="mr-2 h-5 w-5" />
-                    )}
-                    Save Profile Changes
-                  </Button>
-                </form>
+                    <FormField
+                      control={profileForm.control}
+                      name="mobile_number"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Mobile Number</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Phone className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                              <Input
+                                {...field}
+                                placeholder="Enter 10-digit mobile number"
+                                className="pl-10 h-11 bg-slate-50 border-slate-200 focus-visible:ring-primary"
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full md:w-auto bg-primary hover:bg-forest  h-auto text-base font-medium shadow-lg shadow-primary/20 transition-all rounded-md"
+                    >
+                      {loading ? (
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      ) : (
+                        <Save className="mr-2 h-5 w-5" />
+                      )}
+                      Save Profile Changes
+                    </Button>
+                  </form>
+                </Form>
               </CardContent>
             </Card>
 
@@ -347,139 +394,149 @@ const ProfilePage = () => {
                         Add New Address
                       </DialogTitle>
                     </DialogHeader>
-                    <form
-                      onSubmit={handleSaveAddress}
-                      className="space-y-4 pt-4"
-                    >
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2 col-span-2 sm:col-span-1">
-                          <Label>Receiver Name</Label>
-                          <Input
-                            required
-                            value={addressForm.full_name}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                full_name: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2 col-span-2 sm:col-span-1">
-                          <Label>Phone Number</Label>
-                          <Input
-                            required
-                            value={addressForm.phone}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                phone: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2 col-span-2">
-                          <Label>Address Line 1</Label>
-                          <Input
-                            required
-                            value={addressForm.address_line1}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                address_line1: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2 col-span-2">
-                          <Label>Address Line 2 (Optional)</Label>
-                          <Input
-                            value={addressForm.address_line2}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                address_line2: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label>Country</Label>
-                          <Input
-                            required
-                            value={addressForm.country}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                country: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>City</Label>
-                          <Input
-                            required
-                            value={addressForm.city}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                city: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label>State</Label>
-                          <Input
-                            required
-                            value={addressForm.state}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                state: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Pincode</Label>
-                          <Input
-                            required
-                            value={addressForm.pincode}
-                            onChange={(e) =>
-                              setAddressForm({
-                                ...addressForm,
-                                pincode: e.target.value,
-                              })
-                            }
-                          />
-                        </div>
+                    <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg flex items-center gap-3 mt-4">
+                      <div className="bg-amber-100 p-1.5 rounded-full">
+                        <Truck className="h-4 w-4 text-amber-600" />
                       </div>
-                      <DialogFooter className="pt-4">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          onClick={() => setIsDialogOpen(false)}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          type="submit"
-                          disabled={loading}
-                          className="bg-primary hover:bg-forest font-bold"
-                        >
-                          {loading ? (
-                            <Loader2 className="animate-spin h-4 w-4 mr-2" />
-                          ) : (
-                            <Save size={16} className="mr-2" />
-                          )}
-                          Save Address
-                        </Button>
-                      </DialogFooter>
-                    </form>
+                      <p className="text-sm font-medium text-amber-800">
+                        Please fill in correct details for a smooth delivery.
+                      </p>
+                    </div>
+
+                    <Form {...addressForm}>
+                      <form
+                        onSubmit={addressForm.handleSubmit(handleSaveAddress)}
+                        className="space-y-4 pt-4"
+                      >
+                        <div className="grid grid-cols-2 gap-4">
+                          <FormField
+                            control={addressForm.control}
+                            name="full_name"
+                            render={({ field }) => (
+                              <FormItem className="col-span-2 sm:col-span-1">
+                                <FormLabel>Receiver Name</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={addressForm.control}
+                            name="phone"
+                            render={({ field }) => (
+                              <FormItem className="col-span-2 sm:col-span-1">
+                                <FormLabel>Phone Number</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={addressForm.control}
+                            name="address_line1"
+                            render={({ field }) => (
+                              <FormItem className="col-span-2">
+                                <FormLabel>Address Line 1</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={addressForm.control}
+                            name="address_line2"
+                            render={({ field }) => (
+                              <FormItem className="col-span-2">
+                                <FormLabel>Address Line 2 (Optional)</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={addressForm.control}
+                            name="country"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Country</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={addressForm.control}
+                            name="city"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>City</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={addressForm.control}
+                            name="state"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>State</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={addressForm.control}
+                            name="pincode"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Pincode</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <DialogFooter className="pt-4">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={() => setIsDialogOpen(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            type="submit"
+                            disabled={loading}
+                            className="bg-primary hover:bg-forest font-bold"
+                          >
+                            {loading ? (
+                              <Loader2 className="animate-spin h-4 w-4 mr-2" />
+                            ) : (
+                              <Save size={16} className="mr-2" />
+                            )}
+                            Save Address
+                          </Button>
+                        </DialogFooter>
+                      </form>
+                    </Form>
                   </DialogContent>
                 </Dialog>
               </CardHeader>

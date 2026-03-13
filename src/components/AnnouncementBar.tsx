@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FiMail, FiPhoneCall } from "react-icons/fi";
-import { Facebook, Instagram, Youtube, Star } from "lucide-react";
+import { Facebook, Instagram, Youtube } from "lucide-react";
 import { getAllOffersAPI, Offer } from "@/api/offer.service";
 import { Rating } from "react-simple-star-rating";
 

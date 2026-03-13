@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,43 +14,83 @@ import {
 } from "@/components/ui/card";
 import { Mail, ArrowLeft, CheckCircle2, Lock, KeyRound } from "lucide-react";
 import { forgotPasswordAPI, resetPasswordAPI } from "@/api/auth.service";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const forgotPasswordSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+
+const resetPasswordSchema = z.object({
+  otp: z.string().min(6, "OTP must be at least 6 digits"),
+  newPassword: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
+type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
 
 import RLJLOGOJAVIK from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
 
 const ForgotPasswordPage = () => {
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [newPassword, setNewPassword] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isResetDone, setIsResetDone] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const forgotForm = useForm<ForgotPasswordValues>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: { email: "" },
+  });
+
+  const resetForm = useForm<ResetPasswordValues>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { otp: "", newPassword: "" },
+  });
+
+  const onForgotSubmit = async (values: ForgotPasswordValues) => {
+    setSubmitting(true);
     try {
-      const resp = await forgotPasswordAPI({ email });
+      const resp = await forgotPasswordAPI({ email: values.email });
       if (resp.success) {
+        setUserEmail(values.email);
         setIsSubmitted(true);
       } else {
-        alert(resp.message || "Failed to send OTP");
+        toast.error(resp.message || "Failed to send OTP");
       }
     } catch (error) {
       console.error(error);
-      alert("Error sending OTP");
+      toast.error("Error sending OTP");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const handleReset = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onResetSubmit = async (values: ResetPasswordValues) => {
+    setSubmitting(true);
     try {
-      const resp = await resetPasswordAPI({ otp, newPassword });
+      const resp = await resetPasswordAPI({
+        otp: values.otp,
+        newPassword: values.newPassword,
+      });
       if (resp.success) {
         setIsResetDone(true);
       } else {
-        alert(resp.message || "Failed to reset password");
+        toast.error(resp.message || "Failed to reset password");
       }
     } catch (error) {
       console.error(error);
-      alert("Error resetting password");
+      toast.error("Error resetting password");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -79,86 +120,119 @@ const ForgotPasswordPage = () => {
             {isResetDone
               ? "You can now login with your new password"
               : isSubmitted
-                ? `We've sent an OTP to ${email}`
+                ? `We've sent an OTP to ${userEmail}`
                 : "Enter your email address and we'll send you an OTP to reset your password"}
           </CardDescription>
         </CardHeader>
         <CardContent>
           {!isSubmitted ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-                  <Input
-                    id="email"
-                    placeholder="name@example.com"
-                    type="email"
-                    className="pl-10"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-[#01722c] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
+            <Form {...forgotForm}>
+              <form
+                onSubmit={forgotForm.handleSubmit(onForgotSubmit)}
+                className="space-y-4"
               >
-                Send OTP
-              </Button>
-            </form>
-          ) : !isResetDone ? (
-            <form onSubmit={handleReset} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="otp">OTP received on email</Label>
-                <div className="relative">
-                  <KeyRound className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-                  <Input
-                    id="otp"
-                    placeholder="Enter 6-digit OTP"
-                    type="text"
-                    className="pl-10"
-                    required
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="newPassword">New Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
-                  <Input
-                    id="newPassword"
-                    placeholder="Enter new password"
-                    type="password"
-                    className="pl-10"
-                    required
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                  />
-                </div>
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-[#01722c] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
-              >
-                Reset Password
-              </Button>
-              <div className="mt-4 text-center">
-                <p className="text-sm text-emerald-700">
-                  Didn't receive the email?
-                </p>
+                <FormField
+                  control={forgotForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email Address</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                          <Input
+                            {...field}
+                            placeholder="name@example.com"
+                            type="email"
+                            className="pl-10"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <Button
-                  variant="outline"
-                  className="w-full mt-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
-                  onClick={() => setIsSubmitted(false)}
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full bg-[#01722c] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
                 >
-                  Try Another Email
+                  {submitting ? "Sending..." : "Send OTP"}
                 </Button>
-              </div>
-            </form>
+              </form>
+            </Form>
+          ) : !isResetDone ? (
+            <Form {...resetForm}>
+              <form
+                onSubmit={resetForm.handleSubmit(onResetSubmit)}
+                className="space-y-4"
+              >
+                <FormField
+                  control={resetForm.control}
+                  name="otp"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>OTP received on email</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <KeyRound className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                          <Input
+                            {...field}
+                            placeholder="Enter 6-digit OTP"
+                            type="text"
+                            className="pl-10"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={resetForm.control}
+                  name="newPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>New Password</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-500" />
+                          <Input
+                            {...field}
+                            placeholder="Enter new password"
+                            type="password"
+                            className="pl-10"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full bg-[#01722c] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
+                >
+                  {submitting ? "Resetting..." : "Reset Password"}
+                </Button>
+
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-emerald-700">
+                    Didn't receive the email?
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="w-full mt-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                    onClick={() => setIsSubmitted(false)}
+                  >
+                    Try Another Email
+                  </Button>
+                </div>
+              </form>
+            </Form>
           ) : (
             <div className="flex flex-col items-center justify-center py-6 space-y-4 text-center">
               <div className="h-20 w-20 rounded-full bg-emerald-100 flex items-center justify-center">
