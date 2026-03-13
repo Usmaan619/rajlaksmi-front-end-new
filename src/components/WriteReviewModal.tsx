@@ -51,6 +51,7 @@ const WriteReviewModal = ({
 
     setSubmitting(true);
     try {
+      console.log("reviews", productId, name, title, email, rating, review);
       const res = await submitReview({
         product_id: productId,
         name,
@@ -93,11 +94,13 @@ const WriteReviewModal = ({
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[calc(100vh-2rem)] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex justify-between items-center px-4 py-3 md:px-6 md:py-4 border-b border-gray-100 shrink-0">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Write a Review</h2>
-            <p className="text-sm text-gray-500">
+            <h2 className="text-lg md:text-xl font-bold text-gray-900">
+              Write a Review
+            </h2>
+            <p className="text-xs md:text-sm text-gray-500">
               Share your experience with this product
             </p>
           </div>
@@ -109,7 +112,10 @@ const WriteReviewModal = ({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="p-4 md:p-6 space-y-4 md:space-y-5 overflow-y-auto"
+        >
           {/* Rating */}
           <div>
             <label className="text-sm font-semibold text-gray-700 mb-2 block">
@@ -119,11 +125,11 @@ const WriteReviewModal = ({
               <Rating
                 onClick={handleRating}
                 initialValue={rating}
-                size={32}
+                size={window.innerWidth < 640 ? 28 : 32}
                 allowFraction
                 transition
                 fillColor="orange"
-                emptyColor="gray"
+                emptyColor="#E5E7EB"
                 className="flex"
                 SVGclassName="inline-block"
               />
@@ -135,7 +141,7 @@ const WriteReviewModal = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Name */}
             <div>
               <label className="text-sm font-semibold text-gray-700 mb-2 block">
@@ -194,19 +200,19 @@ const WriteReviewModal = ({
           </div>
 
           {/* Submit Button */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="flex-1 h-11 rounded-lg border-gray-200 hover:bg-gray-50 text-gray-700 font-medium"
+              className="flex-1 h-11 rounded-lg border-gray-200 hover:bg-gray-50 text-gray-700 font-medium order-2 sm:order-1"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={submitting}
-              className="flex-1 h-11 bg-primary text-white hover:bg-primary/90 rounded-lg font-bold shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
+              className="flex-1 h-11 bg-primary text-white hover:bg-primary/90 rounded-lg font-bold shadow-lg shadow-primary/20 transition-all active:scale-[0.98] order-1 sm:order-2"
             >
               {submitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

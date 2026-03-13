@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FiMail, FiPhoneCall } from "react-icons/fi";
 import { Facebook, Instagram, Youtube, Star } from "lucide-react";
 import { getAllOffersAPI, Offer } from "@/api/offer.service";
+import { Rating } from "react-simple-star-rating";
 
 const AnnouncementBar = () => {
   const [offers, setOffers] = useState<Offer[]>([]);
@@ -105,26 +106,49 @@ const AnnouncementBar = () => {
         {/* Right Section - Ratings & Social (Desktop Only) */}
         <div className="hidden sm:flex items-center gap-6 shrink-0">
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-0.5 text-yellow-500">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3 h-3 fill-current" />
-              ))}
-            </div>
+            <Rating
+              initialValue={4.3}
+              readonly
+              size={14}
+              allowFraction
+              fillColor="gold"
+              emptyColor="#fff"
+              SVGstyle={{ display: "inline-block" }}
+            />
+
             <span className="text-[11px] lg:text-xs font-bold leading-none">
-              4.9/5 Rating
+              4.3/5 Rating
             </span>
           </div>
 
           <div className="h-3 w-[1px] bg-white/30" />
 
           <div className="flex items-center gap-3">
-            <a href="#" className="hover:text-yellow-400 transition-colors">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="facebook"
+              href="https://www.facebook.com/rajendrarajlakshmijaviksinternational/"
+              className="hover:text-yellow-400 transition-colors"
+            >
               <Facebook size={14} />
             </a>
-            <a href="#" className="hover:text-yellow-400 transition-colors">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="instagram"
+              href="https://www.instagram.com/rajlaxmiorganic_/reel/DHGQBxksIxQ/"
+              className="hover:text-yellow-400 transition-colors"
+            >
               <Instagram size={14} />
             </a>
-            <a href="#" className="hover:text-yellow-400 transition-colors">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="youtube"
+              href="https://www.youtube.com/@rajlakshmijaviks"
+              className="hover:text-yellow-400 transition-colors"
+            >
               <Youtube size={14} />
             </a>
           </div>

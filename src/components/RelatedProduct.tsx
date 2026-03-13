@@ -245,7 +245,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           <Button
             size="sm"
             variant="outline"
-            className="flex-1 text-xs h-8"
+            className="flex-1 text-xs h-8 bg-white"
             onClick={handleBuyNow}
           >
             Buy Now
@@ -375,14 +375,14 @@ const RelatedProduct = ({
         <div className="flex items-center justify-center gap-4 mt-8">
           <button
             onClick={scrollPrev}
-            className="w-10 h-10 rounded-full border-2 border-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+            className="w-10 h-10 bg-white rounded-full border-2 border-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
 
           <button
             onClick={scrollNext}
-            className="w-10 h-10 rounded-full border-2 border-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+            className="w-10 h-10 bg-white rounded-full border-2 border-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
           >
             <ChevronRight className="h-5 w-5" />
           </button>

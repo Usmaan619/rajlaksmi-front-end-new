@@ -18,6 +18,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
@@ -245,149 +258,161 @@ const Header = () => {
 
             <HeaderProfile />
 
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden text-foreground ml-1"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </Button>
-          </div>
-        </div>
+            {/* Mobile Menu Button - Wrapped in Sheet */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden text-foreground ml-1"
+                >
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent
+                side="left"
+                className="w-[85%] sm:max-w-sm p-0 flex flex-col"
+              >
+                <SheetHeader className="p-4 border-b">
+                  <SheetTitle className="text-left flex items-center gap-2">
+                    <img src={RLJLOGOJAVIK} alt="Logo" className="w-8 h-8" />
+                    <span>Rajlakshmi Javik</span>
+                  </SheetTitle>
+                </SheetHeader>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <nav className="lg:hidden py-4 border-t border-border animate-fade-in">
-            <div className="flex flex-col gap-2">
-              {navigation.map((item) =>
-                item.submenu ? (
-                  <div key={item.name} className="flex flex-col">
-                    <span className="px-4 py-2 font-medium text-foreground">
-                      {item.name}
-                    </span>
-                    <div className="pl-8 flex flex-col">
-                      {item.submenu.map((subItem) => (
+                <div className="flex-1 overflow-y-auto py-4">
+                  <nav className="flex flex-col px-2">
+                    {navigation.map((item) =>
+                      item.submenu ? (
+                        <Accordion
+                          type="single"
+                          collapsible
+                          key={item.name}
+                          className="w-full"
+                        >
+                          <AccordionItem
+                            value={item.name}
+                            className="border-none"
+                          >
+                            <AccordionTrigger className="px-4 py-2 hover:no-underline font-medium text-foreground hover:bg-accent rounded-md transition-colors">
+                              {item.name}
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              <div className="pl-6 flex flex-col gap-1 mt-1">
+                                {item.submenu.map((subItem) => (
+                                  <Link
+                                    key={subItem.name}
+                                    to={subItem.href}
+                                    className="px-4 py-2 text-muted-foreground hover:text-primary transition-colors text-sm rounded-md hover:bg-accent/50"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                  >
+                                    {subItem.name}
+                                  </Link>
+                                ))}
+                              </div>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                      ) : (
                         <Link
-                          key={subItem.name}
-                          to={subItem.href}
-                          className="py-2 text-muted-foreground hover:text-primary transition-colors text-sm"
+                          key={item.name}
+                          to={item.href}
+                          className="px-4 py-2 text-foreground hover:text-primary hover:bg-accent transition-colors font-medium rounded-md"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          {subItem.name}
+                          {item.name}
                         </Link>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="px-4 py-2 text-foreground hover:text-primary hover:bg-accent transition-colors font-medium"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ),
-              )}
-              <div className="px-4 pt-4 flex flex-col gap-2">
-                <form
-                  onSubmit={handleSearch}
-                  className="relative flex items-center mb-2"
-                >
-                  <Input
-                    placeholder="Search products..."
-                    className="pr-10 bg-white"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                  <Button
-                    type="submit"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 text-muted-foreground"
-                  >
-                    <Search className="h-4 w-4" />
-                  </Button>
-                </form>
+                      ),
+                    )}
+                  </nav>
 
-                {isAuthenticated ? (
-                  <>
-                    <div className="flex items-center gap-3 px-4 py-3 bg-accent/50 rounded-lg">
-                      <Avatar className="h-10 w-10 border border-primary/20">
-                        <AvatarImage
-                          src={user?.profile_image}
-                          alt={user?.full_name}
-                        />
-                        <AvatarFallback className="bg-primary/10 text-primary">
-                          {user?.full_name
-                            ?.split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase() || "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold">
-                          {user?.full_name}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {user?.email}
-                        </span>
+                  <div className="px-4 pt-6 border-t mt-6 flex flex-col gap-4">
+                    <form
+                      onSubmit={handleSearch}
+                      className="relative flex items-center"
+                    >
+                      <Input
+                        placeholder="Search products..."
+                        className="pr-10 bg-accent/30 border-none rounded-full h-10"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      <Button
+                        type="submit"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 text-muted-foreground"
+                      >
+                        <Search className="h-4 w-4" />
+                      </Button>
+                    </form>
+
+                    {isAuthenticated ? (
+                      <div className="flex flex-col gap-3">
+                        <div className="flex items-center gap-3 px-3 py-3 bg-accent/30 rounded-xl">
+                          <Avatar className="h-10 w-10 border border-primary/20">
+                            <AvatarImage
+                              src={user?.profile_image}
+                              alt={user?.full_name}
+                            />
+                            <AvatarFallback className="bg-primary/10 text-primary">
+                              {user?.full_name
+                                ?.split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .toUpperCase() || "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-bold truncate max-w-[150px]">
+                              {user?.full_name}
+                            </span>
+                            <span className="text-xs text-muted-foreground truncate max-w-[150px]">
+                              {user?.email}
+                            </span>
+                          </div>
+                        </div>
+                        <Link
+                          to="/profile"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start rounded-xl h-11"
+                          >
+                            <User className="h-4 w-4 mr-2" />
+                            Profile
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="destructive"
+                          className="w-full justify-start rounded-xl h-11"
+                          onClick={() => {
+                            handleLogout();
+                            setMobileMenuOpen(false);
+                          }}
+                        >
+                          <X className="h-4 w-4 mr-2" />
+                          Logout
+                        </Button>
                       </div>
-                    </div>
-                    <Link
-                      to="/profile"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full justify-start"
+                    ) : (
+                      <Link
+                        to="/login"
+                        onClick={() => setMobileMenuOpen(false)}
                       >
-                        <User className="h-4 w-4 mr-2" />
-                        Profile
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="w-full justify-start"
-                      onClick={() => {
-                        handleLogout();
-                        setMobileMenuOpen(false);
-                      }}
-                    >
-                      <X className="h-4 w-4 mr-2" />
-                      Logout
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      to="/login"
-                      className="flex-1 "
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Button
-                        size="sm"
-                        className="w-full bg-primary justify-start rounded-lg"
-                      >
-                        <User className="h-4 w-4 mr-2" />
-                        Login
-                      </Button>
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-          </nav>
-        )}
+                        <Button className="w-full bg-primary justify-start rounded-xl h-11">
+                          <User className="h-4 w-4 mr-2" />
+                          Login / Register
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
       </div>
     </header>
   );

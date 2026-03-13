@@ -226,13 +226,34 @@ const Footer = () => {
               <span>Follow Us</span>
               <div className="flex gap-2">
                 <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
-                  <Facebook size={16} />
+                  <a
+                    href="https://www.facebook.com/rajendrarajlakshmijaviksinternational/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="facebook"
+                  >
+                    <Facebook size={16} />
+                  </a>
                 </div>
                 <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
-                  <Instagram size={16} />
+                  <a
+                    href="https://www.instagram.com/rajlaxmiorganic_/reel/DHGQBxksIxQ/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="instagram"
+                  >
+                    <Instagram size={16} />
+                  </a>
                 </div>
                 <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
-                  <Youtube size={16} />
+                  <a
+                    href="https://www.youtube.com/@rajlakshmijaviks"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="youtube"
+                  >
+                    <Youtube size={16} />
+                  </a>
                 </div>
               </div>
             </div>

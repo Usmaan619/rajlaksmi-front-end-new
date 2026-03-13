@@ -101,57 +101,6 @@ This dal is rich in protein and essential nutrients, making it a perfect choice 
 This dal is rich in protein and essential nutrients, making it a perfect choice for daily meals. Whether you're preparing simple dal or traditional recipes, our toor dal ensures purity and great taste in every bite.`,
 };
 
-const allReviews = [
-  {
-    id: 1,
-    name: "Raaj",
-    title: "CEO Founder",
-    quote:
-      "Finally, a brand I can trust for 100% organic essentials. Healthy, wholesome, and absolutely worth it!",
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: "Priya S.",
-    title: "Home Chef",
-    quote:
-      "The quality of toor dal is amazing. Cooks perfectly every time and tastes so fresh compared to store brands.",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "Raj M.",
-    title: "Health Enthusiast",
-    quote:
-      "Finally, a brand I can trust for 100% organic essentials. Healthy, wholesome, and absolutely worth it!",
-    rating: 4,
-  },
-  {
-    id: 4,
-    name: "Sneha K.",
-    title: "Nutritionist",
-    quote:
-      "I recommend Rajlakshmi products to all my clients. Pure, clean ingredients with no hidden additives.",
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: "Amit P.",
-    title: "Regular Customer",
-    quote:
-      "Been ordering for 6 months now. Consistent quality and great packaging. Highly recommend!",
-    rating: 4,
-  },
-  {
-    id: 6,
-    name: "Meera D.",
-    title: "Food Blogger",
-    quote:
-      "The aroma and texture of these organic products are unmatched. My recipes have never tasted better!",
-    rating: 5,
-  },
-];
-
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
@@ -168,6 +117,7 @@ const ProductDetail = () => {
   const [reviewStats, setReviewStats] = useState({
     averageRating: 0,
     totalReviews: 0,
+    ratingsBreakdown: { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 },
   });
   const [isLoading, setIsLoading] = useState(true);
 
@@ -176,10 +126,37 @@ const ProductDetail = () => {
     try {
       const res = await getProductReviews(id);
       if (res.reviews) {
-        setAllReviews(res.reviews);
+        const reviewsData = res.reviews;
+        const total = reviewsData.length;
+
+        // Calculate stats accurately if API values are 0 or missing
+        const calculatedAvg =
+          total > 0
+            ? reviewsData.reduce(
+                (acc: number, r: any) => acc + (parseFloat(r.rating) || 0),
+                0,
+              ) / total
+            : 0;
+
+        const calculatedBreakdown = { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 };
+        reviewsData.forEach((r: any) => {
+          const rati = Math.round(parseFloat(r.rating) || 0);
+          if (rati >= 1 && rati <= 5) {
+            calculatedBreakdown[
+              rati.toString() as keyof typeof calculatedBreakdown
+            ]++;
+          }
+        });
+
+        setAllReviews(reviewsData);
         setReviewStats({
-          averageRating: res.averageRating || 0,
-          totalReviews: res.totalReviews || 0,
+          averageRating:
+            res.averageRating && res.averageRating > 0
+              ? res.averageRating
+              : calculatedAvg,
+          totalReviews:
+            res.totalReviews && res.totalReviews > 0 ? res.totalReviews : total,
+          ratingsBreakdown: res.ratingsBreakdown || calculatedBreakdown,
         });
       }
     } catch (err) {
@@ -213,9 +190,9 @@ const ProductDetail = () => {
 
   // Calculate dynamic stats or use fake defaults
   const dynamicRating =
-    reviewStats.totalReviews > 0 ? reviewStats.averageRating : 4.5;
+    reviewStats.totalReviews > 0 ? Number(reviewStats.averageRating) || 0 : 0;
   const dynamicReviewCount =
-    reviewStats.totalReviews > 0 ? reviewStats.totalReviews : 112;
+    reviewStats.totalReviews > 0 ? reviewStats.totalReviews : 0;
 
   const product = apiProduct
     ? {
@@ -405,7 +382,7 @@ const ProductDetail = () => {
   const handleCopyCode = (code: string, index: number) => {
     navigator.clipboard.writeText(code);
     setCopiedCode(index);
-    setTimeout(() => setCopiedCode(null), 2000);
+    setTimeout(() => setCopiedCode(null), 1000);
   };
 
   const prevImage = () =>
@@ -574,23 +551,26 @@ const ProductDetail = () => {
                 {product.subtitle}
               </p>
 
-              {/* Rating */}
               <div className="flex items-center gap-3 flex-wrap">
                 <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className={`h-5 w-5 ${star <= Math.floor(product.rating) ? "fill-golden text-golden" : "text-border"}`}
-                    />
-                  ))}
+                  <Rating
+                    initialValue={Number(product.rating) || 0}
+                    readonly
+                    allowFraction
+                    size={22}
+                    fillColor="orange"
+                    className="flex"
+                    SVGclassName="inline-block"
+                  />
                 </div>
-                <span className="text-sm font-semibold text-foreground">
-                  {product.rating}
-                </span>
+                {product.rating > 0 && (
+                  <span className="text-sm font-semibold text-foreground">
+                    {Number(product.rating).toFixed(1)}
+                  </span>
+                )}
                 <span className="text-sm text-muted-foreground">
                   from {product.reviews} Reviews
                 </span>
-                {/* Icons */}
                 <div className="ml-auto flex items-center gap-2">
                   <button
                     onClick={() => {
@@ -637,39 +617,54 @@ const ProductDetail = () => {
               </div>
 
               {/* Offers */}
-              <div>
-                <h3 className="text-sm font-semibold text-foreground mb-3">
-                  Offers Available
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {product.offers.map((offer, index) => (
-                    <div
-                      key={index}
-                      className="border border-primary/30 rounded-lg p-3 bg-accent/20"
-                    >
-                      <p className="text-primary font-bold text-xs mb-1">
-                        {offer.title}
-                      </p>
-                      <p className="text-muted-foreground text-[11px] leading-tight mb-2">
-                        {offer.desc}
-                      </p>
-                      <div className="flex items-center gap-1">
-                        <span className="text-[11px] text-muted-foreground">
-                          Use Code:
+              <div className="mt-2">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="offers" className="border-none">
+                    <AccordionTrigger className="hover:no-underline py-2 border border-primary/20 bg-accent/10 rounded-lg px-4 [&>svg]:ml-2">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-primary/10 text-primary border-none text-[10px] h-5 px-2">
+                          {product.offers.length}
+                        </Badge>
+                        <span className="text-sm font-semibold text-foreground">
+                          Offers Available
                         </span>
-                        <span className="text-primary font-semibold text-xs">
-                          {offer.code}
-                        </span>
-                        <button
-                          onClick={() => handleCopyCode(offer.code, index)}
-                          className="ml-auto text-primary hover:text-primary/80 text-xs font-medium flex items-center gap-0.5"
-                        >
-                          {copiedCode === index ? "Copied!" : "Copy"}
-                        </button>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {product.offers.map((offer, index) => (
+                          <div
+                            key={index}
+                            className="border border-primary/30 rounded-lg p-3 bg-accent/20"
+                          >
+                            <p className="text-primary font-bold text-xs mb-1">
+                              {offer.title}
+                            </p>
+                            <p className="text-muted-foreground text-[11px] leading-tight mb-2">
+                              {offer.desc}
+                            </p>
+                            <div className="flex items-center gap-1">
+                              <span className="text-[11px] text-muted-foreground">
+                                Use Code:
+                              </span>
+                              <span className="text-primary font-semibold text-xs">
+                                {offer.code}
+                              </span>
+                              <button
+                                onClick={() =>
+                                  handleCopyCode(offer.code, index)
+                                }
+                                className="ml-auto text-primary hover:text-primary/80 text-xs font-medium flex items-center gap-0.5"
+                              >
+                                {copiedCode === index ? "Copied!" : "Copy"}
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </div>
 
               {/* Size Selector */}
@@ -702,9 +697,7 @@ const ProductDetail = () => {
                     product.stock > 0 ? "text-primary" : "text-destructive"
                   }`}
                 >
-                  {product.stock > 0
-                    ? `In Stock (${product.stock})`
-                    : "Out of Stock"}
+                  {product.stock > 0 ? `In Stock` : "Out of Stock"}
                 </span>
               </p>
 
@@ -947,52 +940,125 @@ const ProductDetail = () => {
               Customer Reviews
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {reviews.map((review, index) => (
-                <div
-                  key={review.id}
-                  className="bg-card rounded-xl p-6 shadow-md border border-border"
-                >
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="w-14 h-14 rounded-full bg-muted overflow-hidden flex-shrink-0">
-                      <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/20 flex items-center justify-center">
-                        <svg
-                          viewBox="0 0 24 24"
-                          className="w-8 h-8 text-muted-foreground/50"
-                        >
-                          <circle cx="12" cy="8" r="4" fill="currentColor" />
-                          <path
-                            d="M12 14c-6 0-8 3-8 6v1h16v-1c0-3-2-6-8-6z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="flex gap-0.5 ml-auto">
+            {/* Reviews Summary Breakdown */}
+            {allReviews.length > 0 && (
+              <div className="mb-12 p-8 bg-white rounded-2xl border border-border shadow-md">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+                  <div className="text-center md:border-r border-border md:pr-10">
+                    <p className="text-6xl font-bold text-foreground mb-2">
+                      {Number(reviewStats.averageRating).toFixed(1)}
+                    </p>
+                    <div className="flex justify-center mb-2">
                       <Rating
-                        initialValue={review.rating}
+                        initialValue={Number(reviewStats.averageRating)}
                         readonly
                         allowFraction
-                        size={18}
+                        size={28}
                         fillColor="orange"
                         className="flex"
                         SVGclassName="inline-block"
                       />
                     </div>
+                    <p className="text-sm text-muted-foreground font-medium">
+                      Based on {reviewStats.totalReviews} verified reviews
+                    </p>
                   </div>
-                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed italic">
-                    "{review.feedback || review.quote}"
-                  </p>
-                  <div>
-                    <p className="font-semibold text-foreground">
-                      {review.name}
-                    </p>
-                    <p className="text-xs text-primary font-medium">
-                      {review.title || "Verified Customer"}
-                    </p>
+
+                  <div className="md:col-span-2 space-y-3">
+                    {[5, 4, 3, 2, 1].map((star) => {
+                      const count =
+                        (reviewStats.ratingsBreakdown as any)[
+                          star.toString()
+                        ] || 0;
+                      const percentage =
+                        reviewStats.totalReviews > 0
+                          ? (count / reviewStats.totalReviews) * 100
+                          : 0;
+                      return (
+                        <div
+                          key={star}
+                          className="flex items-center gap-4 group"
+                        >
+                          <span className="text-sm font-semibold w-14 text-foreground">
+                            {star} Stars
+                          </span>
+                          <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-orange-400 rounded-full transition-all duration-500 group-hover:bg-orange-500"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                          <span className="text-sm text-muted-foreground w-12 text-right font-medium">
+                            {count}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-              ))}
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {reviews.length > 0 ? (
+                reviews.map((review) => (
+                  <div
+                    key={review.id}
+                    className="bg-white rounded-xl p-6 shadow-md border border-border flex flex-col h-full"
+                  >
+                    <div className="flex items-start gap-4 mb-4">
+                      <div className="w-14 h-14 rounded-full bg-muted overflow-hidden flex-shrink-0">
+                        <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/30 flex items-center justify-center text-primary font-bold text-xl uppercase">
+                          {review.name?.[0] || "U"}
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center mb-1">
+                          <p className="font-semibold text-foreground">
+                            {review.name}
+                          </p>
+                          <Rating
+                            initialValue={Number(review.rating) || 0}
+                            readonly
+                            allowFraction
+                            size={16}
+                            fillColor="orange"
+                            className="flex"
+                            SVGclassName="inline-block"
+                          />
+                        </div>
+                        <p className="text-xs text-primary font-medium">
+                          {review.title || "Verified Customer"}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground text-sm mb-4 leading-relaxed italic flex-1">
+                      "
+                      {review.feedback ||
+                        review.quote ||
+                        "No feedback provided."}
+                      "
+                    </p>
+                    <div className="pt-3 border-t border-border mt-auto">
+                      <p className="text-[10px] text-muted-foreground">
+                        Reviewed on{" "}
+                        {review.created_at
+                          ? new Date(review.created_at).toLocaleDateString()
+                          : "unknown date"}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full py-16 text-center bg-muted/30 rounded-2xl border-2 border-dashed border-muted">
+                  <p className="text-muted-foreground text-lg mb-2">
+                    No reviews yet for this product.
+                  </p>
+                  <p className="text-sm text-muted-foreground/70">
+                    Be the first to share your experience!
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Review Navigation */}
@@ -1002,7 +1068,7 @@ const ProductDetail = () => {
                 size="icon"
                 onClick={() => setReviewPage((p) => Math.max(0, p - 1))}
                 disabled={reviewPage === 0}
-                className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
+                className="bg-white rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
               >
                 <ChevronLeft className="w-5 h-5" />
               </Button>
@@ -1022,7 +1088,7 @@ const ProductDetail = () => {
                   setReviewPage((p) => Math.min(totalReviewPages - 1, p + 1))
                 }
                 disabled={reviewPage === totalReviewPages - 1}
-                className="rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
+                className="bg-white rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
               >
                 <ChevronRight className="w-5 h-5" />
               </Button>

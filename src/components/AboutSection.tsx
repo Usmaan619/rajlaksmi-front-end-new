@@ -5,7 +5,7 @@ import aboutFarmersBgImage from "@/assets/aboutus/aboutusbgfarmerImg.png";
 
 const AboutSection = () => {
   return (
-    <section className="py-12 lg:py-20 bg-background">
+    <section className="py-12 lg:py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className=" rounded-3xl p-6 lg:p-12 relative overflow-hidden">
           {/* Background image */}
@@ -49,7 +49,7 @@ const AboutSection = () => {
               <Link to="/about">
                 <Button
                   variant="outline"
-                  className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"
+                  className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6 mt-3"
                 >
                   Read more
                 </Button>
