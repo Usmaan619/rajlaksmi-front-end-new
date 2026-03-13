@@ -92,6 +92,7 @@ const FilterDropdown = ({
   return (
     <div className="relative">
       <button
+        aria-label="Open Filter Dropdown"
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 border border-[hsl(140,40%,75%)] rounded-full px-4 py-1.5 text-sm text-foreground hover:border-[hsl(140,60%,30%)] transition-colors bg-background"
       >
@@ -101,6 +102,7 @@ const FilterDropdown = ({
       {open && (
         <div className="absolute top-full mt-1 left-0 bg-background border border-border rounded-lg shadow-lg z-[60] min-w-[160px]">
           <button
+            aria-label="Select All"
             onClick={() => {
               onChange("");
               setOpen(false);
@@ -111,6 +113,7 @@ const FilterDropdown = ({
           </button>
           {options.map((opt) => (
             <button
+              aria-label={`Select ${opt}`}
               key={opt}
               onClick={() => {
                 onChange(opt);
@@ -219,6 +222,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           />
         </div>
         <button
+          aria-label="Add to Wishlist"
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
@@ -264,6 +268,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       <div className="flex items-center justify-between mt-2">
         <div className="relative">
           <button
+            aria-label="Select Weight"
             onClick={(e) => {
               e.stopPropagation();
               if (weights.length > 1) setShowWeights(!showWeights);
@@ -300,12 +305,14 @@ const ProductCard = ({ product }: { product: Product }) => {
       {/* Buttons */}
       <div className="flex gap-2 mt-auto pt-2">
         <button
+          aria-label="Add to Cart"
           onClick={handleAddToCart}
           className="flex-1 border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-[11px] py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors font-medium"
         >
           Add to Cart
         </button>
         <button
+          aria-label="Buy Now"
           onClick={handleBuyNow}
           className="flex-1 bg-[hsl(140,60%,30%)] text-white text-[11px] py-1.5 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors font-medium"
         >
@@ -466,6 +473,7 @@ const CategoryMain = () => {
 
             {(availability || weight || filterBy || sortBy) && (
               <button
+                aria-label="Clear All Filters"
                 onClick={() => {
                   setAvailability("");
                   setWeight("");
@@ -492,6 +500,7 @@ const CategoryMain = () => {
             <div className="text-center py-16">
               <p className="text-red-500 mb-4">{error}</p>
               <button
+                aria-label="Retry"
                 onClick={fetchProducts}
                 className="bg-primary text-white px-4 py-2 rounded-md"
               >
@@ -520,6 +529,7 @@ const CategoryMain = () => {
           {!loading && totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-12 py-2">
               <button
+                aria-label="Previous Page"
                 onClick={() => {
                   setCurrentPage((p) => Math.max(1, p - 1));
                   window.scrollTo({ top: 0, behavior: "smooth" });
@@ -531,6 +541,7 @@ const CategoryMain = () => {
               </button>
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
+                  aria-label={`Page ${i + 1}`}
                   key={i}
                   onClick={() => {
                     setCurrentPage(i + 1);
@@ -546,6 +557,7 @@ const CategoryMain = () => {
                 </button>
               ))}
               <button
+                aria-label="Next Page"
                 onClick={() => {
                   setCurrentPage((p) => Math.min(totalPages, p + 1));
                   window.scrollTo({ top: 0, behavior: "smooth" });

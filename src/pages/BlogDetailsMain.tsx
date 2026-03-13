@@ -73,7 +73,7 @@ const BlogDetail = () => {
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <h2 className="text-2xl font-bold mb-4">Blog not found</h2>
         <Link to="/blog">
-          <Button>Back to Blogs</Button>
+          <Button aria-label="Back to Blogs">Back to Blogs</Button>
         </Link>
       </div>
     );
@@ -225,13 +225,19 @@ const BlogDetail = () => {
                   </p>
                   <div className="flex flex-wrap gap-4">
                     <Link to="/products">
-                      <Button className="bg-[#01722C] hover:bg-[#01722C] text-white rounded-xl px-7 py-3 font-semibold text-base shadow-sm transition-all duration-300">
+                      <Button
+                        aria-label="Shop Organic Products"
+                        className="bg-[#01722C] hover:bg-[#01722C] text-white rounded-xl px-7 py-3 font-semibold text-base shadow-sm transition-all duration-300"
+                      >
                         Shop Organic Products
                       </Button>
                     </Link>
 
                     <Link to="/products">
-                      <Button className="bg-[#F0FFF0] text-[#01722C] hover:text-white border border-[#01722C]  rounded-xl px-7 py-3 font-semibold text-base transition-all duration-300">
+                      <Button
+                        aria-label="Explore Categories"
+                        className="bg-[#F0FFF0] text-[#01722C] hover:text-white border border-[#01722C]  rounded-xl px-7 py-3 font-semibold text-base transition-all duration-300"
+                      >
                         Explore Categories
                       </Button>
                     </Link>

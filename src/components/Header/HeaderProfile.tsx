@@ -11,7 +11,10 @@ const HeaderProfile = () => {
     <ProfileDropdown />
   ) : (
     <Link to="/login" className="hidden sm:block">
-      <Button className="bg-primary hover:bg-forest-light text-primary-foreground gap-2 rounded-full shadow-sm hover:shadow-md transition-all px-5">
+      <Button
+        aria-label="Login"
+        className="bg-primary hover:bg-forest-light text-primary-foreground gap-2 rounded-full shadow-sm hover:shadow-md transition-all px-5"
+      >
         <User size={18} />
         <span className="font-semibold">Login</span>
       </Button>

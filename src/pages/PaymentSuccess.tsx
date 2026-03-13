@@ -34,6 +34,7 @@ const PaymentSuccess = () => {
             <ArrowRight className="ml-2 w-4 h-4" />
           </Button> */}
           <Button
+            aria-label="Continue shopping"
             variant="outline"
             onClick={() => navigate("/products")}
             className="w-full bg-white border border-gray-100"

@@ -274,6 +274,7 @@ const SignupPage = () => {
                             className="pl-10 pr-10"
                           />
                           <button
+                            aria-label="Toggle password visibility"
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
                             className="absolute right-3 top-3 text-gray-500"
@@ -350,6 +351,7 @@ const SignupPage = () => {
               />
 
               <Button
+                aria-label="Sign Up"
                 type="submit"
                 disabled={submitting}
                 className="w-full bg-[#01722c] hover:bg-[#015a23] text-white transition-all transform hover:scale-[1.01]"
@@ -370,6 +372,7 @@ const SignupPage = () => {
           </div>
           <div className="flex justify-center gap-4">
             <Button
+              aria-label="Sign Up with Google"
               type="button"
               variant="outline"
               size="icon"
@@ -399,6 +402,7 @@ const SignupPage = () => {
               )}
               render={({ onClick }) => (
                 <Button
+                  aria-label="Sign Up with Facebook"
                   type="button"
                   variant="outline"
                   size="icon"

@@ -143,6 +143,7 @@ const ReviewSection = () => {
         {/* Navigation */}
         <div className="flex items-center justify-center gap-4 mt-8">
           <button
+            aria-label="Previous slide"
             onClick={scrollPrev}
             className="w-10 h-10 rounded-full border-2 border-primary flex items-center justify-center"
           >
@@ -150,6 +151,7 @@ const ReviewSection = () => {
           </button>
 
           <button
+            aria-label="Next slide"
             onClick={scrollNext}
             className="w-10 h-10 rounded-full border-2 border-primary flex items-center justify-center"
           >
@@ -194,6 +196,7 @@ const ReviewSection = () => {
           </select>
 
           <button
+            aria-label="Submit review"
             type="submit"
             className="w-full bg-primary text-white py-3 rounded-md"
           >

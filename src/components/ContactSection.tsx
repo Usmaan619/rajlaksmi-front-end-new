@@ -234,7 +234,12 @@ const ContactSection = () => {
             </div>
 
             {/* Button */}
-            <Button type="submit" disabled={loading} className="h-12 px-8">
+            <Button
+              aria-label="Send Message"
+              type="submit"
+              disabled={loading}
+              className="h-12 px-8"
+            >
               {loading ? "Sending..." : "Send Message"}
             </Button>
           </form>

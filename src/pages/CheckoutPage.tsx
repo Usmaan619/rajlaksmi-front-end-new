@@ -320,6 +320,7 @@ const CheckoutPage = () => {
           Add some products to continue checkout
         </p>
         <Button
+          aria-label="Shop Now"
           onClick={() => navigate("/products")}
           className="bg-[#01722c] hover:bg-[#0c9c43] text-white"
         >
@@ -373,6 +374,7 @@ const CheckoutPage = () => {
                                 {addr.full_name}
                               </h4>
                               <button
+                                aria-label="Delete Address"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleDeleteAddress(addr.id);
@@ -408,6 +410,7 @@ const CheckoutPage = () => {
                     )}
 
                     <Button
+                      aria-label="Add New Address"
                       variant="outline"
                       onClick={() => setIsAddingAddress(true)}
                       className="w-full h-12 border-dashed border-emerald-300 text-emerald-700 hover:bg-emerald-50 gap-2 font-semibold"
@@ -439,33 +442,36 @@ const CheckoutPage = () => {
                               <FormItem>
                                 <FormLabel>Full Name</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="Ex: John Doe" />
+                                  <Input
+                                    {...field}
+                                    placeholder="Ex: John Doe"
+                                  />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
+                          <FormField
+                            control={addressForm.control}
+                            name="phone"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Phone Number</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="10 digit mobile number"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
                         <FormField
                           control={addressForm.control}
-                          name="phone"
+                          name="address_line1"
                           render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Phone Number</FormLabel>
-                              <FormControl>
-                                <Input
-                                  {...field}
-                                  placeholder="10 digit mobile number"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <FormField
-                        control={addressForm.control}
-                        name="address_line1"
-                        render={({ field }) => (
                             <FormItem>
                               <FormLabel>Address Line 1</FormLabel>
                               <FormControl>
@@ -477,11 +483,11 @@ const CheckoutPage = () => {
                               <FormMessage />
                             </FormItem>
                           )}
-                      />
-                      <FormField
-                        control={addressForm.control}
-                        name="address_line2"
-                        render={({ field }) => (
+                        />
+                        <FormField
+                          control={addressForm.control}
+                          name="address_line2"
+                          render={({ field }) => (
                             <FormItem>
                               <FormLabel>Address Line 2 (Optional)</FormLabel>
                               <FormControl>
@@ -493,80 +499,82 @@ const CheckoutPage = () => {
                               <FormMessage />
                             </FormItem>
                           )}
-                      />
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                          control={addressForm.control}
-                          name="city"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>City</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
                         />
-                        <FormField
-                          control={addressForm.control}
-                          name="state"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>State</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                          control={addressForm.control}
-                          name="pincode"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Pincode</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={addressForm.control}
-                          name="country"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Country</FormLabel>
-                              <FormControl>
-                                <Input {...field} placeholder="Ex: India" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className="flex gap-3 pt-2">
-                        <Button
-                          type="submit"
-                          className="flex-1 bg-[#01722c] hover:bg-[#01722c]"
-                        >
-                          Save Address
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setIsAddingAddress(false)}
-                          className="flex-1"
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </form>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={addressForm.control}
+                            name="city"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>City</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={addressForm.control}
+                            name="state"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>State</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={addressForm.control}
+                            name="pincode"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Pincode</FormLabel>
+                                <FormControl>
+                                  <Input {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={addressForm.control}
+                            name="country"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Country</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="Ex: India" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <div className="flex gap-3 pt-2">
+                          <Button
+                            aria-label="Save Address"
+                            type="submit"
+                            className="flex-1 bg-[#01722c] hover:bg-[#01722c]"
+                          >
+                            Save Address
+                          </Button>
+                          <Button
+                            aria-label="Cancel"
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsAddingAddress(false)}
+                            className="flex-1"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </form>
                     </Form>
                   </div>
                 )}
@@ -668,6 +676,7 @@ const CheckoutPage = () => {
               </CardContent>
               <CardFooter className="p-6 pt-0">
                 <Button
+                  aria-label="Place Order"
                   onClick={handlePlaceOrder}
                   disabled={isLoading || !selectedAddressId}
                   className="w-full h-14 bg-[#01722c]   hover:bg-[#0c9c43] text-white font-bold text-lg rounded-xl shadow-lg transition-all active:scale-[0.98]"

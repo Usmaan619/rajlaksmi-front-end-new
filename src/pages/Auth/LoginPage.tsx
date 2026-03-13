@@ -15,11 +15,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useGoogleLogin } from "@react-oauth/google";
-import {
-  googleLoginAPI,
-  facebookLoginAPI,
-  loginAPI,
-} from "@/api/auth.service";
+import { googleLoginAPI, facebookLoginAPI, loginAPI } from "@/api/auth.service";
 import FacebookLogin from "@greatsumini/react-facebook-login";
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -235,6 +231,7 @@ const LoginPage = () => {
                           className="pl-10 pr-10"
                         />
                         <button
+                          aria-label="Toggle password visibility"
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
@@ -275,6 +272,7 @@ const LoginPage = () => {
 
               <Button
                 type="submit"
+                aria-label="Sign In"
                 disabled={submitting}
                 className="w-full bg-[#01722c] hover:bg-[#015a23] text-white transition-all transform hover:scale-[1.01]"
               >
@@ -294,6 +292,7 @@ const LoginPage = () => {
           </div>
           <div className="flex justify-center gap-4">
             <Button
+              aria-label="Sign In with Google"
               type="button"
               variant="outline"
               size="icon"
@@ -323,6 +322,7 @@ const LoginPage = () => {
               )}
               render={({ onClick }) => (
                 <Button
+                  aria-label="Sign In with Facebook"
                   type="button"
                   variant="outline"
                   size="icon"

@@ -150,6 +150,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
 
         <button
+          aria-label="Add to wishlist"
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
@@ -201,6 +202,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         <div className="flex items-center justify-between">
           <div className="relative">
             <button
+              aria-label="Select unit"
               onClick={(e) => {
                 e.stopPropagation();
                 if (weights.length > 1) setShowWeights(!showWeights);
@@ -236,6 +238,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
         <div className="flex gap-2 pt-1 mt-auto">
           <Button
+            aria-label="Add to cart"
             size="sm"
             className="flex-1 text-xs h-8"
             onClick={handleAddToCart}
@@ -243,6 +246,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             Add to Cart
           </Button>
           <Button
+            aria-label="Buy now"
             size="sm"
             variant="outline"
             className="flex-1 text-xs h-8 bg-white"
@@ -374,6 +378,7 @@ const RelatedProduct = ({
 
         <div className="flex items-center justify-center gap-4 mt-8">
           <button
+            aria-label="Previous slide"
             onClick={scrollPrev}
             className="w-10 h-10 bg-white rounded-full border-2 border-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
           >
@@ -381,6 +386,7 @@ const RelatedProduct = ({
           </button>
 
           <button
+            aria-label="Next slide"
             onClick={scrollNext}
             className="w-10 h-10 bg-white rounded-full border-2 border-primary flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
           >

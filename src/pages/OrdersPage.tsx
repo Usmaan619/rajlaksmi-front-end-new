@@ -137,6 +137,7 @@ const OrdersPage = () => {
           </div>
           <div className="flex items-center gap-2 bg-white p-1 rounded-md shadow-sm border border-slate-100">
             <Button
+              aria-label="Filter orders"
               variant={filter === "all" ? "default" : "ghost"}
               size="sm"
               onClick={() => setFilter("all")}
@@ -145,6 +146,7 @@ const OrdersPage = () => {
               All
             </Button>
             <Button
+              aria-label="Filter orders"
               variant={filter === "delivered" ? "default" : "ghost"}
               size="sm"
               onClick={() => setFilter("delivered")}
@@ -153,6 +155,7 @@ const OrdersPage = () => {
               Delivered
             </Button>
             <Button
+              aria-label="Filter orders"
               variant={filter === "processing" ? "default" : "ghost"}
               size="sm"
               onClick={() => setFilter("processing")}
@@ -275,6 +278,7 @@ const OrdersPage = () => {
                     </p>
                     <div className="flex gap-2">
                       <Button
+                        aria-label="Track order"
                         variant="outline"
                         size="sm"
                         onClick={() => handleTrackOrder(order.id)}
@@ -291,6 +295,7 @@ const OrdersPage = () => {
                           : "Track Order"}
                       </Button>
                       <Button
+                        aria-label="View order details"
                         variant="ghost"
                         size="sm"
                         onClick={() => navigate(`/orders/${order.id}`)}
@@ -318,6 +323,7 @@ const OrdersPage = () => {
               fill your history!
             </p>
             <Button
+              aria-label="Shop products"
               className="mt-8 bg-primary hover:bg-forest  h-auto text-base font-medium rounded-md shadow-lg shadow-primary/20 transition-all hover:scale-[1.02]"
               onClick={() => navigate("/products")}
             >
@@ -338,6 +344,7 @@ const OrdersPage = () => {
                 within 7 days.
               </p>
               <Button
+                aria-label="View refund policy"
                 variant="secondary"
                 size="sm"
                 onClick={() => navigate("/returns")}
@@ -362,6 +369,7 @@ const OrdersPage = () => {
                 products. Orders are delivered within 2-4 business days.
               </p>
               <Button
+                aria-label="View shipping policy"
                 variant="outline"
                 size="sm"
                 onClick={() => navigate("/shipping")}

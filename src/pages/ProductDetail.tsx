@@ -494,12 +494,14 @@ const ProductDetail = () => {
                   className="w-full h-full object-cover"
                 />
                 <button
+                  aria-label="Previous image"
                   onClick={prevImage}
                   className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-popover/80 shadow-soft flex items-center justify-center hover:bg-popover transition-colors"
                 >
                   <ChevronLeft className="h-5 w-5 text-foreground" />
                 </button>
                 <button
+                  aria-label="Next image"
                   onClick={nextImage}
                   className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-popover/80 shadow-soft flex items-center justify-center hover:bg-popover transition-colors"
                 >
@@ -511,6 +513,7 @@ const ProductDetail = () => {
               <div className="flex gap-2 overflow-x-auto pb-2">
                 {product.images.map((img, index) => (
                   <button
+                    aria-label="Thumbnail image"
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${
@@ -572,6 +575,7 @@ const ProductDetail = () => {
                 </span>
                 <div className="ml-auto flex items-center gap-2">
                   <button
+                    aria-label="Add to wishlist"
                     onClick={() => {
                       toggleWishlist({
                         id: product.name,
@@ -597,6 +601,7 @@ const ProductDetail = () => {
                     />
                   </button>
                   <button
+                    aria-label="Share product"
                     onClick={handleShare}
                     title="Share product"
                     className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors"
@@ -650,6 +655,7 @@ const ProductDetail = () => {
                                 {offer.code}
                               </span>
                               <button
+                                aria-label="Copy code"
                                 onClick={() =>
                                   handleCopyCode(offer.code, index)
                                 }
@@ -674,6 +680,7 @@ const ProductDetail = () => {
                 <div className="flex flex-wrap gap-2">
                   {sizesArr.map((sizeObj, idx) => (
                     <button
+                      aria-label="Size selector"
                       key={idx}
                       onClick={() => setSelectedSizeIdx(idx)}
                       className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
@@ -726,6 +733,7 @@ const ProductDetail = () => {
                 </h3>
                 <div className="flex items-center w-32 border border-border rounded-lg overflow-hidden h-12">
                   <button
+                    aria-label="Decrease quantity"
                     onClick={handleDecreaseQuantity}
                     className="flex-1 flex items-center justify-center hover:bg-muted transition-colors border-r border-border h-full"
                     disabled={quantity <= 1}
@@ -736,6 +744,7 @@ const ProductDetail = () => {
                     {quantity}
                   </div>
                   <button
+                    aria-label="Increase quantity"
                     onClick={handleIncreaseQuantity}
                     className="flex-1 flex items-center justify-center hover:bg-muted transition-colors border-l border-border h-full"
                     disabled={
@@ -750,6 +759,7 @@ const ProductDetail = () => {
               {/* Action Buttons */}
               <div className="flex gap-3">
                 <Button
+                  aria-label="Add to cart"
                   variant="outline"
                   onClick={handleAddToCart}
                   disabled={product.stock <= 0}
@@ -758,6 +768,7 @@ const ProductDetail = () => {
                   Add to Cart
                 </Button>
                 <Button
+                  aria-label="Buy now"
                   onClick={handleBuyNow}
                   disabled={product.stock <= 0}
                   className="flex-1 h-12 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1063,6 +1074,7 @@ const ProductDetail = () => {
             {/* Review Navigation */}
             <div className="flex items-center justify-center gap-4 mb-6">
               <Button
+                aria-label="Previous review"
                 variant="outline"
                 size="icon"
                 onClick={() => setReviewPage((p) => Math.max(0, p - 1))}
@@ -1074,6 +1086,7 @@ const ProductDetail = () => {
               <div className="flex gap-2">
                 {Array.from({ length: totalReviewPages }).map((_, i) => (
                   <button
+                    aria-label="Review page selector"
                     key={i}
                     onClick={() => setReviewPage(i)}
                     className={`w-2.5 h-2.5 rounded-full transition-colors ${i === reviewPage ? "bg-primary" : "bg-muted-foreground/30"}`}
@@ -1081,6 +1094,7 @@ const ProductDetail = () => {
                 ))}
               </div>
               <Button
+                aria-label="Next review"
                 variant="outline"
                 size="icon"
                 onClick={() =>
@@ -1096,6 +1110,7 @@ const ProductDetail = () => {
             {/* Write a Review Button */}
             <div className="flex justify-center">
               <Button
+                aria-label="Write a review"
                 variant="outline"
                 onClick={() => setIsReviewModalOpen(true)}
                 className="bg-white rounded-md border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8"

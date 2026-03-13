@@ -179,6 +179,7 @@ const VideoProductCard = ({
 
         {/* Top-right icon */}
         <button
+          aria-label="View product"
           onClick={(e) => {
             e.stopPropagation();
             navigate(`/product/${product.id}`);
@@ -190,6 +191,7 @@ const VideoProductCard = ({
 
         {/* Wishlist icon */}
         <button
+          aria-label="Add to wishlist"
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
@@ -232,6 +234,7 @@ const VideoProductCard = ({
         </div>
 
         <button
+          aria-label="Add to cart"
           onClick={handleAddToCart}
           className="w-full border border-green-700 text-green-700 rounded-md py-1.5 text-xs font-bold hover:bg-green-700 hover:text-white transition-colors duration-300"
         >
@@ -410,6 +413,7 @@ const OurProductsSection = () => {
           {/* Navigation Arrows like Testimonial */}
           <div className="hidden sm:flex absolute top-1/2 -left-2 md:-left-8 lg:-left-12 -translate-y-1/2 z-30">
             <button
+              aria-label="Previous slide"
               onClick={scrollPrev}
               className="w-12 h-12 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-green-700 hover:bg-green-700 hover:text-white transition-all duration-300"
             >
@@ -418,6 +422,7 @@ const OurProductsSection = () => {
           </div>
           <div className="hidden sm:flex absolute top-1/2 -right-2 md:-right-8 lg:-right-12 -translate-y-1/2 z-30">
             <button
+              aria-label="Next slide"
               onClick={scrollNext}
               className="w-12 h-12 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-green-700 hover:bg-green-700 hover:text-white transition-all duration-300"
             >

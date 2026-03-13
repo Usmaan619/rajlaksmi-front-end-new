@@ -87,7 +87,10 @@ const Certifications = () => {
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
                   {cert.description}
                 </p>
-                <button className="border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-sm px-4 py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors">
+                <button
+                  aria-label="View Certificate"
+                  className="border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-sm px-4 py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors"
+                >
                   View Certificate
                 </button>
               </div>
@@ -98,6 +101,7 @@ const Certifications = () => {
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-8">
               <button
+                aria-label="Previous Page"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 className="w-8 h-8 rounded-full border border-[hsl(140,40%,80%)] flex items-center justify-center text-[hsl(140,60%,30%)] disabled:opacity-40"
@@ -107,6 +111,7 @@ const Certifications = () => {
               <span className="text-sm text-muted-foreground">Previous</span>
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
+                  aria-label={`Page ${i + 1}`}
                   key={i}
                   onClick={() => setCurrentPage(i + 1)}
                   className={`text-sm px-1 ${currentPage === i + 1 ? "font-bold text-foreground" : "text-muted-foreground"}`}
@@ -116,6 +121,7 @@ const Certifications = () => {
               ))}
               <span className="text-sm text-muted-foreground">Next</span>
               <button
+                aria-label="Next Page"
                 onClick={() =>
                   setCurrentPage((p) => Math.min(totalPages, p + 1))
                 }
@@ -147,7 +153,10 @@ const Certifications = () => {
                 <li>Continuous monitoring and improvement</li>
               </ul>
               <div>
-                <button className="bg-[hsl(140,60%,30%)] text-white text-sm px-5 py-2 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors">
+                <button
+                  aria-label="Read More About Our Quality Control"
+                  className="bg-[hsl(140,60%,30%)] text-white text-sm px-5 py-2 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors"
+                >
                   Read more about our quality control
                 </button>
               </div>

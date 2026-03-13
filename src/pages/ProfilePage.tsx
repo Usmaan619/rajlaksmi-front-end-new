@@ -237,6 +237,7 @@ const ProfilePage = () => {
               </AvatarFallback>
             </Avatar>
             <button
+              aria-label="Change profile picture"
               onClick={() => fileInputRef.current?.click()}
               className="absolute bottom-0 right-0 p-2.5 bg-primary text-white rounded-full shadow-lg hover:bg-forest transition-all"
               title="Change Profile Picture"
@@ -350,6 +351,7 @@ const ProfilePage = () => {
                       )}
                     />
                     <Button
+                      aria-label="Save profile changes"
                       type="submit"
                       disabled={loading}
                       className="w-full md:w-auto bg-primary hover:bg-forest  h-auto text-base font-medium shadow-lg shadow-primary/20 transition-all rounded-md"
@@ -381,6 +383,7 @@ const ProfilePage = () => {
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
                     <Button
+                      aria-label="Add new address"
                       variant="outline"
                       size="sm"
                       className="font-bold gap-1 border-primary/20 text-primary bg-white hover:bg-primary/5"
@@ -516,6 +519,7 @@ const ProfilePage = () => {
                         </div>
                         <DialogFooter className="pt-4">
                           <Button
+                            aria-label="Cancel address form"
                             type="button"
                             variant="ghost"
                             onClick={() => setIsDialogOpen(false)}
@@ -523,6 +527,7 @@ const ProfilePage = () => {
                             Cancel
                           </Button>
                           <Button
+                            aria-label="Save address"
                             type="submit"
                             disabled={loading}
                             className="bg-primary hover:bg-forest font-bold"
@@ -571,6 +576,7 @@ const ProfilePage = () => {
                             {addr.phone}
                           </div>
                           <button
+                            aria-label="Delete address"
                             onClick={() => handleDeleteAddress(addr.id)}
                             className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
                           >
@@ -606,6 +612,7 @@ const ProfilePage = () => {
                   </p>
                 </div>
                 <Button
+                  aria-label="View order history"
                   variant="secondary"
                   className="w-full font-semibold h-auto rounded-md hover:bg-white shadow-lg transition-all"
                   onClick={() => navigate("/orders")}
@@ -629,6 +636,7 @@ const ProfilePage = () => {
                 </p>
                 <div className="space-y-2">
                   <Button
+                    aria-label="Email support"
                     variant="outline"
                     className="w-full bg-white font-bold h-11 rounded-xl gap-2 border-slate-200"
                     onClick={() => navigate("/contact")}
@@ -636,6 +644,7 @@ const ProfilePage = () => {
                     <Mail size={16} /> Email Support
                   </Button>
                   <Button
+                    aria-label="Visit help center"
                     variant="ghost"
                     className="w-full bg-white font-bold h-11 text-slate-600 rounded-xl"
                     onClick={() => navigate("/faq")}

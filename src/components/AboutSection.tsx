@@ -48,6 +48,7 @@ const AboutSection = () => {
 
               <Link to="/about">
                 <Button
+                  aria-label="Read more about us"
                   variant="outline"
                   className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6 mt-3"
                 >

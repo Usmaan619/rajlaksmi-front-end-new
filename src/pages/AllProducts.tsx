@@ -193,6 +193,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
 
         <button
+          aria-label="Add to Wishlist"
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
@@ -246,6 +247,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         <div className="flex items-center justify-between">
           <div className="relative">
             <button
+              aria-label="Select Weight"
               onClick={(e) => {
                 e.stopPropagation();
                 if (weights.length > 1) setShowWeights(!showWeights);
@@ -281,6 +283,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
         <div className="flex gap-2 mt-auto">
           <Button
+            aria-label="Add to Cart"
             size="sm"
             className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9"
             onClick={handleAddToCart}
@@ -289,6 +292,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           </Button>
 
           <Button
+            aria-label="Buy Now"
             size="sm"
             variant="outline"
             className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white border-border hover:bg-primary/5"
@@ -515,6 +519,7 @@ const AllProducts = () => {
       {/* Buttons */}
       <div className="flex gap-3">
         <Button
+          aria-label="Clear Filters"
           variant="outline"
           className="bg-white flex-1 border-border text-muted-foreground"
           onClick={handleClearFilters}
@@ -522,6 +527,7 @@ const AllProducts = () => {
           Clear
         </Button>
         <Button
+          aria-label="Apply Filters"
           className="flex-1 bg-primary text-primary-foreground"
           onClick={handleApplyFilters}
         >
@@ -558,6 +564,7 @@ const AllProducts = () => {
 
               {/* Mobile Filter Button */}
               <Button
+                aria-label="Filter Products"
                 variant="outline"
                 size="icon"
                 className="lg:hidden"
@@ -590,7 +597,9 @@ const AllProducts = () => {
                 ) : error ? (
                   <div className="flex flex-col items-center justify-center py-20 text-center">
                     <p className="text-destructive font-medium mb-4">{error}</p>
-                    <Button onClick={fetchAllProducts}>Try Again</Button>
+                    <Button aria-label="Try Again" onClick={fetchAllProducts}>
+                      Try Again
+                    </Button>
                   </div>
                 ) : products?.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -601,7 +610,11 @@ const AllProducts = () => {
                     <p className="text-muted-foreground mb-6">
                       Try adjusting your filters or search terms
                     </p>
-                    <Button variant="outline" onClick={handleClearFilters}>
+                    <Button
+                      aria-label="Clear all filters"
+                      variant="outline"
+                      onClick={handleClearFilters}
+                    >
                       Clear all filters
                     </Button>
                   </div>
@@ -628,6 +641,7 @@ const AllProducts = () => {
                 {!loading && !error && totalPages > 1 && (
                   <div className="flex items-center justify-center gap-2 mt-12 py-2">
                     <Button
+                      aria-label="Previous Page"
                       variant="outline"
                       size="icon"
                       className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
@@ -656,6 +670,7 @@ const AllProducts = () => {
                       ) {
                         return (
                           <Button
+                            aria-label={`Page ${pageNum}`}
                             key={pageNum}
                             variant={
                               currentPage === pageNum ? "default" : "ghost"
@@ -695,6 +710,7 @@ const AllProducts = () => {
                     })}
 
                     <Button
+                      aria-label="Next Page"
                       variant="outline"
                       size="icon"
                       className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
@@ -732,6 +748,7 @@ const AllProducts = () => {
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">Filters</h3>
                 <Button
+                  aria-label="Close Filters"
                   variant="ghost"
                   size="sm"
                   onClick={() => setMobileFilterOpen(false)}

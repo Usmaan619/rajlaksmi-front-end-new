@@ -74,6 +74,7 @@ const CertificationsBottomSection = ({
         {/* View Certificate Button */}
         <div className="flex justify-center">
           <Button
+            aria-label="View Certificates"
             variant="outline"
             className={`border-primary/50 text-primary hover:bg-primary hover:text-white h-12 px-10 rounded-md font-bold transition-colors duration-300 ${btnCss}`}
           >

@@ -153,6 +153,7 @@ const ForgotPasswordPage = () => {
                   )}
                 />
                 <Button
+                  aria-label="Send OTP"
                   type="submit"
                   disabled={submitting}
                   className="w-full bg-[#01722c] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
@@ -212,6 +213,7 @@ const ForgotPasswordPage = () => {
                 />
 
                 <Button
+                  aria-label="Reset Password"
                   type="submit"
                   disabled={submitting}
                   className="w-full bg-[#01722c] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
@@ -224,6 +226,7 @@ const ForgotPasswordPage = () => {
                     Didn't receive the email?
                   </p>
                   <Button
+                    aria-label="Try another email"
                     variant="outline"
                     className="w-full mt-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
                     onClick={() => setIsSubmitted(false)}
@@ -239,6 +242,7 @@ const ForgotPasswordPage = () => {
                 <CheckCircle2 className="h-10 w-10 text-emerald-600" />
               </div>
               <Button
+                aria-label="Go to Login"
                 variant="outline"
                 className="w-full border-emerald-200 text-emerald-700 hover:bg-emerald-50"
               >

@@ -148,6 +148,7 @@ const BlogMain = () => {
               ))}
         </div>
         <Button
+          aria-label="Apply Filters"
           className="w-full mt-4 bg-primary text-primary-foreground"
           onClick={() => {
             setSelectedCategory("All");
@@ -174,7 +175,10 @@ const BlogMain = () => {
           onChange={(e) => setNewsletterEmail(e.target.value)}
           className="mb-3 bg-white/20 border-white/30 text-primary-foreground placeholder:text-primary-foreground/60"
         />
-        <Button className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
+        <Button
+          aria-label="Subscribe"
+          className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+        >
           Subscribe
         </Button>
       </div>
@@ -201,6 +205,7 @@ const BlogMain = () => {
 
               <Link to="/products">
                 <Button
+                  aria-label="Explore all Articles"
                   variant="outline"
                   className="rounded-md border-foreground text-foreground hover:bg-foreground hover:text-background"
                 >
@@ -225,6 +230,7 @@ const BlogMain = () => {
           {/* Mobile Filter Button */}
           <div className="lg:hidden mb-6">
             <Button
+              aria-label="Open Filters"
               variant="outline"
               className="w-full justify-center gap-2"
               onClick={() => setIsFilterOpen(true)}
@@ -302,6 +308,7 @@ const BlogMain = () => {
               {totalPages > 1 && (
                 <div className="flex items-center justify-center gap-2">
                   <Button
+                    aria-label="Previous Page"
                     variant="ghost"
                     size="sm"
                     className="text-sm text-muted-foreground mr-2"
@@ -314,6 +321,7 @@ const BlogMain = () => {
                   </Button>
                   {Array.from({ length: totalPages }, (_, i) => (
                     <Button
+                      aria-label={`Page ${i + 1}`}
                       key={i}
                       variant={currentPage === i + 1 ? "default" : "outline"}
                       size="icon"
@@ -324,6 +332,7 @@ const BlogMain = () => {
                     </Button>
                   ))}
                   <Button
+                    aria-label="Next Page"
                     variant="ghost"
                     size="sm"
                     className="text-sm text-muted-foreground ml-2"
@@ -358,6 +367,7 @@ const BlogMain = () => {
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-heading font-bold">Filters</h3>
                 <Button
+                  aria-label="Close Filters"
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsFilterOpen(false)}
@@ -388,6 +398,7 @@ transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
+                  aria-label="Shop Now"
                   className="bg-green-700 hover:bg-green-800 text-white rounded-md px-8 py-5 text-lg 
 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
@@ -395,6 +406,7 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 </Button>
 
                 <Button
+                  aria-label="Explore Categories"
                   variant="ghost"
                   className="border border-green-700 text-green-700 hover:bg-green-50 rounded-md px-8 py-5 text-lg 
   transition-all duration-300 hover:scale-105 hover:shadow-lg"

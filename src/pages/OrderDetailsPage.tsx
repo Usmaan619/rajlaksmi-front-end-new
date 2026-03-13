@@ -88,6 +88,7 @@ const OrderDetailsPage = () => {
     <div className="min-h-screen bg-slate-50/50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <Button
+          aria-label="Back to orders"
           variant="ghost"
           onClick={() => navigate("/orders")}
           className="gap-2 text-slate-600 hover:text-slate-900 -ml-4"
@@ -102,7 +103,8 @@ const OrderDetailsPage = () => {
               Order #{order.order_number || order.id}
             </h1>
             <p className="text-slate-500 mt-1 font-medium">
-              Placed on {format(new Date(order.created_at), "MMMM dd, yyyy 'at' hh:mm a")}
+              Placed on{" "}
+              {format(new Date(order.created_at), "MMMM dd, yyyy 'at' hh:mm a")}
             </p>
           </div>
           <Badge
@@ -118,7 +120,9 @@ const OrderDetailsPage = () => {
           <div className="md:col-span-2 space-y-6">
             <Card className="border-none shadow-sm rounded-2xl overflow-hidden">
               <div className="bg-white border-b border-slate-50 p-5 sm:p-6 pb-4">
-                <h3 className="text-lg font-bold text-slate-900">Items Ordered</h3>
+                <h3 className="text-lg font-bold text-slate-900">
+                  Items Ordered
+                </h3>
               </div>
               <CardContent className="p-0 bg-slate-50/30">
                 <div className="p-5 sm:p-6 space-y-4">
@@ -179,7 +183,9 @@ const OrderDetailsPage = () => {
                       <span className="text-emerald-600">Free</span>
                     </div>
                     <div className="pt-3 border-t border-slate-100 flex justify-between items-center bg-slate-50/50 -mx-6 px-6 py-4 mt-6">
-                      <span className="text-base font-bold text-slate-900">Total</span>
+                      <span className="text-base font-bold text-slate-900">
+                        Total
+                      </span>
                       <span className="text-xl font-extrabold text-primary">
                         ₹{order.total_amount}
                       </span>
@@ -200,7 +206,9 @@ const OrderDetailsPage = () => {
                       <AlertCircle size={16} className="text-primary" />
                       Method: {(order as any).payment_method || "ONLINE"}
                     </p>
-                    <Badge className={`border-none capitalize ${(order as any).payment_status === "completed" ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100" : "bg-amber-100 text-amber-800 hover:bg-amber-100"}`}>
+                    <Badge
+                      className={`border-none capitalize ${(order as any).payment_status === "completed" ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-100" : "bg-amber-100 text-amber-800 hover:bg-amber-100"}`}
+                    >
                       {(order as any).payment_status || "pending"}
                     </Badge>
                   </div>
@@ -219,9 +227,14 @@ const OrderDetailsPage = () => {
                         {order.shipping_address.address_line1}
                         <br />
                         {order.shipping_address.address_line2 && (
-                          <>{order.shipping_address.address_line2}<br/></>
+                          <>
+                            {order.shipping_address.address_line2}
+                            <br />
+                          </>
                         )}
-                        {order.shipping_address.city}, {order.shipping_address.state} - {order.shipping_address.pincode}
+                        {order.shipping_address.city},{" "}
+                        {order.shipping_address.state} -{" "}
+                        {order.shipping_address.pincode}
                         <br />
                         {order.shipping_address.country}
                       </p>
@@ -233,7 +246,6 @@ const OrderDetailsPage = () => {
                 )}
               </div>
             </Card>
-
           </div>
         </div>
       </div>

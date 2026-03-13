@@ -71,7 +71,10 @@ const AboutUsPage = () => {
                   doorstep is 100% pure, chemical-free, and full of natural
                   goodness.
                 </p>
-                <Button className="bg-[#01722C] hover:bg-green-700 text-white rounded-md px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all">
+                <Button
+                  aria-label="Explore Our Products"
+                  className="bg-[#01722C] hover:bg-green-700 text-white rounded-md px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all"
+                >
                   Explore Our Products
                 </Button>
               </div>
@@ -298,6 +301,7 @@ hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             </p>
 
             <button
+              aria-label="View Certifications"
               onClick={() => navigate(`/certifications`)}
               className="
         px-6
@@ -343,6 +347,7 @@ transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
+                  aria-label="Shop Now"
                   onClick={() => navigate(`/product`)}
                   className="bg-[#01722C] hover:bg-green-700 text-white rounded-md px-8 py-5 text-lg 
 transition-all duration-300 hover:scale-105 hover:shadow-xl"
@@ -399,6 +404,7 @@ const TransparencySection = () => {
 
             <div className="pt-2">
               <Button
+                aria-label="Contact Us"
                 onClick={() => navigate(`/contact`)}
                 variant="outline"
                 className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"

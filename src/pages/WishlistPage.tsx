@@ -43,7 +43,10 @@ const WishlistPage = () => {
           amazing products to your wishlist!
         </p>
         <Link to="/products">
-          <Button className="bg-[#01722C] hover:bg-[#01722C] text-white  text-md rounded-md shadow-lg transition-transform hover:scale-105">
+          <Button
+            aria-label="Explore products"
+            className="bg-[#01722C] hover:bg-[#01722C] text-white  text-md rounded-md shadow-lg transition-transform hover:scale-105"
+          >
             Explore Products
           </Button>
         </Link>
@@ -72,11 +75,10 @@ const WishlistPage = () => {
             <Card
               key={item.id}
               className="overflow-hidden border-none shadow-md hover:shadow-lg transition-shadow group relative cursor-pointer"
-              onClick={()=>{
-
-                console.log('item.id: ', item.id);
-                console.log('item: ', item);
-                navigate(`/product/${item.id}`)
+              onClick={() => {
+                console.log("item.id: ", item.id);
+                console.log("item: ", item);
+                navigate(`/product/${item.id}`);
               }}
             >
               {/* Image Section */}
@@ -125,6 +127,7 @@ const WishlistPage = () => {
                 </div>
 
                 <Button
+                  aria-label="Add to cart"
                   onClick={(e) => handleAddToCart(e, item)}
                   className="w-full bg-[#01722C] hover:bg-[#06a443] text-white gap-2 font-semibold"
                 >

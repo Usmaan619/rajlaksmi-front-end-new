@@ -175,7 +175,10 @@ const BlogsSection = () => {
                         : "Aug 12, 2026"}
                     </p>
 
-                    <button className="mt-auto text-[#01722C] font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all duration-200">
+                    <button
+                      aria-label="Read more about this story"
+                      className="mt-auto text-[#01722C] font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all duration-200"
+                    >
                       Read more about this story
                       <ArrowRight className="w-4 h-4" />
                     </button>
@@ -189,6 +192,7 @@ const BlogsSection = () => {
           <div className="flex justify-center gap-2 mt-6 md:hidden">
             {blogs.map((_, i) => (
               <button
+                aria-label="Read more about this story"
                 key={i}
                 onClick={() => {
                   stopAutoSlide();
@@ -208,6 +212,7 @@ const BlogsSection = () => {
         {/* Explore All Stories Button - Bottom Center */}
         <div className="flex justify-center mt-12">
           <button
+            aria-label="Explore All Stories"
             onClick={() => navigate("/blog")}
             className="bg-white border-2 border-[#01722C] text-[#01722C] px-10 py-3 rounded-md text-sm font-bold hover:bg-[#01722C] hover:text-white transition-all duration-500 shadow-md hover:shadow-lg active:scale-95"
           >

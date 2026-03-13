@@ -220,6 +220,7 @@ const Header = () => {
                 className="pl-4 pr-10 py-1.5 rounded-full border border-border bg-popover text-sm focus:outline-none focus:ring-1 focus:ring-primary w-40 lg:w-60 transition-all duration-300"
               />
               <button
+                aria-label="Search"
                 type="submit"
                 className="absolute right-3 text-muted-foreground hover:text-primary transition-colors"
               >
@@ -231,6 +232,7 @@ const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="Wishlist"
                 className="hidden sm:flex text-foreground hover:text-primary hover:bg-accent relative"
               >
                 <Heart className="h-5 w-5" />
@@ -245,6 +247,7 @@ const Header = () => {
               <Button
                 variant="ghost"
                 size="icon"
+                aria-label="Cart"
                 className="text-foreground hover:text-primary hover:bg-accent relative"
               >
                 <ShoppingCart className="h-5 w-5" />
@@ -264,6 +267,7 @@ const Header = () => {
                 <Button
                   variant="ghost"
                   size="icon"
+                  aria-label="Menu"
                   className="lg:hidden text-foreground ml-1"
                 >
                   <Menu className="h-6 w-6" />
@@ -341,6 +345,7 @@ const Header = () => {
                         type="submit"
                         variant="ghost"
                         size="icon"
+                        aria-label="Search bar"
                         className="absolute right-0 text-muted-foreground"
                       >
                         <Search className="h-4 w-4" />
@@ -378,6 +383,7 @@ const Header = () => {
                         >
                           <Button
                             variant="outline"
+                            aria-label="Profile"
                             className="w-full justify-start rounded-xl h-11"
                           >
                             <User className="h-4 w-4 mr-2" />
@@ -386,6 +392,7 @@ const Header = () => {
                         </Link>
                         <Button
                           variant="destructive"
+                          aria-label="Logout"
                           className="w-full justify-start rounded-xl h-11"
                           onClick={() => {
                             handleLogout();
@@ -401,7 +408,10 @@ const Header = () => {
                         to="/login"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        <Button className="w-full bg-primary justify-start rounded-xl h-11">
+                        <Button
+                          aria-label="Login / Register"
+                          className="w-full bg-primary justify-start rounded-xl h-11"
+                        >
                           <User className="h-4 w-4 mr-2" />
                           Login / Register
                         </Button>

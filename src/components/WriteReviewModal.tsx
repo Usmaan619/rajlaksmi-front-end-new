@@ -130,6 +130,7 @@ const WriteReviewModal = ({
             </p>
           </div>
           <button
+            aria-label="Close modal"
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center hover:bg-gray-100 transition-colors"
           >
@@ -266,6 +267,7 @@ const WriteReviewModal = ({
             {/* Submit Button */}
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Button
+                aria-label="Cancel"
                 type="button"
                 variant="outline"
                 onClick={onClose}
@@ -274,6 +276,7 @@ const WriteReviewModal = ({
                 Cancel
               </Button>
               <Button
+                aria-label="Submit review"
                 type="submit"
                 disabled={submitting}
                 className="flex-1 h-11 bg-primary text-white hover:bg-primary/90 rounded-lg font-bold shadow-lg shadow-primary/20 transition-all active:scale-[0.98] order-1 sm:order-2"

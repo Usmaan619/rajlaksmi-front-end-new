@@ -162,6 +162,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
 
         {/* Wishlist */}
         <button
+          aria-label="Add to wishlist"
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
@@ -211,6 +212,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
         {/* Unit + Rating */}
         <div className="flex items-center justify-between">
           <button
+            aria-label="Select unit"
             onClick={(e) => e.stopPropagation()}
             className="flex items-center gap-1 px-2 py-1 rounded-md border text-xs"
           >
@@ -226,6 +228,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
         {/* Buttons (always one line) */}
         <div className="flex gap-2 mt-auto">
           <Button
+            aria-label="Add to cart"
             size="sm"
             className="flex-1 text-xs h-8"
             onClick={handleAddToCart}
@@ -233,6 +236,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
             Add to Cart
           </Button>
           <Button
+            aria-label="Buy now"
             size="sm"
             variant="outline"
             className="flex-1 text-xs h-8"
@@ -303,6 +307,7 @@ const OurProductsSectionSimple = () => {
         <div className="flex flex-wrap gap-3 mb-8">
           {categories.map((category, index) => (
             <button
+              aria-label="Select category"
               key={index}
               className="
               px-4
@@ -343,6 +348,7 @@ const OurProductsSectionSimple = () => {
 
         <div className="flex items-center justify-center gap-4 mt-8">
           <button
+            aria-label="Previous slide"
             onClick={scrollPrev}
             className="w-10 h-10 rounded-full border-2 border-primary flex items-center justify-center"
           >
@@ -350,6 +356,7 @@ const OurProductsSectionSimple = () => {
           </button>
 
           <button
+            aria-label="Next slide"
             onClick={scrollNext}
             className="w-10 h-10 rounded-full border-2 border-primary flex items-center justify-center"
           >

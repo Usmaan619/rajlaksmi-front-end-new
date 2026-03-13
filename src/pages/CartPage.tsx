@@ -50,7 +50,10 @@ const CartPage = () => {
           cart yet.
         </p>
         <Link to="/products">
-          <Button className="bg-[#01722c] hover:bg-[#0c9c43] text-white px-8 py-6 text-lg rounded-md shadow-lg transition-transform hover:scale-105">
+          <Button
+            aria-label="Start Shopping"
+            className="bg-[#01722c] hover:bg-[#0c9c43] text-white px-8 py-6 text-lg rounded-md shadow-lg transition-transform hover:scale-105"
+          >
             Start Shopping
           </Button>
         </Link>
@@ -110,11 +113,11 @@ const CartPage = () => {
                   <div className="flex flex-col items-end gap-2 sm:gap-3 min-w-[70px] sm:min-w-[120px] justify-between">
                     <div className="flex items-center border border-emerald-200 rounded-lg sm:rounded-full overflow-hidden bg-white">
                       <button
+                        aria-label="Decrease quantity"
                         onClick={() =>
                           updateQuantity(item.id, item.quantity - 1)
                         }
                         className="p-1 sm:p-2 hover:bg-emerald-50 text-emerald-700 transition-colors"
-                        aria-label="Decrease quantity"
                       >
                         <Minus size={14} className="sm:w-4 sm:h-4" />
                       </button>
@@ -132,6 +135,7 @@ const CartPage = () => {
                       </button>
                     </div>
                     <button
+                      aria-label="Remove from cart"
                       onClick={() => removeFromCart(item.id)}
                       className="text-red-500 hover:text-red-600 flex items-center text-xs sm:text-sm font-medium transition-colors"
                     >
@@ -187,7 +191,10 @@ const CartPage = () => {
                   className="block w-full"
                   onClick={handleCheckout}
                 >
-                  <Button className="w-full bg-[#01722c] hover:bg-emerald-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg transition-all transform hover:translate-y-[-2px]">
+                  <Button
+                    aria-label="Proceed to Checkout"
+                    className="w-full bg-[#01722c] hover:bg-emerald-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg transition-all transform hover:translate-y-[-2px]"
+                  >
                     Proceed to Checkout <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>

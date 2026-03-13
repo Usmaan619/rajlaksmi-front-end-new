@@ -101,6 +101,7 @@ const ProductCard = ({ product }: { product: any }) => {
 
         {/* Wishlist */}
         <button
+          aria-label="Add to wishlist"
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist({
@@ -157,6 +158,7 @@ const ProductCard = ({ product }: { product: any }) => {
         <div className="flex items-center justify-between mt-2">
           <div className="relative">
             <button
+              aria-label="Select unit"
               onClick={(e) => {
                 e.stopPropagation();
                 if (weights.length > 1) setShowUnits(!showUnits);
@@ -171,6 +173,7 @@ const ProductCard = ({ product }: { product: any }) => {
               <div className="absolute top-full left-0 mt-1 bg-white border rounded shadow z-30 min-w-[80px]">
                 {weights.map((unit: any, idx: number) => (
                   <button
+                    aria-label="Select unit"
                     key={idx}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -195,12 +198,14 @@ const ProductCard = ({ product }: { product: any }) => {
       {/* Buttons */}
       <div className="flex gap-2 mt-auto">
         <button
+          aria-label="Add to cart"
           onClick={handleAddToCart}
           className="flex-1 border border-primary text-primary text-xs py-2 rounded-md hover:bg-primary hover:text-white transition-colors font-semibold"
         >
           Add to Cart
         </button>
         <button
+          aria-label="Buy now"
           onClick={handleBuyNow}
           className="flex-1 bg-primary text-white text-xs py-2 rounded-md hover:bg-primary/90 transition-colors font-semibold shadow-sm"
         >

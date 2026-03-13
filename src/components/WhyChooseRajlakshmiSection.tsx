@@ -83,6 +83,7 @@ const WhyChooseRajlakshmiSection = () => {
 
             <div className="pt-2">
               <Button
+                aria-label="Read more about our story"
                 onClick={() => navigate(`/about`)}
                 variant="outline"
                 className="bg-white border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-md px-6"

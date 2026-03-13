@@ -168,6 +168,7 @@ const TestimonialSection = () => {
           {/* Navigation - hidden on small mobile, visible on sm and up */}
           <div className="hidden sm:flex absolute top-1/2 -left-12 -translate-y-1/2 z-30">
             <button
+              aria-label="Previous slide"
               onClick={scrollPrev}
               className="w-10 h-10 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-[#01722C] hover:bg-[#01722C] hover:text-white transition-all duration-300"
             >
@@ -176,6 +177,7 @@ const TestimonialSection = () => {
           </div>
           <div className="hidden sm:flex absolute top-1/2 -right-12 -translate-y-1/2 z-30">
             <button
+              aria-label="Next slide"
               onClick={scrollNext}
               className="w-10 h-10 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-[#01722C] hover:bg-[#01722C] hover:text-white transition-all duration-300"
             >

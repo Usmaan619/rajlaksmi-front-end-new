@@ -77,6 +77,7 @@ const B2BMainPage = () => {
               products. Ethical sourcing and pan-India supply.
             </p>
             <button
+              aria-label="Get in touch"
               onClick={scrollToForm}
               className="bg-[#01722C] hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
             >
@@ -163,6 +164,7 @@ const B2BMainPage = () => {
                 </div>
 
                 <button
+                  aria-label="Get in touch"
                   onClick={scrollToForm}
                   className="bg-[#01722C] hover:bg-green-700 text-white font-semibold px-8 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl mt-6"
                 >
@@ -431,6 +433,7 @@ const B2BMainPage = () => {
 
                 <button
                   type="submit"
+                  aria-label="Submit Inquiry"
                   disabled={isSubmitting}
                   className="w-full bg-[#01722C] hover:bg-green-700 text-white font-semibold px-8 py-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
                 >
