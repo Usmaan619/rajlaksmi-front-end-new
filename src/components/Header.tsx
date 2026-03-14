@@ -169,6 +169,9 @@ const Header = () => {
                 <img
                   src={RLJLOGOJAVIK}
                   alt="Logo"
+                  width="48"
+                  height="48"
+                  decoding="async"
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -217,12 +220,12 @@ const Header = () => {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-4 pr-10 py-1.5 rounded-full border border-border bg-popover text-sm focus:outline-none focus:ring-1 focus:ring-primary w-40 lg:w-60 transition-all duration-300"
+                className="pl-4 pr-10 py-2.5 lg:py-3 rounded-full border border-border bg-popover text-sm focus:outline-none focus:ring-1 focus:ring-primary w-40 lg:w-60 transition-all duration-300"
               />
               <button
                 aria-label="Search"
                 type="submit"
-                className="absolute right-3 text-muted-foreground hover:text-primary transition-colors"
+                className="absolute right-0 h-full px-3 text-muted-foreground hover:text-primary transition-colors flex items-center justify-center min-w-[44px]"
               >
                 <Search className="h-4 w-4" />
               </button>
@@ -252,7 +255,7 @@ const Header = () => {
               >
                 <ShoppingCart className="h-5 w-5" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#f4b42b] text-primary-foreground text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 bg-[#f4b42b] text-slate-900 text-[10px] rounded-full w-4 h-4 flex items-center justify-center font-bold">
                     {cartCount}
                   </span>
                 )}
@@ -279,7 +282,13 @@ const Header = () => {
               >
                 <SheetHeader className="p-4 border-b">
                   <SheetTitle className="text-left flex items-center gap-2">
-                    <img src={RLJLOGOJAVIK} alt="Logo" className="w-8 h-8" />
+                    <img
+                      src={RLJLOGOJAVIK}
+                      alt="Logo"
+                      width="32"
+                      height="32"
+                      className="w-8 h-8"
+                    />
                     <span>Rajlakshmi Javik</span>
                   </SheetTitle>
                 </SheetHeader>

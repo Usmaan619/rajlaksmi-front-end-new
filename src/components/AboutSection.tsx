@@ -12,6 +12,8 @@ const AboutSection = () => {
           <img
             src={aboutFarmersBgImage}
             alt="farmer background"
+            loading="lazy"
+            decoding="async"
             className="
     absolute
     bottom-0
@@ -59,11 +61,15 @@ const AboutSection = () => {
 
             {/* Main Image */}
             <div className="w-full md:w-1/2">
-              <div className="rounded-2xl overflow-hidden">
+              <div className="rounded-2xl overflow-hidden ">
                 <img
                   src={aboutFarmersImage}
                   alt="Farmers with organic products"
-                  className="w-full h-auto object-cover"
+                  width="600"
+                  height="400"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>

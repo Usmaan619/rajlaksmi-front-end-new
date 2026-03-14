@@ -15,8 +15,145 @@ import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import { getAllBlogs, getBlogCategories } from "@/api/blog.service";
+import { createNewsletterAPI } from "@/api/contact.service";
+import { toast } from "@/hooks/use-toast";
 
 import blogImg from "@/assets/blog/blogheader.png";
+
+interface SidebarContentProps {
+  searchQuery: string;
+  setSearchQuery: (val: string) => void;
+  categories: string[];
+  selectedCategory: string;
+  setSelectedCategory: (val: string) => void;
+  newsletterEmail: string;
+  setNewsletterEmail: (val: string) => void;
+  isLoading: boolean;
+  blogs: any[];
+  setCurrentPage: (page: number | ((prev: number) => number)) => void;
+  setIsFilterOpen: (open: boolean) => void;
+  onNewsletterSubmit: (e: React.FormEvent) => void;
+  newsletterLoading: boolean;
+}
+
+const SidebarContent = ({
+  searchQuery,
+  setSearchQuery,
+  categories,
+  selectedCategory,
+  setSelectedCategory,
+  newsletterEmail,
+  setNewsletterEmail,
+  isLoading,
+  blogs,
+  setCurrentPage,
+  setIsFilterOpen,
+  onNewsletterSubmit,
+  newsletterLoading,
+}: SidebarContentProps) => (
+  <>
+    {/* Search */}
+    <div className="bg-card rounded-xl p-4 shadow-soft">
+      <h4 className="font-heading font-bold text-foreground mb-3">
+        Search articles
+      </h4>
+      <div className="relative">
+        <Input
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="pr-10"
+        />
+        <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      </div>
+    </div>
+
+    {/* Categories */}
+    <div className="bg-card rounded-xl p-4 shadow-soft">
+      <h4 className="font-heading font-bold text-foreground mb-3">
+        Categories
+      </h4>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {categories.map((cat) => (
+          <Badge
+            key={cat}
+            className={`cursor-pointer rounded-full px-3 py-1 text-xs transition-colors ${
+              selectedCategory === cat
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-primary/10"
+            }`}
+            onClick={() => {
+              setSelectedCategory(cat);
+              setCurrentPage(1);
+            }}
+          >
+            {cat}
+          </Badge>
+        ))}
+      </div>
+      <h4 className="font-heading font-bold text-foreground mb-3">
+        Recent Posts
+      </h4>
+      <div className="space-y-2">
+        {isLoading
+          ? [1, 2, 3].map((i) => <Skeleton key={i} className="h-4 w-full" />)
+          : blogs.slice(0, 3).map((blog) => (
+              <Link
+                to={`/blog/${blog.slug}`}
+                key={blog.id}
+                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                <span className="line-clamp-1">{blog.title}</span>
+              </Link>
+            ))}
+      </div>
+      <Button
+        aria-label="Apply Filters"
+        className="w-full mt-4 bg-primary text-primary-foreground"
+        onClick={() => {
+          setSelectedCategory("All");
+          setSearchQuery("");
+          setCurrentPage(1);
+          setIsFilterOpen(false);
+        }}
+      >
+        Apply Filters
+      </Button>
+    </div>
+
+    {/* Newsletter */}
+    <div className="bg-primary rounded-xl p-5 text-primary-foreground">
+      <h4 className="font-heading font-bold mb-2">
+        Stay Updated with Healthy Living Tips
+      </h4>
+      <p className="text-sm opacity-90 mb-4">
+        Get weekly organic food tips and exclusive offers.
+      </p>
+      <form onSubmit={onNewsletterSubmit} className="space-y-3">
+        <Input
+          type="email"
+          required
+          placeholder="Your email"
+          value={newsletterEmail}
+          onChange={(e) => setNewsletterEmail(e.target.value)}
+          className="bg-white/20 border-white/30 text-primary-foreground placeholder:text-primary-foreground/60"
+        />
+        <Button
+          aria-label="Subscribe"
+          type="submit"
+          disabled={newsletterLoading}
+          className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+        >
+          {newsletterLoading ? "Subscribing..." : "Subscribe"}
+        </Button>
+      </form>
+    </div>
+  </>
+);
 
 const BlogMain = () => {
   const [blogs, setBlogs] = useState<any[]>([]);
@@ -28,6 +165,7 @@ const BlogMain = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState<any>(null);
   const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const blogsPerPage = 10;
@@ -84,106 +222,30 @@ const BlogMain = () => {
     fetchBlogs();
   }, [currentPage, debouncedSearch, selectedCategory]);
 
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim()) return;
+
+    try {
+      setNewsletterLoading(true);
+      await createNewsletterAPI({ email: newsletterEmail });
+      toast({
+        title: "Success!",
+        description: "You've successfully subscribed to our newsletter.",
+      });
+      setNewsletterEmail("");
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.message || "Failed to subscribe. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setNewsletterLoading(false);
+    }
+  };
+
   const totalPages = pagination?.totalPages || 1;
-
-  const SidebarContent = () => (
-    <>
-      {/* Search */}
-      <div className="bg-card rounded-xl p-4 shadow-soft">
-        <h4 className="font-heading font-bold text-foreground mb-3">
-          Search articles
-        </h4>
-        <div className="relative">
-          <Input
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="pr-10"
-          />
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        </div>
-      </div>
-
-      {/* Categories */}
-      <div className="bg-card rounded-xl p-4 shadow-soft">
-        <h4 className="font-heading font-bold text-foreground mb-3">
-          Categories
-        </h4>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {categories.map((cat) => (
-            <Badge
-              key={cat}
-              className={`cursor-pointer rounded-full px-3 py-1 text-xs transition-colors ${
-                selectedCategory === cat
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted text-muted-foreground hover:bg-primary/10"
-              }`}
-              onClick={() => {
-                setSelectedCategory(cat);
-                setCurrentPage(1);
-              }}
-            >
-              {cat}
-            </Badge>
-          ))}
-        </div>
-        <h4 className="font-heading font-bold text-foreground mb-3">
-          Recent Posts
-        </h4>
-        <div className="space-y-2">
-          {isLoading
-            ? [1, 2, 3].map((i) => <Skeleton key={i} className="h-4 w-full" />)
-            : blogs.slice(0, 3).map((blog) => (
-                <Link
-                  to={`/blog/${blog.slug}`}
-                  key={blog.id}
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                  <span className="line-clamp-1">{blog.title}</span>
-                </Link>
-              ))}
-        </div>
-        <Button
-          aria-label="Apply Filters"
-          className="w-full mt-4 bg-primary text-primary-foreground"
-          onClick={() => {
-            setSelectedCategory("All");
-            setSearchQuery("");
-            setCurrentPage(1);
-            setIsFilterOpen(false);
-          }}
-        >
-          Apply Filters
-        </Button>
-      </div>
-
-      {/* Newsletter */}
-      <div className="bg-primary rounded-xl p-5 text-primary-foreground">
-        <h4 className="font-heading font-bold mb-2">
-          Stay Updated with Healthy Living Tips
-        </h4>
-        <p className="text-sm opacity-90 mb-4">
-          Get weekly organic food tips and exclusive offers.
-        </p>
-        <Input
-          placeholder="Your email"
-          value={newsletterEmail}
-          onChange={(e) => setNewsletterEmail(e.target.value)}
-          className="mb-3 bg-white/20 border-white/30 text-primary-foreground placeholder:text-primary-foreground/60"
-        />
-        <Button
-          aria-label="Subscribe"
-          className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
-        >
-          Subscribe
-        </Button>
-      </div>
-    </>
-  );
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -207,7 +269,7 @@ const BlogMain = () => {
                 <Button
                   aria-label="Explore all Articles"
                   variant="outline"
-                  className="rounded-md border-foreground text-foreground hover:bg-foreground hover:text-background"
+                  className=" bg-white rounded-md border-foreground text-foreground hover:bg-foreground hover:text-background"
                 >
                   Explore all Articles
                 </Button>
@@ -349,7 +411,21 @@ const BlogMain = () => {
 
             {/* Desktop Sidebar */}
             <aside className="hidden lg:block w-72 shrink-0 space-y-6">
-              <SidebarContent />
+              <SidebarContent
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                newsletterEmail={newsletterEmail}
+                setNewsletterEmail={setNewsletterEmail}
+                isLoading={isLoading}
+                blogs={blogs}
+                setCurrentPage={setCurrentPage}
+                setIsFilterOpen={setIsFilterOpen}
+                onNewsletterSubmit={handleNewsletterSubmit}
+                newsletterLoading={newsletterLoading}
+              />
             </aside>
           </div>
         </section>
@@ -375,7 +451,21 @@ const BlogMain = () => {
                   <X className="w-5 h-5" />
                 </Button>
               </div>
-              <SidebarContent />
+              <SidebarContent
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                categories={categories}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                newsletterEmail={newsletterEmail}
+                setNewsletterEmail={setNewsletterEmail}
+                isLoading={isLoading}
+                blogs={blogs}
+                setCurrentPage={setCurrentPage}
+                setIsFilterOpen={setIsFilterOpen}
+                onNewsletterSubmit={handleNewsletterSubmit}
+                newsletterLoading={newsletterLoading}
+              />
             </div>
           </div>
         )}

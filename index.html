@@ -6,7 +6,7 @@
     <!-- Responsive -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Primary SEO -->
+    <!-- SEO -->
     <title>Rajlakshmi Javiks International | Organic & Natural Products</title>
 
     <meta
@@ -18,18 +18,19 @@
       name="keywords"
       content="organic products, javik products, natural food, rajlakshmi javiks international"
     />
+
     <meta name="author" content="Rajlakshmi Javiks International" />
 
     <!-- Canonical -->
     <link rel="canonical" href="https://rajlakshmijaviksinternational.com/" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
 
     <!-- Theme -->
     <meta name="theme-color" content="#ffffff" />
 
-    <!-- Open Graph (Facebook, LinkedIn etc) -->
+    <!-- Open Graph -->
     <meta property="og:title" content="Rajlakshmi Javiks International" />
     <meta
       property="og:description"
@@ -42,7 +43,7 @@
     />
     <meta property="og:image" content="/og-image.jpg" />
 
-    <!-- Twitter Card -->
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Rajlakshmi Javiks International" />
     <meta
@@ -51,30 +52,51 @@
     />
     <meta name="twitter:image" content="/og-image.jpg" />
 
-    <!-- Performance: Preconnect for fonts -->
+    <!-- PERFORMANCE OPTIMIZATION -->
+
+    <!-- Preconnect important origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://ik.imagekit.io" crossorigin />
 
-    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-    <!-- Google Fonts -->
+    <!-- Preload hero image (LCP improvement) -->
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/banner2.webp"
+      fetchpriority="high"
+    />
+
+    <!-- Google Fonts optimized -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media = 'all'"
     />
 
-    <!-- Google Analytics -->
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <!-- Google Analytics (deferred) -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-B6M3DSVNX7"
     ></script>
+
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-      gtag("config", "G-B6M3DSVNX7");
+      gtag("config", "G-B6M3DSVNX7", {
+        anonymize_ip: true,
+      });
     </script>
   </head>
 

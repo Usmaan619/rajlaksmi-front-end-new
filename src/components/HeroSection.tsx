@@ -107,21 +107,48 @@ const HeroSection: React.FC = () => {
           emulateTouch
           stopOnHover={false}
           className="main-carousel"
+          // renderIndicator={(onClickHandler, isSelected, index, label) => (
+          //   <li
+          //     className="inline-block mx-1 py-3 cursor-pointer group"
+          //     onClick={onClickHandler}
+          //     onKeyDown={(e) => {
+          //       if (e.key === "Enter" || e.key === " ") {
+          //         onClickHandler(e as any);
+          //       }
+          //     }}
+          //     key={index}
+          //     role="button"
+          //     tabIndex={0}
+          //     aria-label={`${label} ${index + 1}`}
+          //   >
+          //     <div
+          //       className={`rounded-full transition-all duration-500
+          //       ${
+          //         isSelected
+          //           ? "bg-[#01722C] w-6 md:w-8 h-2 md:h-2.5"
+          //           : "bg-black/20 group-hover:bg-black/30 w-2 md:w-3 h-2"
+          //       }`}
+          //     />
+          //   </li>
+          // )}
           renderIndicator={(onClickHandler, isSelected, index, label) => (
-            <li
-              className={`inline-block mx-1 rounded-full transition-all duration-500 cursor-pointer
-              ${
-                isSelected
-                  ? "bg-[#01722C] w-6 md:w-8 h-1 md:h-1.5"
-                  : "bg-black/20 hover:bg-black/30 w-2 md:w-3 h-1"
-              }`}
-              onClick={onClickHandler}
-              onKeyDown={onClickHandler}
-              key={index}
-              role="button"
-              tabIndex={0}
-              title={`${label} ${index + 1}`}
-            />
+            <li key={index} className="inline-block mx-1 py-3">
+              <button
+                type="button"
+                onClick={onClickHandler}
+                aria-label={`${label} ${index + 1}`}
+                className="cursor-pointer group focus:outline-none"
+              >
+                <span
+                  className={`rounded-full transition-all duration-500 block
+        ${
+          isSelected
+            ? "bg-[#01722C] w-6 md:w-8 h-2 md:h-2.5"
+            : "bg-black/20 group-hover:bg-black/30 w-2 md:w-3 h-2"
+        }`}
+                />
+              </button>
+            </li>
           )}
         >
           {slides.map((item, index) => (

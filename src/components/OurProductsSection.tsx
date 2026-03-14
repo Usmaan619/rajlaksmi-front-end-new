@@ -150,6 +150,10 @@ const VideoProductCard = ({
         <img
           src={product.thumbnail}
           alt={product.name}
+          width="300"
+          height="490"
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover"
         />
 
@@ -157,6 +161,7 @@ const VideoProductCard = ({
         {isYoutube ? (
           isPlaying && (
             <iframe
+              loading="lazy"
               src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${youtubeId}&modestbranding=1&rel=0&enablejsapi=1&showinfo=0`}
               className="absolute inset-0 w-full h-full object-cover pointer-events-none border-0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -171,6 +176,7 @@ const VideoProductCard = ({
             muted
             loop
             playsInline
+            preload="none"
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
               isPlaying ? "opacity-100" : "opacity-0"
             }`}
@@ -360,6 +366,10 @@ const OurProductsSection = () => {
       <img
         src={ourProductVideoImg}
         alt="ourProductVideoImg"
+        width="1920"
+        height="600"
+        loading="lazy"
+        decoding="async"
         className="
         absolute
         bottom-0
@@ -432,18 +442,22 @@ const OurProductsSection = () => {
         </div>
 
         {/* Dot Indicators */}
-        <div className="flex justify-center gap-2 mt-8 z-10 relative">
+        <div className="flex justify-center gap-3 mt-8 z-10 relative flex-wrap">
           {Array.from({ length: count }).map((_, i) => (
             <button
               key={i}
               onClick={() => scrollTo(i)}
-              className={`transition-all duration-500 rounded-full ${
-                i === activeIndex
-                  ? "w-8 h-2.5 bg-[#01722C]"
-                  : "w-2.5 h-2.5 bg-[#01722C]/20 hover:bg-[#01722C]/40"
-              }`}
-              aria-label={`Go to product ${i + 1}`}
-            />
+              aria-label={`Go to slide ${i + 1}`}
+              className="w-12 h-12 flex items-center justify-center group transition-all"
+            >
+              <div
+                className={`transition-all duration-500 rounded-full ${
+                  i === activeIndex
+                    ? "w-8 h-2.5 bg-[#01722C]"
+                    : "w-3 h-3 bg-[#01722C]/20 group-hover:bg-[#01722C]/40"
+                }`}
+              />
+            </button>
           ))}
         </div>
       </div>

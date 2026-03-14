@@ -60,10 +60,10 @@ const Footer = () => {
       <div className="absolute -top-8 md:-top-16 left-0 right-0 max-w-6xl mx-auto px-4 z-20">
         <div className="bg-[#f4b42b] rounded-2xl px-5 py-5 md:px-8 md:py-8 flex flex-col md:flex-row items-center justify-between gap-4 shadow-xl">
           <div className="text-center md:text-left">
-            <p className="text-white/80 text-xs md:text-sm font-bold uppercase tracking-wider mb-1">
+            <p className="text-slate-900/80 text-xs md:text-sm font-bold uppercase tracking-wider mb-1">
               Newsletter
             </p>
-            <h3 className="text-white text-lg md:text-2xl lg:text-3xl font-bold leading-tight">
+            <h3 className="text-slate-900 text-lg md:text-2xl lg:text-3xl font-bold leading-tight">
               Subscribe to our newsletter
             </h3>
           </div>
@@ -111,7 +111,15 @@ const Footer = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             {/* Logo */}
             <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
-              <img src={logo} alt="logo" className="w-32 sm:w-40 mb-4" />
+              <img
+                src={logo}
+                alt="logo"
+                width="160"
+                height="64"
+                loading="lazy"
+                decoding="async"
+                className="w-32 sm:w-40 mb-4"
+              />
             </div>
 
             {/* Contact */}

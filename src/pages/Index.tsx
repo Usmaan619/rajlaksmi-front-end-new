@@ -1,20 +1,22 @@
+import { lazy, Suspense } from "react";
 import Seo from "@/components/Seo";
 import HeroSection from "@/components/HeroSection";
 import CertificationsSection from "@/components/CertificationsSection";
 import CategoriesSection from "@/components/CategoriesSection";
 import BestSellersSection from "@/components/BestSellersSection";
-import ExclusiveDealsSection from "@/components/ExclusiveDealsSection";
-import BlogsSection from "@/components/BlogsSection";
 import FarmerDivider from "@/components/FarmerDivider";
-import FarmerDividerExclusive from "@/components/FarmerDividerExclusive";
-import SellingSection from "@/components/SellingSection";
-import WhyChooseRajlakshmiSection from "@/components/WhyChooseRajlakshmiSection";
-import AboutSection from "@/components/AboutSection";
-import ContactSection from "@/components/ContactSection";
-import TestimonialSection from "@/components/TestimonialSection";
-import CertificationsBottomSection from "@/components/CertificationsBottomSection";
-import CategoryProductsSection from "@/components/CategoryProductsSection";
-import OurProductsSection from "@/components/OurProductsSection";
+
+// Lazy-loaded sections (below the fold)
+const BlogsSection = lazy(() => import("@/components/BlogsSection"));
+const ExclusiveDealsSection = lazy(() => import("@/components/ExclusiveDealsSection"));
+const SellingSection = lazy(() => import("@/components/SellingSection"));
+const WhyChooseRajlakshmiSection = lazy(() => import("@/components/WhyChooseRajlakshmiSection"));
+const AboutSection = lazy(() => import("@/components/AboutSection"));
+const ContactSection = lazy(() => import("@/components/ContactSection"));
+const TestimonialSection = lazy(() => import("@/components/TestimonialSection"));
+const CategoryProductsSection = lazy(() => import("@/components/CategoryProductsSection"));
+const OurProductsSection = lazy(() => import("@/components/OurProductsSection"));
+const FarmerDividerExclusive = lazy(() => import("@/components/FarmerDividerExclusive"));
 
 const Index = () => {
   return (
@@ -42,20 +44,18 @@ const Index = () => {
           <FarmerDivider />
           <CategoriesSection />
           <BestSellersSection />
-          <FarmerDividerExclusive />
-          <ExclusiveDealsSection />
-          <OurProductsSection />
-          <CategoryProductsSection />
-          <BlogsSection />
-          <SellingSection />
-          <WhyChooseRajlakshmiSection />
-          <AboutSection />
-          <ContactSection />
-          <TestimonialSection />
-          {/* <CertificationsBottomSection
-          className="bg-[#F0FFF0] "
-          btnCss="bg-white mb"
-        /> */}
+          <Suspense fallback={<div className="h-40 animate-pulse bg-gray-50" />}>
+            <FarmerDividerExclusive />
+            <ExclusiveDealsSection />
+            <OurProductsSection />
+            <CategoryProductsSection />
+            <BlogsSection />
+            <SellingSection />
+            <WhyChooseRajlakshmiSection />
+            <AboutSection />
+            <ContactSection />
+            <TestimonialSection />
+          </Suspense>
         </main>
       </div>
     </>

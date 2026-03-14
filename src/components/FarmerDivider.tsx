@@ -6,6 +6,10 @@ const FarmerDivider = () => {
       <img
         src={farmerImg}
         alt="farmer illustration"
+        width="282"
+        height="282"
+        loading="lazy"
+        decoding="async"
         className="
           pointer-events-none
           select-none

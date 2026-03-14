@@ -7,6 +7,10 @@ const FarmerDividerExclusive = () => {
       <img
         src={farmerImg}
         alt="farmer illustration"
+        width="447"
+        height="230"
+        loading="lazy"
+        decoding="async"
         className="
     pointer-events-none
     select-none

@@ -3,6 +3,7 @@
   src: url("./fonts/Nunito/Nunito-VariableFont_wght.ttf") format("truetype");
   font-weight: 200 1000;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -11,6 +12,7 @@
     format("truetype");
   font-weight: 200 1000;
   font-style: italic;
+  font-display: swap;
 }
 
 @tailwind base;

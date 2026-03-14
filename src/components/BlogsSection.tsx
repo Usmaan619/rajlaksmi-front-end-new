@@ -149,6 +149,10 @@ const BlogsSection = () => {
                     <img
                       src={blog.image || productRice}
                       alt={blog.title}
+                      width="220"
+                      height="220"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-[220px] object-cover rounded-md group-hover:scale-105 transition-transform duration-500"
                     />
                     <Badge
@@ -192,19 +196,23 @@ const BlogsSection = () => {
           <div className="flex justify-center gap-2 mt-6 md:hidden">
             {blogs.map((_, i) => (
               <button
-                aria-label="Read more about this story"
+                aria-label={`Go to blog slide ${i + 1}`}
                 key={i}
                 onClick={() => {
                   stopAutoSlide();
                   scrollToIndex(i);
                   setTimeout(() => startAutoSlide(), 1500);
                 }}
-                className={`transition-all duration-300 rounded-full ${
-                  i === currentIndex
-                    ? "w-6 h-2 bg-[#01722C]"
-                    : "w-2 h-2 bg-[#01722C]/20"
-                }`}
-              />
+                className="p-2 -m-2 group transition-all"
+              >
+                <div
+                  className={`transition-all duration-300 rounded-full ${
+                    i === currentIndex
+                      ? "w-6 h-2 bg-[#01722C]"
+                      : "w-2 h-2 bg-[#01722C]/20 group-hover:bg-[#01722C]/40"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         )}

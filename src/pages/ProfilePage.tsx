@@ -153,11 +153,21 @@ const ProfilePage = () => {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
     if (file) {
+      // 1. Security Check: File Type
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Invalid file type. Only JPEG, PNG, and WEBP are allowed.");
+        return;
+      }
+
+      // 2. Security Check: File Size
       if (file.size > 50 * 1024) {
         toast.error("Profile image should not exceed 50KB");
         return;
       }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result as string;

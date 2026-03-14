@@ -81,6 +81,10 @@ const ProductCard = ({ product }: { product: any }) => {
           <img
             src={product.product_images[0]}
             alt={product.product_name}
+            width="300"
+            height="300"
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
@@ -284,6 +288,10 @@ const CategoryRow = ({
             <div className="absolute top-0 right-0 p-4 sm:p-6 opacity-20 group-hover:opacity-30 transition-opacity">
               <img
                 src={categoryDecorations[category.category_name] || grainsImg}
+                width="128"
+                height="128"
+                loading="lazy"
+                decoding="async"
                 className="w-24 h-24 sm:w-32 sm:h-32 object-contain mix-blend-multiply grayscale hover:grayscale-0 transition-all duration-700 rotate-12 group-hover:rotate-0"
                 alt=""
               />

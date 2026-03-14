@@ -32,8 +32,10 @@ import {
   facebookLoginAPI,
   signupAPI,
 } from "@/api/auth.service";
-import { useGoogleLogin } from "@react-oauth/google";
-import FacebookLogin from "@greatsumini/react-facebook-login";
+import { useGoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+const FacebookLogin = React.lazy(() =>
+  import("@greatsumini/react-facebook-login"),
+);
 import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
@@ -382,37 +384,39 @@ const SignupPage = () => {
               <FcGoogle className="w-6 h-6" />
             </Button>
 
-            <FacebookLogin
-              appId={import.meta.env.VITE_FACEBOOK_APP_ID || "733633632296577"}
-              autoLoad={false}
-              fields="name,email,picture"
-              onSuccess={handleFacebookSuccess}
-              onFail={(error: any) => {
-                console.log("Login Failed!", error);
-              }}
-              onProfileSuccess={React.useCallback(
-                (response: {
-                  name?: string;
-                  email?: string;
-                  picture?: { data: { url: string } };
-                }) => {
-                  console.log("Get Profile Success!", response);
-                },
-                [],
-              )}
-              render={({ onClick }) => (
-                <Button
-                  aria-label="Sign Up with Facebook"
-                  type="button"
-                  variant="outline"
-                  size="icon"
-                  onClick={onClick}
-                  className="w-12 h-12 rounded-full border-gray-200 hover:bg-gray-50 text-[#1877F2] flex items-center justify-center transition-all"
-                >
-                  <FaFacebook className="w-6 h-6" />
-                </Button>
-              )}
-            />
+            <React.Suspense fallback={null}>
+              <FacebookLogin
+                appId={import.meta.env.VITE_FACEBOOK_APP_ID || "733633632296577"}
+                autoLoad={false}
+                fields="name,email,picture"
+                onSuccess={handleFacebookSuccess}
+                onFail={(error: any) => {
+                  console.log("Login Failed!", error);
+                }}
+                onProfileSuccess={React.useCallback(
+                  (response: {
+                    name?: string;
+                    email?: string;
+                    picture?: { data: { url: string } };
+                  }) => {
+                    console.log("Get Profile Success!", response);
+                  },
+                  [],
+                )}
+                render={({ onClick }) => (
+                  <Button
+                    aria-label="Sign Up with Facebook"
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={onClick}
+                    className="w-12 h-12 rounded-full border-gray-200 hover:bg-gray-50 text-[#1877F2] flex items-center justify-center transition-all"
+                  >
+                    <FaFacebook className="w-6 h-6" />
+                  </Button>
+                )}
+              />
+            </React.Suspense>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
@@ -431,4 +435,15 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+const SignupPageWrapper = () => (
+  <GoogleOAuthProvider
+    clientId={
+      import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+      "725826907762-oqshpfbtciv5n0coch74f91qurujp8r5.apps.googleusercontent.com"
+    }
+  >
+    <SignupPage />
+  </GoogleOAuthProvider>
+);
+
+export default SignupPageWrapper;

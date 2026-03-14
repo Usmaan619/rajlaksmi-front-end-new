@@ -65,6 +65,10 @@ const DealCard = ({ deal }: { deal: (typeof deals)[0] }) => {
       <img
         src={deal.image}
         alt={deal.name}
+        width="400"
+        height="320"
+        loading="lazy"
+        decoding="async"
         className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
       />
 

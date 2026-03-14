@@ -3,7 +3,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
-import { GoogleOAuthProvider } from "@react-oauth/google";
 import { HelmetProvider } from "react-helmet-async";
 import MainRoutes from "./routes/Routes";
 
@@ -14,23 +13,21 @@ import { AuthProvider } from "./context/AuthContext";
 const queryClient = new QueryClient();
 
 const App = () => (
-<HelmetProvider>
+  <HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
           <AuthProvider>
             <WishlistProvider>
               <CartProvider>
-                <GoogleOAuthProvider
-                  clientId={
-                    import.meta.env.VITE_GOOGLE_CLIENT_ID ||
-                    "725826907762-oqshpfbtciv5n0coch74f91qurujp8r5.apps.googleusercontent.com"
-                  }
-                >
-                  <MainRoutes />
-                </GoogleOAuthProvider>
+                <MainRoutes />
               </CartProvider>
             </WishlistProvider>
           </AuthProvider>

@@ -60,8 +60,11 @@ const CertificationsSection: React.FC = () => {
                       <img
                         src={logo.src}
                         alt={logo.alt}
+                        width="100"
+                        height="64"
                         loading="lazy"
-                        className="h-16 object-contain"
+                        decoding="async"
+                        className="h-16 w-auto object-contain"
                       />
                     </div>
                   </div>
@@ -79,8 +82,11 @@ const CertificationsSection: React.FC = () => {
                 <img
                   src={logo.src}
                   alt={logo.alt}
+                  width="120"
+                  height="64"
                   loading="lazy"
-                  className="h-16 object-contain transition-all duration-500"
+                  decoding="async"
+                  className="h-16 w-auto object-contain transition-all duration-500"
                 />
               </div>
             </div>

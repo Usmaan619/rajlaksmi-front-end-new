@@ -187,18 +187,22 @@ const TestimonialSection = () => {
         </div>
 
         {/* Dot Indicators */}
-        <div className="flex justify-center gap-2 mt-12">
+        <div className="flex justify-center gap-2 mt-12 flex-wrap">
           {Array.from({ length: count }).map((_, i) => (
             <button
               key={i}
               onClick={() => scrollTo(i)}
-              className={`transition-all duration-500 rounded-full ${
-                i === activeIndex
-                  ? "w-8 h-2.5 bg-[#01722C]"
-                  : "w-2.5 h-2.5 bg-[#01722C]/20 hover:bg-[#01722C]/40"
-              }`}
-              aria-label={`Go to testimonial ${i + 1}`}
-            />
+              aria-label={`Go to slide ${i + 1}`}
+              className="w-12 h-12 flex items-center justify-center group transition-all"
+            >
+              <div
+                className={`transition-all duration-500 rounded-full ${
+                  i === activeIndex
+                    ? "w-8 h-2.5 bg-[#01722C]"
+                    : "w-2.5 h-2.5 bg-[#01722C]/20 group-hover:bg-[#01722C]/40"
+                }`}
+              />
+            </button>
           ))}
         </div>
       </div>

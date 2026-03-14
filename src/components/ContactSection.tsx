@@ -139,6 +139,10 @@ const ContactSection = () => {
               <img
                 src={RAJLAXMIJAVIKImg}
                 alt="Rajlaxmi Javik Logo"
+                width="128"
+                height="64"
+                loading="lazy"
+                decoding="async"
                 className="w-20 sm:w-24 lg:w-28 xl:w-32 object-contain opacity-60"
               />
             </div>
@@ -200,21 +204,42 @@ const ContactSection = () => {
 
             {/* Query Type */}
             <div>
-              <Label text="Select Query Type" />
-              <Select onValueChange={(value) => setValue("queryType", value)}>
-                <SelectTrigger className="h-12 bg-transparent">
-                  <SelectValue placeholder="Select Query Type" />
+              <Label aria-label="Select Query Type" text="Select Query Type" />
+              <Select
+                aria-label="Select Query Type"
+                onValueChange={(value) => setValue("queryType", value)}
+              >
+                <SelectTrigger
+                  aria-label="Select Query Type"
+                  className="h-12 bg-transparent"
+                >
+                  <SelectValue
+                    aria-label="Select Query Type"
+                    placeholder="Select Query Type"
+                  />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="General Inquiry">
+                <SelectContent aria-label="Select Query Type">
+                  <SelectItem
+                    aria-label="Select Query Type"
+                    value="General Inquiry"
+                  >
                     General Inquiry
                   </SelectItem>
                   <SelectItem value="Product Inquiry">
                     Product Inquiry
                   </SelectItem>
-                  <SelectItem value="Order Related">Order Related</SelectItem>
-                  <SelectItem value="Bulk Order">Bulk Order</SelectItem>
-                  <SelectItem value="Feedback">Feedback</SelectItem>
+                  <SelectItem
+                    aria-label="Select Query Type"
+                    value="Order Related"
+                  >
+                    Order Related
+                  </SelectItem>
+                  <SelectItem aria-label="Select Query Type" value="Bulk Order">
+                    Bulk Order
+                  </SelectItem>
+                  <SelectItem aria-label="Select Query Type" value="Feedback">
+                    Feedback
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-red-500 text-xs">

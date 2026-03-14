@@ -12,6 +12,10 @@ const WhyChooseRajlakshmiSection = () => {
       <img
         src={farmerBgImg}
         alt="farmer background"
+        width="360"
+        height="360"
+        loading="lazy"
+        decoding="async"
         className="
           absolute
           bottom-0
@@ -32,20 +36,28 @@ const WhyChooseRajlakshmiSection = () => {
           {/* Left - Overlapping Images */}
           <div className="relative w-full max-w-md md:max-w-full lg:max-w-xl mx-auto h-[280px] sm:h-[350px] lg:h-[420px]">
             {/* Team image - back */}
-            <div className="absolute top-0 right-0 w-[67%]">
+            <div className="absolute top-0 right-0 w-[67%] aspect-[4/3] overflow-hidden rounded-2xl">
               <img
                 src={teamImage}
                 alt="Rajlakshmi team"
-                className="w-full h-full object-cover rounded-2xl shadow-lg aspect-[4/3]"
+                width="400"
+                height="300"
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover shadow-lg"
               />
             </div>
 
             {/* Farmer image - front */}
-            <div className="absolute bottom-0 left-0 w-[40%] z-10">
+            <div className="absolute bottom-0 left-0 w-[40%] z-10 aspect-[3/4] overflow-hidden rounded-2xl">
               <img
                 src={farmerImage}
                 alt="Rajasthani farmer"
-                className="w-full h-full object-cover rounded-2xl shadow-xl aspect-[3/4]"
+                width="240"
+                height="320"
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover shadow-xl"
               />
             </div>
           </div>
