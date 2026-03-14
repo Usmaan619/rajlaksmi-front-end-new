@@ -19,7 +19,13 @@ export const getAllReviews = async () => {
   return response.data;
 };
 
-export const getProductReviews = async (productId: string) => {
-  const response = await api.get(`/users/productfeedback/${productId}`);
+export const getProductReviews = async (
+  productId: string,
+  page: number = 1,
+  limit: number = 3,
+) => {
+  const response = await api.get(
+    `/users/productfeedback/${productId}?page=${page}&limit=${limit}`,
+  );
   return response.data;
 };

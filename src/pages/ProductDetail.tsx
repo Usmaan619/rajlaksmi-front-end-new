@@ -119,44 +119,28 @@ const ProductDetail = () => {
     ratingsBreakdown: { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 },
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [reviewPage, setReviewPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const fetchReviews = async () => {
+  const fetchReviews = async (page: number = 1) => {
     if (!id) return;
     try {
-      const res = await getProductReviews(id);
-      if (res.reviews) {
-        const reviewsData = res.reviews;
-        const total = reviewsData.length;
-
-        // Calculate stats accurately if API values are 0 or missing
-        const calculatedAvg =
-          total > 0
-            ? reviewsData.reduce(
-                (acc: number, r: any) => acc + (parseFloat(r.rating) || 0),
-                0,
-              ) / total
-            : 0;
-
-        const calculatedBreakdown = { "1": 0, "2": 0, "3": 0, "4": 0, "5": 0 };
-        reviewsData.forEach((r: any) => {
-          const rati = Math.round(parseFloat(r.rating) || 0);
-          if (rati >= 1 && rati <= 5) {
-            calculatedBreakdown[
-              rati.toString() as keyof typeof calculatedBreakdown
-            ]++;
-          }
-        });
-
-        setAllReviews(reviewsData);
+      const limit = 3;
+      const res = await getProductReviews(id, page, limit);
+      if (res.success) {
+        setAllReviews(res.reviews || []);
         setReviewStats({
-          averageRating:
-            res.averageRating && res.averageRating > 0
-              ? res.averageRating
-              : calculatedAvg,
-          totalReviews:
-            res.totalReviews && res.totalReviews > 0 ? res.totalReviews : total,
-          ratingsBreakdown: res.ratingsBreakdown || calculatedBreakdown,
+          averageRating: res.averageRating || 0,
+          totalReviews: res.totalReviews || 0,
+          ratingsBreakdown: res.ratingsBreakdown || {
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0,
+          },
         });
+        setTotalPages(res.totalPages || 0);
       }
     } catch (err) {
       console.error("Failed to fetch reviews:", err);
@@ -164,6 +148,11 @@ const ProductDetail = () => {
   };
 
   useEffect(() => {
+    fetchReviews(reviewPage);
+  }, [reviewPage, id]);
+
+  useEffect(() => {
+    setReviewPage(1);
     const loadData = async () => {
       if (!id) return;
       setIsLoading(true);
@@ -171,7 +160,7 @@ const ProductDetail = () => {
       const delay = new Promise((resolve) => setTimeout(resolve, 2000));
 
       try {
-        await Promise.all([fetchReviews(), delay]);
+        await delay;
 
         const res = await api.get(`/products/get-product/${id}`);
         if (res.data?.success) {
@@ -198,7 +187,10 @@ const ProductDetail = () => {
         ...DEFAULT_PRODUCT,
         id: apiProduct.id,
         name: apiProduct.product_name || DEFAULT_PRODUCT.name,
-        subtitle: apiProduct.short_description || DEFAULT_PRODUCT.subtitle,
+        subtitle:
+          apiProduct.product_subtitle ||
+          apiProduct.short_description ||
+          DEFAULT_PRODUCT.subtitle,
         description: apiProduct.full_description || DEFAULT_PRODUCT.description,
         healthBenefits: apiProduct.health_benefits
           ? apiProduct.health_benefits.split("\n").filter(Boolean)
@@ -330,7 +322,6 @@ const ProductDetail = () => {
   }
   const isFavorite = isInWishlist(`product-detail-${product.name}`);
   const [copiedCode, setCopiedCode] = useState<number | null>(null);
-  const [reviewPage, setReviewPage] = useState(0);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
 
@@ -371,12 +362,7 @@ const ProductDetail = () => {
     navigate("/cart");
   };
 
-  const reviewsPerPage = 3;
-  const totalReviewPages = Math.ceil(allReviews.length / reviewsPerPage);
-  const reviews = allReviews.slice(
-    reviewPage * reviewsPerPage,
-    reviewPage * reviewsPerPage + reviewsPerPage,
-  );
+  const reviews = allReviews;
 
   const handleCopyCode = (code: string, index: number) => {
     navigator.clipboard.writeText(code);
@@ -1077,19 +1063,19 @@ const ProductDetail = () => {
                 aria-label="Previous review"
                 variant="outline"
                 size="icon"
-                onClick={() => setReviewPage((p) => Math.max(0, p - 1))}
-                disabled={reviewPage === 0}
+                onClick={() => setReviewPage((p) => Math.max(1, p - 1))}
+                disabled={reviewPage === 1}
                 className="bg-white rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
               >
                 <ChevronLeft className="w-5 h-5" />
               </Button>
               <div className="flex gap-2">
-                {Array.from({ length: totalReviewPages }).map((_, i) => (
+                {Array.from({ length: totalPages }).map((_, i) => (
                   <button
                     aria-label="Review page selector"
                     key={i}
-                    onClick={() => setReviewPage(i)}
-                    className={`w-2.5 h-2.5 rounded-full transition-colors ${i === reviewPage ? "bg-primary" : "bg-muted-foreground/30"}`}
+                    onClick={() => setReviewPage(i + 1)}
+                    className={`w-2.5 h-2.5 rounded-full transition-colors ${i + 1 === reviewPage ? "bg-primary" : "bg-muted-foreground/30"}`}
                   />
                 ))}
               </div>
@@ -1097,10 +1083,8 @@ const ProductDetail = () => {
                 aria-label="Next review"
                 variant="outline"
                 size="icon"
-                onClick={() =>
-                  setReviewPage((p) => Math.min(totalReviewPages - 1, p + 1))
-                }
-                disabled={reviewPage === totalReviewPages - 1}
+                onClick={() => setReviewPage((p) => Math.min(totalPages, p + 1))}
+                disabled={reviewPage === totalPages}
                 className="bg-white rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
               >
                 <ChevronRight className="w-5 h-5" />
