@@ -100,7 +100,7 @@ const ProfileDropdown = () => {
             className="rounded-xl cursor-pointer flex items-center gap-3 px-3 py-3 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors focus:bg-red-50 focus:text-red-700"
           >
             <LogOut className="h-5 w-5" />
-            <span className="font-semibold">Sign Out</span>
+            <span className="font-semibold">Logout</span>
           </DropdownMenuItem>
         </div>
       </DropdownMenuContent>

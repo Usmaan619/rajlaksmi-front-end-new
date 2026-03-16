@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AnnouncementBar from "./components/AnnouncementBar";
+import WhatsAppButton from "./components/WhatsAppButton";
 
 const AppWrapper = ({ children }) => {
   const location = useLocation();
@@ -22,6 +23,7 @@ const AppWrapper = ({ children }) => {
       {!isAuthRoute && <Header />}
       {children}
       {!isAuthRoute && <Footer />}
+      <WhatsAppButton />
     </>
   );
 };

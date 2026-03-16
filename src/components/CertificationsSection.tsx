@@ -4,6 +4,7 @@ import IndiaOrganicLogo from "@/assets/certified/100_ Naturals.webp";
 import Usda from "@/assets/certified/GUARANTED ORIGINAL.webp";
 import Apeda from "@/assets/certified/APEDA.webp";
 import impandexpot from "@/assets/certified/ICE.webp";
+import NPOP from "@/assets/certified/npop.webp";
 
 import {
   Carousel,
@@ -18,6 +19,10 @@ const logos = [
   { src: Usda, alt: "USDA Organic" },
   { src: Apeda, alt: "APEDA certified" },
   { src: impandexpot, alt: "Import and Export certified" },
+  {
+    src: NPOP,
+    alt: "NPOP National Programme for Organic Production certified",
+  },
 ];
 
 const CertificationsSection: React.FC = () => {
@@ -75,10 +80,10 @@ const CertificationsSection: React.FC = () => {
         </div>
 
         {/* DESKTOP GRID */}
-        <div className="hidden md:grid grid-cols-3 lg:grid-cols-5 gap-6 items-stretch justify-center">
+        <div className="hidden md:grid grid-cols-3 lg:grid-cols-6 gap-6 items-stretch justify-center">
           {logos.map((logo, index) => (
             <div key={index} className="flex group">
-              <div className="w-full flex items-center justify-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100 group-hover:shadow-lg group-hover:border-[#01722C]/20 transition-all duration-300">
+              <div className="w-full flex items-center justify-center p-8 bg-white rounded-2xl shadow-md border border-gray-100 group-hover:shadow-lg group-hover:border-[#01722C]/20 transition-all duration-300">
                 <img
                   src={logo.src}
                   alt={logo.alt}

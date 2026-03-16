@@ -123,6 +123,11 @@ export default {
           from: { transform: "translateX(0)" },
           to: { transform: "translateX(-50%)" },
         },
+        "whatsapp-pulse": {
+          "0%": { boxShadow: "0 0 0 0 rgba(37, 211, 102, 0.7)", transform: "scale(1)" },
+          "70%": { boxShadow: "0 0 0 15px rgba(37, 211, 102, 0)", transform: "scale(1.05)" },
+          "100%": { boxShadow: "0 0 0 0 rgba(37, 211, 102, 0)", transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -132,6 +137,7 @@ export default {
         "scale-in": "scale-in 0.5s ease-out forwards",
         "slide-in-left": "slide-in-left 0.5s ease-out forwards",
         marquee: "marquee 30s linear infinite",
+        "whatsapp-pulse": "whatsapp-pulse 2s infinite",
       },
     },
   },
