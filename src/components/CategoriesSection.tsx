@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCategories, Category } from "@/api/category.service";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 import grainsImg from "@/assets/category-grains.jpg";
 import floursImg from "@/assets/category-flours.jpg";
@@ -61,19 +62,20 @@ const categoryImages: Record<string, string> = {
 };
 
 const pastelColors = [
-  "bg-[#E8F5E9]",
-  "bg-[#FFF3E0]",
-  "bg-[#E3F2FD]",
-  "bg-[#F3E5F5]",
-  "bg-[#FFFDE7]",
-  "bg-[#FCE4EC]",
-  "bg-[#E0F2F1]",
-  "bg-[#EFEBE9]",
+  "bg-[#fdfcfa]",
+  "bg-[#f9fcf9]",
+  "bg-[#fafbfc]",
+  "bg-[#fcfafc]",
+  "bg-[#fcfcf9]",
+  "bg-[#fdf9fa]",
+  "bg-[#f9fdfc]",
+  "bg-[#fafaf8]",
 ];
 
 const CategoriesSection = () => {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const scrollRef = useScrollAnimation();
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -111,7 +113,7 @@ const CategoriesSection = () => {
             name: "All Categories",
             href: "/categories",
             image: allCategoriesImg,
-            bgColor: "bg-gray-100",
+            bgColor: "bg-muted/50",
           };
 
           setCategories([allCategories, ...colored]);
@@ -127,66 +129,66 @@ const CategoriesSection = () => {
   }, []);
 
   return (
-    <section className="bg-white py-10 sm:py-14 relative overflow-hidden">
+    <section ref={scrollRef as any} className="bg-background py-16 sm:py-24 relative overflow-hidden animate-on-scroll">
       <div className="px-4 sm:px-6 md:px-10 max-w-[1850px] mx-auto">
         {/* Header */}
-        <div className="mb-14 text-center">
-          <p className="text-[#01722C] font-semibold text-xs uppercase tracking-[0.3em] mb-4">
+        <div className="mb-16 text-center">
+          <p className="text-primary font-semibold text-[11px] uppercase tracking-[0.4em] mb-4 opacity-80">
             Pure & Authentic
           </p>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary tracking-tight">
             Shop by Category
           </h2>
-          <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
+          <div className="h-1.5 w-24 bg-secondary mx-auto mt-8 rounded-full" />
         </div>
 
         {/* Scrollable Container */}
-        <div className="flex overflow-x-auto gap-4 sm:gap-6 md:gap-8 pb-6 scrollbar-custom snap-x scroll-smooth">
+        <div className="flex overflow-x-auto gap-6 sm:gap-8 md:gap-10 pb-8 scrollbar-custom snap-x scroll-smooth">
           {isLoading
             ? Array.from({ length: 10 }).map((_, i) => (
                 <div
                   key={i}
-                  className="flex flex-col items-center gap-3 flex-shrink-0 w-32 sm:w-36 md:w-44"
+                  className="flex flex-col items-center gap-4 flex-shrink-0 w-36 sm:w-44 md:w-56"
                 >
-                  <Skeleton className="w-full aspect-square rounded-2xl" />
-                  <Skeleton className="h-4 w-20 rounded-full" />
+                  <Skeleton className="w-full aspect-square rounded-[2.5rem]" />
+                  <Skeleton className="h-5 w-24 rounded-full" />
                 </div>
               ))
             : categories.map((category) => (
                 <Link
                   key={category.name}
                   to={category.href}
-                  className="group flex-shrink-0 w-32 sm:w-36 md:w-44 snap-start py-4"
+                  className="group flex-shrink-0 w-36 sm:w-44 md:w-56 snap-start py-4"
                 >
                   <div
-                    className={`relative flex flex-col items-center justify-between h-full ${category.bgColor || "bg-gray-100"} rounded-2xl p-5 text-center shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-2 overflow-hidden border border-white/50`}
+                    className={`relative flex flex-col items-center justify-between h-full ${category.bgColor || "bg-card"} rounded-[2.5rem] p-6 text-center shadow-soft transition-all duration-700 hover:shadow-card hover:-translate-y-3 overflow-hidden border border-border/50`}
                   >
                     {/* Decorative subtle shine */}
-                    <div className="absolute -left-10 -top-10 h-32 w-32 bg-white/40 rounded-full blur-3xl transition-transform duration-700 group-hover:translate-x-full group-hover:translate-y-full" />
+                    <div className="absolute -left-10 -top-10 h-40 w-40 bg-white/60 rounded-full blur-3xl transition-transform duration-1000 group-hover:translate-x-full group-hover:translate-y-full" />
 
                     {/* Image Wrapper with White Border */}
-                    <div className="relative w-full aspect-square bg-white rounded-[2rem] overflow-hidden mb-4 shadow-sm border-[4px] border-white ring-1 ring-black/5 transition-transform duration-500 group-hover:scale-105">
+                    <div className="relative w-full aspect-square bg-white rounded-[2rem] overflow-hidden mb-6 shadow-sm border-[6px] border-white ring-1 ring-black/5 transition-transform duration-700 group-hover:scale-105">
                       <img
                         src={category.image}
                         alt={category.name}
-                        width="150"
-                        height="150"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        width="200"
+                        height="200"
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                         loading="lazy"
                         decoding="async"
                       />
                     </div>
 
                     {/* Text Area */}
-                    <div className="flex-1 flex flex-col justify-center mb-1">
-                      <p className="text-[#01722C] font-black text-[11px] md:text-xs tracking-[0.05em] uppercase leading-tight line-clamp-2 px-1">
+                    <div className="flex-1 flex flex-col justify-center mb-2">
+                      <p className="text-primary font-bold text-xs sm:text-sm tracking-[0.05em] uppercase leading-tight line-clamp-2 px-2">
                         {category.name}
                       </p>
                     </div>
 
-                    {/* Bottom accent (same as text color) */}
-                    <div className="mt-auto h-1 w-8 bg-[#01722C]/20 rounded-full transition-all duration-500 group-hover:bg-[#01722C]/40 group-hover:w-14" />
+                    {/* Bottom accent */}
+                    <div className="mt-auto h-1 w-10 bg-secondary/20 rounded-full transition-all duration-700 group-hover:bg-secondary group-hover:w-16" />
                   </div>
                 </Link>
               ))}

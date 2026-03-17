@@ -132,7 +132,7 @@ const HeroSection: React.FC = () => {
           //   </li>
           // )}
           renderIndicator={(onClickHandler, isSelected, index, label) => (
-            <li key={index} className="inline-block mx-1 py-3">
+            <li key={index} className="inline-block mx-1 py-4">
               <button
                 type="button"
                 onClick={onClickHandler}
@@ -140,11 +140,11 @@ const HeroSection: React.FC = () => {
                 className="cursor-pointer group focus:outline-none"
               >
                 <span
-                  className={`rounded-full transition-all duration-500 block
+                  className={`rounded-full transition-all duration-700 block
         ${
           isSelected
-            ? "bg-[#01722C] w-6 md:w-8 h-2 md:h-2.5"
-            : "bg-black/20 group-hover:bg-black/30 w-2 md:w-3 h-2"
+            ? "bg-primary w-10 md:w-14 h-1.5 md:h-2"
+            : "bg-primary/20 group-hover:bg-primary/40 w-2 md:w-3 h-1.5 md:h-2"
         }`}
                 />
               </button>
@@ -152,7 +152,7 @@ const HeroSection: React.FC = () => {
           )}
         >
           {slides.map((item, index) => (
-            <div key={index} className="relative w-full h-full ">
+            <div key={index} className="relative w-full h-full overflow-hidden">
               <picture className="w-full h-full">
                 {/* Mobile */}
                 <source media="(max-width:768px)" srcSet={item.mobile} />
@@ -166,7 +166,7 @@ const HeroSection: React.FC = () => {
                   // @ts-ignore - fetchpriority is the native attribute name
                   fetchpriority="high"
                   decoding="async"
-                  className="w-full h-full"
+                  className="w-full h-full object-cover transition-transform duration-[6s] ease-linear scale-100 group-hover:scale-110"
                   onError={(e) => {
                     e.currentTarget.src = FALLBACK_BANNERS[0];
                   }}
@@ -176,8 +176,8 @@ const HeroSection: React.FC = () => {
           ))}
         </Carousel>
 
-        {/* bottom gradient decoration */}
-        <div className="absolute inset-x-0 bottom-0 h-10 md:h-24 bg-gradient-to-t from-white/60 to-transparent pointer-events-none" />
+        {/* bottom gradient decoration - transitioning to the new off-white background */}
+        <div className="absolute inset-x-0 bottom-0 h-16 md:h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
       </div>
     </section>
   );

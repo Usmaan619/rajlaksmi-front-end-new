@@ -23,69 +23,66 @@
 
 @layer base {
   :root {
-    /* Core Colors - Organic & Natural Theme */
-    --background: 45 30% 97%;
-    --foreground: 30 10% 20%;
+    /* Core Colors - Organic & Natural Theme - Refined for Premium Feel */
+    --background: 35 30% 98%; /* Slightly warmer off-white */
+    --foreground: 30 15% 15%;
 
-    --card: 45 40% 95%;
-    --card-foreground: 30 10% 20%;
+    --card: 35 30% 96%;
+    --card-foreground: 30 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 30 10% 20%;
+    --popover-foreground: 30 15% 15%;
 
-    /* Primary - Forest Green */
-    --primary: 142 72% 24%;
+    /* Primary - Deep Jungle Green */
+    --primary: 155 45% 18%; /* Darker, richer green */
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Golden/Amber */
-    --secondary: 43 96% 50%;
-    --secondary-foreground: 30 10% 15%;
+    /* Secondary - Burned Orange / Golden */
+    --secondary: 35 90% 45%; 
+    --secondary-foreground: 30 10% 10%;
 
-    /* Muted - Cream/Beige */
-    --muted: 40 30% 92%;
-    --muted-foreground: 30 15% 40%;
+    /* Muted - Soft Cream */
+    --muted: 35 25% 92%;
+    --muted-foreground: 30 10% 45%;
 
-    /* Accent - Light Green */
-    --accent: 90 40% 90%;
-    --accent-foreground: 142 72% 24%;
+    /* Accent - Earthy Green */
+    --accent: 140 25% 93%;
+    --accent-foreground: 155 45% 18%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --border: 35 15% 88%;
+    --input: 35 15% 88%;
+    --ring: 155 45% 18%;
 
-    --border: 40 20% 85%;
-    --input: 40 20% 85%;
-    --ring: 142 72% 24%;
-
-    --radius: 0.5rem;
+    --radius: 0.75rem; /* Softer corners */
 
     /* Custom tokens */
-    --cream: 40 40% 96%;
-    --cream-dark: 40 30% 90%;
-    --forest: 142 72% 24%;
-    --forest-light: 142 50% 35%;
-    --golden: 43 96% 50%;
-    --golden-light: 45 90% 60%;
-    --brown: 30 40% 25%;
-    --brown-light: 30 30% 45%;
+    --cream: 35 30% 98%;
+    --cream-dark: 35 20% 92%;
+    --forest: 155 45% 18%;
+    --forest-light: 155 40% 28%;
+    --golden: 35 90% 45%;
+    --golden-light: 40 85% 60%;
+    --brown: 25 35% 20%;
+    --brown-light: 25 30% 40%;
 
     /* Typography */
-    --font-heading: "Nunito", sans-serif;
+    --font-heading: "Lora", serif;
     --font-body: "Nunito", sans-serif;
 
-    /* Shadows */
-    --shadow-soft: 0 4px 20px -2px hsl(30 20% 20% / 0.08);
-    --shadow-card: 0 8px 30px -4px hsl(30 20% 20% / 0.12);
-    --shadow-elevated: 0 20px 50px -10px hsl(30 20% 20% / 0.15);
+    /* Shadows - More subtle and soft */
+    --shadow-soft: 0 4px 20px -2px hsl(30 20% 20% / 0.05);
+    --shadow-card: 0 10px 40px -4px hsl(30 20% 20% / 0.08);
+    --shadow-elevated: 0 30px 60px -12px hsl(30 20% 20% / 0.12);
 
     /* Sidebar */
-    --sidebar-background: 40 40% 96%;
-    --sidebar-foreground: 30 10% 20%;
-    --sidebar-primary: 142 72% 24%;
+    --sidebar-background: 35 30% 98%;
+    --sidebar-foreground: 30 15% 15%;
+    --sidebar-primary: 155 45% 18%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 90 40% 90%;
-    --sidebar-accent-foreground: 142 72% 24%;
-    --sidebar-border: 40 20% 85%;
-    --sidebar-ring: 142 72% 24%;
+    --sidebar-accent: 140 25% 93%;
+    --sidebar-accent-foreground: 155 45% 18%;
+    --sidebar-border: 35 15% 88%;
+    --sidebar-ring: 155 45% 18%;
   }
 
   .dark {
@@ -149,6 +146,9 @@
   body {
     font-family: var(--font-body);
     scroll-behavior: smooth;
+    background-color: hsl(var(--background));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1,
@@ -158,6 +158,19 @@
   h5,
   h6 {
     font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: hsl(var(--primary));
+  }
+}
+
+@layer utilities {
+  .animate-on-scroll {
+    @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+  }
+
+  .animate-on-scroll.show {
+    @apply opacity-100 translate-y-0;
   }
 }
 

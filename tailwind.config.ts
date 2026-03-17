@@ -17,7 +17,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ["Nunito", "sans-serif"],
+        heading: ["Lora", "serif"],
         body: ["Nunito", "sans-serif"],
       },
       colors: {
