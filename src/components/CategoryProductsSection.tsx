@@ -178,16 +178,16 @@ const ProductCard = ({ product }: { product: any }) => {
         <button
           aria-label="Add to cart"
           onClick={handleAddToCart}
-          className="flex-1 border border-primary text-primary text-xs py-2 rounded-md hover:bg-primary hover:text-white transition-colors font-semibold"
+          className="flex-1 border border-primary text-primary text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary hover:text-white transition-colors font-bold"
         >
-          Add to Cart
+          ADD TO CART
         </button>
         <button
           aria-label="Buy Now"
           onClick={handleBuyNow}
-          className="flex-1 bg-primary text-white text-xs py-2 rounded-md hover:bg-primary/90 transition-colors font-semibold shadow-sm animate-glow"
+          className="flex-1 bg-primary text-white text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow"
         >
-          Buy Now
+          BUY NOW
         </button>
       </div>
     </Card>
@@ -298,8 +298,8 @@ const CategoryRow = ({
             </div>
 
             <div className="relative z-10">
-              <div className="w-10 sm:w-12 h-1 bg-[#01722C] mb-4 sm:mb-6 rounded-full" />
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#01722C] tracking-tight mb-3 sm:mb-4 leading-tight">
+              <div className="w-10 sm:w-12 h-1 bg-[#116931] mb-4 sm:mb-6 rounded-full" />
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#116931] tracking-tight mb-3 sm:mb-4 leading-tight">
                 {category.category_name}
               </h2>
               <p className="text-gray-500 text-xs sm:text-sm mb-4 sm:mb-6 leading-relaxed line-clamp-2 sm:line-clamp-3">
@@ -310,10 +310,10 @@ const CategoryRow = ({
 
               <Link
                 to={`/categories?category=${encodeURIComponent(category.category_name)}`}
-                className="group/btn inline-flex items-center gap-2 sm:gap-3 text-[#01722C] font-bold text-xs sm:text-sm tracking-wide"
+                className="group/btn inline-flex items-center gap-2 sm:gap-3 text-[#116931] font-bold text-xs sm:text-sm tracking-wide"
               >
                 EXPLORE ALL
-                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#01722C] text-white flex items-center justify-center group-hover/btn:translate-x-1 transition-transform">
+                <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#116931] text-white flex items-center justify-center group-hover/btn:translate-x-1 transition-transform">
                   <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
                 </span>
               </Link>

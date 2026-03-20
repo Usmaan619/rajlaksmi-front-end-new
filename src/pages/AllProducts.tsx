@@ -223,7 +223,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
       {/* Content */}
       <div className="space-y-2 flex-1 flex flex-col">
-        <h3 className="font-medium text-foreground text-sm line-clamp-2">
+        <h3 className="font-medium text-foreground text-sm line-clamp-2 min-h-[40px]">
           {product.product_name}
         </h3>
 
@@ -295,10 +295,10 @@ const ProductCard = ({ product }: { product: Product }) => {
             aria-label="Buy Now"
             size="sm"
             variant="outline"
-            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white border-border hover:bg-primary/5"
+            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white border-border hover:bg-primary/5 font-bold"
             onClick={handleBuyNow}
           >
-            Buy Now
+            BUY NOW
           </Button>
         </div>
       </div>
@@ -558,7 +558,7 @@ const AllProducts = () => {
           <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
             {/* Title + mobile filter */}
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#01722C]">
+              <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#116931]">
                 All Products
               </h2>
 

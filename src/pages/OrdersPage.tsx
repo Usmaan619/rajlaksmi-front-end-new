@@ -333,7 +333,7 @@ const OrdersPage = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-12 ">
-          <Card className="border-none shadow-md rounded-2xl bg-[#01722c] text-white overflow-hidden p-6 relative">
+          <Card className="border-none shadow-md rounded-2xl bg-[#116931] text-white overflow-hidden p-6 relative">
             <div className="space-y-4 relative z-10">
               <h3 className="text-xl font-bold uppercase tracking-wide">
                 Refund Policy
@@ -348,7 +348,7 @@ const OrdersPage = () => {
                 variant="secondary"
                 size="sm"
                 onClick={() => navigate("/returns")}
-                className="font-medium gap-2 rounded-md transition-all hover:bg-white text-[#01722c]"
+                className="font-medium gap-2 rounded-md transition-all hover:bg-white text-[#116931]"
               >
                 View Policy <ExternalLink size={16} />
               </Button>

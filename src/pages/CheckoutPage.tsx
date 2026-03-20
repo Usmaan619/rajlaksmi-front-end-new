@@ -322,9 +322,9 @@ const CheckoutPage = () => {
         <Button
           aria-label="Shop Now"
           onClick={() => navigate("/products")}
-          className="bg-[#01722c] hover:bg-[#0c9c43] text-white"
+          className="bg-[#116931] hover:bg-[#0c9c43] text-white font-bold"
         >
-          Shop Now
+          SHOP NOW
         </Button>
       </div>
     );
@@ -333,8 +333,8 @@ const CheckoutPage = () => {
   return (
     <div className="min-h-screen bg-white py-10 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#01722c] mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3">
-          <CheckCircle2 className="text-[#01722c] h-6 w-6 sm:h-8 sm:w-8" />
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#116931] mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3">
+          <CheckCircle2 className="text-[#116931] h-6 w-6 sm:h-8 sm:w-8" />
           Secure Checkout
         </h1>
 
@@ -344,7 +344,7 @@ const CheckoutPage = () => {
             {/* Shipping Address Section */}
             <Card className="border-none shadow-md overflow-hidden">
               <CardHeader className="bg-white border-b border-emerald-50">
-                <CardTitle className="flex items-center gap-2 text-[#01722c]">
+                <CardTitle className="flex items-center gap-2 text-[#116931]">
                   <Truck className="h-5 w-5" />
                   Shipping Address
                 </CardTitle>
@@ -560,18 +560,18 @@ const CheckoutPage = () => {
                           <Button
                             aria-label="Save Address"
                             type="submit"
-                            className="flex-1 bg-[#01722c] hover:bg-[#01722c]"
+                            className="flex-1 bg-[#116931] hover:bg-[#116931] font-bold"
                           >
-                            Save Address
+                            SAVE ADDRESS
                           </Button>
                           <Button
                             aria-label="Cancel"
                             type="button"
                             variant="outline"
                             onClick={() => setIsAddingAddress(false)}
-                            className="flex-1"
+                            className="flex-1 font-bold"
                           >
-                            Cancel
+                            CANCEL
                           </Button>
                         </div>
                       </form>
@@ -626,10 +626,10 @@ const CheckoutPage = () => {
           {/* Right Column: Order Summary */}
           <div className="space-y-6">
             <Card className="border-none shadow-md  sticky top-10">
-              <CardHeader className="bg-[#01722c] rounded-t-xl py-6">
+              <CardHeader className="bg-[#116931] rounded-t-xl py-6">
                 <CardTitle className="text-white flex justify-between items-center">
                   Order Summary
-                  <span className="text-[#01722c] text-sm font-normal">
+                  <span className="text-[#116931] text-sm font-normal">
                     {cart.length} items
                   </span>
                 </CardTitle>
@@ -679,7 +679,7 @@ const CheckoutPage = () => {
                   aria-label="Place Order"
                   onClick={handlePlaceOrder}
                   disabled={isLoading || !selectedAddressId}
-                  className="w-full h-14 bg-[#01722c]   hover:bg-[#0c9c43] text-white font-bold text-lg rounded-xl shadow-lg transition-all active:scale-[0.98]"
+                  className="w-full h-14 bg-[#116931]   hover:bg-[#0c9c43] text-white font-bold text-lg rounded-xl shadow-lg transition-all active:scale-[0.98]"
                 >
                   {isLoading ? (
                     <span className="flex items-center gap-2">
@@ -687,7 +687,7 @@ const CheckoutPage = () => {
                       Processing...
                     </span>
                   ) : (
-                    "Place Order Now"
+                    "PLACE ORDER NOW"
                   )}
                 </Button>
               </CardFooter>

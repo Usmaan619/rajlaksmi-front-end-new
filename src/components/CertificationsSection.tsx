@@ -31,11 +31,11 @@ const CertificationsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
-          <p className="text-[#01722C] font-semibold text-[11px] sm:text-xs uppercase tracking-[0.3em] mb-3">
+          <p className="text-[#116931] font-semibold text-[11px] sm:text-xs uppercase tracking-[0.3em] mb-3">
             Quality Guaranteed
           </p>
 
-          <h2 className="text-2xl sm:text-3xl font-bold text-[#01722C] tracking-tight font-serif mb-3">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#116931] tracking-tight font-serif mb-3">
             Our Trusted Certifications
           </h2>
 
@@ -83,7 +83,7 @@ const CertificationsSection: React.FC = () => {
         <div className="hidden md:grid grid-cols-3 lg:grid-cols-6 gap-6 items-stretch justify-center">
           {logos.map((logo, index) => (
             <div key={index} className="flex group">
-              <div className="w-full flex items-center justify-center p-8 bg-white rounded-2xl shadow-md border border-gray-100 group-hover:shadow-lg group-hover:border-[#01722C]/20 transition-all duration-300">
+              <div className="w-full flex items-center justify-center p-8 bg-white rounded-2xl shadow-md border border-gray-100 group-hover:shadow-lg group-hover:border-[#116931]/20 transition-all duration-300">
                 <img
                   src={logo.src}
                   alt={logo.alt}

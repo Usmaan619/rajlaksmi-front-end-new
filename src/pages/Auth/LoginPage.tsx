@@ -258,7 +258,7 @@ const LoginPage = () => {
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        className="border-gray-300 data-[state=checked]:bg-[#01722c]"
+                        className="border-gray-300 data-[state=checked]:bg-[#116931]"
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
@@ -274,7 +274,7 @@ const LoginPage = () => {
                 type="submit"
                 aria-label="Sign In"
                 disabled={submitting}
-                className="w-full bg-[#01722c] hover:bg-[#015a23] text-white transition-all transform hover:scale-[1.01]"
+                className="w-full bg-[#116931] hover:bg-[#015a23] text-white transition-all transform hover:scale-[1.01]"
               >
                 {submitting ? "Signing In..." : "Sign In"}
               </Button>

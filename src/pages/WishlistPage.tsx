@@ -35,7 +35,7 @@ const WishlistPage = () => {
         <div className="bg-white p-6 rounded-full mb-6">
           <Heart className="h-16 w-16 text-red-500  fill-red-500" />
         </div>
-        <h2 className="text-3xl font-bold text-[#01722C] mb-2">
+        <h2 className="text-3xl font-bold text-[#116931] mb-2">
           Your Wishlist is Empty
         </h2>
         <p className=" mb-8 max-w-md">
@@ -45,9 +45,9 @@ const WishlistPage = () => {
         <Link to="/products">
           <Button
             aria-label="Explore products"
-            className="bg-[#01722C] hover:bg-[#01722C] text-white  text-md rounded-md shadow-lg transition-transform hover:scale-105"
+            className="bg-[#116931] hover:bg-[#116931] text-white text-md rounded-md shadow-lg transition-transform hover:scale-105 font-bold"
           >
-            Explore Products
+            EXPLORE PRODUCTS
           </Button>
         </Link>
       </div>
@@ -58,13 +58,13 @@ const WishlistPage = () => {
     <div className="min-h-screen bg-slate-50 py-10 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#01722C] flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#116931] flex items-center gap-3">
             <Heart className="text-rose-500 fill-rose-500 h-6 w-6 sm:h-8 sm:w-8" />
             My Wishlist ({wishlistCount})
           </h1>
           <Link
             to="/products"
-            className="text-[#01722C] font-semibold hover:text-emerald-800 flex items-center gap-2"
+            className="text-[#116931] font-semibold hover:text-emerald-800 flex items-center gap-2"
           >
             Continue Shopping <ArrowRight size={18} />
           </Link>
@@ -105,13 +105,13 @@ const WishlistPage = () => {
 
               <CardContent className="p-5 bg-white">
                 <div className="flex justify-between items-start mb-3">
-                  <h3 className="font-bold text-lg text-slate-800 line-clamp-1 riflex-1 pr-2">
+                  <h3 className="font-bold text-lg text-slate-800 line-clamp-2 flex-1 pr-2 min-h-[3.5rem]">
                     {item.name}
                   </h3>
                 </div>
 
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xl font-bold text-[#01722C]">
+                  <span className="text-xl font-bold text-[#116931]">
                     ₹{item.price}
                   </span>
                   {item.originalPrice && (
@@ -129,9 +129,9 @@ const WishlistPage = () => {
                 <Button
                   aria-label="Add to cart"
                   onClick={(e) => handleAddToCart(e, item)}
-                  className="w-full bg-[#01722C] hover:bg-[#06a443] text-white gap-2 font-semibold"
+                  className="w-full bg-[#116931] hover:bg-[#06a443] text-white gap-2 font-bold h-9 text-xs sm:text-sm"
                 >
-                  <ShoppingCart size={18} /> Add to Cart
+                  <ShoppingCart size={18} /> ADD TO CART
                 </Button>
               </CardContent>
             </Card>

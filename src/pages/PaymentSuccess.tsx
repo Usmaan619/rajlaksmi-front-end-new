@@ -28,7 +28,7 @@ const PaymentSuccess = () => {
         <div className="pt-6 space-y-3">
           {/* <Button
             onClick={() => navigate("/orders")}
-            className="w-full bg-[#01722c] hover:bg-[#0c9c43] text-white"
+            className="w-full bg-[#116931] hover:bg-[#0c9c43] text-white"
           >
             Track Order
             <ArrowRight className="ml-2 w-4 h-4" />

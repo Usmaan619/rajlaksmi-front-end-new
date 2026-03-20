@@ -156,7 +156,7 @@ const ForgotPasswordPage = () => {
                   aria-label="Send OTP"
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-[#01722c] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
+                  className="w-full bg-[#116931] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
                 >
                   {submitting ? "Sending..." : "Send OTP"}
                 </Button>
@@ -216,7 +216,7 @@ const ForgotPasswordPage = () => {
                   aria-label="Reset Password"
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-[#01722c] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
+                  className="w-full bg-[#116931] hover:bg-[#015a23] text-white shadow-lg transition-transform hover:scale-[1.01]"
                 >
                   {submitting ? "Resetting..." : "Reset Password"}
                 </Button>

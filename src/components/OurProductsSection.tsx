@@ -245,7 +245,7 @@ const VideoProductCard = ({
             />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-green-900 text-sm line-clamp-1 leading-tight">
+            <h3 className="font-bold text-green-900 text-sm line-clamp-2 leading-tight min-h-[32px]">
               {product.name}
             </h3>
             <div className="flex items-baseline gap-0.5 mt-0.5">
@@ -264,7 +264,7 @@ const VideoProductCard = ({
           <button
             aria-label="Add to cart"
             onClick={handleAddToCart}
-            className="w-full bg-green-700 text-white rounded-lg py-2 text-xs font-bold hover:bg-green-800 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm active:scale-95 animate-glow"
+            className="w-full bg-[#116931] text-white rounded-lg h-9 text-xs font-bold hover:bg-[#0d5427] transition-all duration-300 flex items-center justify-center gap-2 shadow-sm active:scale-95 animate-glow"
           >
             <ShoppingCart className="h-3.5 w-3.5" />
             ADD TO CART
@@ -276,7 +276,7 @@ const VideoProductCard = ({
               e.stopPropagation();
               navigate(`/product/${product.id}`);
             }}
-            className="w-full bg-white text-green-700 border border-green-700/30 rounded-lg py-2 text-xs font-bold hover:bg-green-50 transition-all duration-300 active:scale-95"
+            className="w-full bg-white text-[#116931] border border-[#116931]/30 rounded-lg h-9 text-xs font-bold hover:bg-green-50 transition-all duration-300 active:scale-95"
           >
             VIEW PRODUCT
           </button>
@@ -586,7 +586,7 @@ const OurProductsSection = () => {
                   <div className="flex flex-col gap-2 shrink-0">
                     <Button
                       size="sm"
-                      className="bg-green-600 hover:bg-green-700 text-white font-bold h-9 px-4 shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 animate-glow"
+                      className="bg-[#116931] hover:bg-[#0d5427] text-white font-bold h-9 px-4 shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 animate-glow"
                       onClick={() => {
                         addToCart({
                           id: `product-${selectedProduct.id}`,

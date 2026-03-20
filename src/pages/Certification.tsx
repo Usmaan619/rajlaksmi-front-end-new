@@ -57,7 +57,7 @@ const Certifications = () => {
       <div className="min-h-screen bg-white ">
         {/* Header */}
         <section className="px-6 py-10 md:px-16 lg:px-24">
-          <h1 className="text-2xl md:text-3xl font-bold text-[hsl(140,60%,30%)]">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#116931]">
             Certifications & Quality Assurance
           </h1>
           <p className="text-[hsl(140,40%,40%)] mt-1">
@@ -89,7 +89,7 @@ const Certifications = () => {
                 </p>
                 <button
                   aria-label="View Certificate"
-                  className="border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-sm px-4 py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors"
+                  className="border border-[#116931] text-[#116931] text-sm px-4 py-1.5 rounded-md hover:bg-[#116931] hover:text-white transition-colors"
                 >
                   View Certificate
                 </button>
@@ -104,7 +104,7 @@ const Certifications = () => {
                 aria-label="Previous Page"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="w-8 h-8 rounded-full border border-[hsl(140,40%,80%)] flex items-center justify-center text-[hsl(140,60%,30%)] disabled:opacity-40"
+                className="w-8 h-8 rounded-full border border-[hsl(140,40%,80%)] flex items-center justify-center text-[#116931] disabled:opacity-40"
               >
                 <ChevronLeft size={16} />
               </button>
@@ -126,7 +126,7 @@ const Certifications = () => {
                   setCurrentPage((p) => Math.min(totalPages, p + 1))
                 }
                 disabled={currentPage === totalPages}
-                className="w-8 h-8 rounded-full border border-[hsl(140,60%,30%)] flex items-center justify-center text-[hsl(140,60%,30%)] disabled:opacity-40"
+                className="w-8 h-8 rounded-full border border-[#116931] flex items-center justify-center text-[#116931] disabled:opacity-40"
               >
                 <ChevronRight size={16} />
               </button>
@@ -138,7 +138,7 @@ const Certifications = () => {
         <section className="mx-6 md:mx-16 lg:mx-24 mb-20 rounded-3xl overflow-hidden bg-[hsl(140,30%,95%)] ">
           <div className="grid md:grid-cols-2 gap-0">
             <div className="p-8 md:p-12 flex flex-col justify-center">
-              <h2 className="text-xl md:text-2xl font-bold text-[hsl(140,60%,30%)] mb-4">
+              <h2 className="text-xl md:text-2xl font-bold text-[#116931] mb-4">
                 How We Maintain Quality
               </h2>
               <p className="text-sm text-foreground mb-4">
@@ -155,7 +155,7 @@ const Certifications = () => {
               <div>
                 <button
                   aria-label="Read More About Our Quality Control"
-                  className="bg-[hsl(140,60%,30%)] text-white text-sm px-5 py-2 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors"
+                  className="bg-[#116931] text-white text-sm px-5 py-2 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors"
                 >
                   Read more about our quality control
                 </button>

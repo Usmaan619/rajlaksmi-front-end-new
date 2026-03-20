@@ -307,16 +307,16 @@ const ProductCard = ({ product }: { product: Product }) => {
         <button
           aria-label="Add to Cart"
           onClick={handleAddToCart}
-          className="flex-1 border border-[hsl(140,60%,30%)] text-[hsl(140,60%,30%)] text-[11px] py-1.5 rounded-md hover:bg-[hsl(140,60%,30%)] hover:text-white transition-colors font-bold"
+          className="flex-1 border border-[#116931] text-[#116931] text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-[#116931] hover:text-white transition-colors font-bold"
         >
           ADD TO CART
         </button>
         <button
           aria-label="Buy Now"
           onClick={handleBuyNow}
-          className="flex-1 bg-[hsl(140,60%,30%)] text-white text-[11px] py-1.5 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors font-bold animate-glow shadow-sm"
+          className="flex-1 bg-[#116931] text-white text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-[#0d5427] transition-colors font-bold animate-glow shadow-sm"
         >
-          Buy Now
+          BUY NOW
         </button>
       </div>
     </div>

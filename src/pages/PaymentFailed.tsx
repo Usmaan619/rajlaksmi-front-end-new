@@ -26,7 +26,7 @@ const PaymentFailed = () => {
         <div className="pt-6 space-y-3">
           {/* <Button
             onClick={() => navigate("/checkout")}
-            className="w-full bg-[#01722c] hover:bg-[#0c9c43] text-white"
+            className="w-full bg-[#116931] hover:bg-[#0c9c43] text-white"
           >
             <RefreshCw className="mr-2 w-4 h-4" />
             Try Again

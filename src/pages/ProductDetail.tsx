@@ -798,9 +798,9 @@ const ProductDetail = () => {
                   variant="outline"
                   onClick={handleAddToCart}
                   disabled={product.stock <= 0}
-                  className="flex-1 bg-white h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 shadow-sm"
+                  className="flex-1 bg-white h-12 text-base font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 shadow-sm"
                 >
-                  Add to Cart
+                  ADD TO CART
                 </Button>
                 
                 {/* Custom keyframes for infinite button animations */}
@@ -815,8 +815,8 @@ const ProductDetail = () => {
                     animation: continuous-shine 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
                   }
                   @keyframes continuous-glow {
-                    0%, 100% { box-shadow: 0 0 10px rgba(0,166,81,0.4), 4px 4px 10px rgba(0,0,0,0.1), -4px -4px 10px rgba(255,255,255,0.8); transform: scale(1); }
-                    50% { box-shadow: 0 0 25px rgba(0,166,81,0.8), 6px 6px 15px rgba(0,0,0,0.15), -6px -6px 15px rgba(255,255,255,0.9); transform: scale(1.02); }
+                    0%, 100% { box-shadow: 0 0 10px rgba(17, 105, 49,0.4), 4px 4px 10px rgba(0,0,0,0.1), -4px -4px 10px rgba(255,255,255,0.8); transform: scale(1); }
+                    50% { box-shadow: 0 0 25px rgba(17, 105, 49,0.8), 6px 6px 15px rgba(0,0,0,0.15), -6px -6px 15px rgba(255,255,255,0.9); transform: scale(1.02); }
                   }
                   .glow-button {
                     animation: continuous-glow 2.5s infinite ease-in-out;
@@ -837,12 +837,12 @@ const ProductDetail = () => {
                   className="
                     flex-1 h-12 text-base font-bold text-white rounded-xl relative overflow-hidden group
                     active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
-                    bg-gradient-to-r from-primary to-[#18754b] glow-button
-                    hover:bg-gradient-to-r hover:from-[#18754b] hover:to-primary
+                    bg-gradient-to-r from-primary to-[#187a3e] glow-button
+                    hover:bg-gradient-to-r hover:from-[#187a3e] hover:to-primary
                   "
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    <span className="tracking-wide">Buy it now</span>
+                    <span className="tracking-wide">BUY NOW</span>
                     <svg 
                       className="w-4 h-4 arrow-pulse" 
                       fill="none" 

@@ -73,7 +73,7 @@ const AboutUsPage = () => {
                 </p>
                 <Button
                   aria-label="Explore Our Products"
-                  className="bg-[#01722C] hover:bg-green-700 text-white rounded-md px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all"
+                  className="bg-[#116931] hover:bg-green-700 text-white rounded-md px-8 py-6 text-base shadow-lg hover:shadow-xl transition-all"
                 >
                   Explore Our Products
                 </Button>
@@ -287,7 +287,7 @@ hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
           ></div>
 
           <div className="max-w-4xl mx-auto text-center relative z-20">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#01722C] mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#116931] mb-6">
               Our Quality Promise
             </h2>
             <p className="text-[#676767] text-lg leading-relaxed mb-5">
@@ -349,7 +349,7 @@ transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                 <Button
                   aria-label="Shop Now"
                   onClick={() => navigate(`/product`)}
-                  className="bg-[#01722C] hover:bg-green-700 text-white rounded-md px-8 py-5 text-lg 
+                  className="bg-[#116931] hover:bg-green-700 text-white rounded-md px-8 py-5 text-lg 
 transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 >
                   Shop Now

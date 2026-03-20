@@ -40,21 +40,21 @@ const CartPage = () => {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center p-4 text-center">
         <div className="bg-emerald-50 p-6 rounded-full mb-6">
-          <ShoppingBag className="h-16 w-16 text-[#01722c]" />
+          <ShoppingBag className="h-16 w-16 text-[#116931]" />
         </div>
         <h2 className="text-3xl font-bold text-emerald-900 mb-2">
           Your Cart is Empty
         </h2>
-        <p className="text-[#01722c] mb-8 max-w-md">
+        <p className="text-[#116931] mb-8 max-w-md">
           Looks like you haven't added any of our fresh organic products to your
           cart yet.
         </p>
         <Link to="/products">
           <Button
             aria-label="Start Shopping"
-            className="bg-[#01722c] hover:bg-[#0c9c43] text-white px-8 py-6 text-lg rounded-md shadow-lg transition-transform hover:scale-105"
+            className="bg-[#116931] hover:bg-[#0c9c43] text-white px-8 py-6 text-lg rounded-md shadow-lg transition-transform hover:scale-105 font-bold"
           >
-            Start Shopping
+            START SHOPPING
           </Button>
         </Link>
       </div>
@@ -154,14 +154,14 @@ const CartPage = () => {
           <Card className="sticky top-24 border-emerald-200 shadow-xl bg-gradient-to-br from-green-50 to-white overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-emerald-600" />
             <CardHeader>
-              <CardTitle className="text-xl text-[#01722c]">
+              <CardTitle className="text-xl text-[#116931]">
                 Order Summary
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between text-[#01722c]">
+              <div className="flex justify-between text-[#116931]">
                 <span>Subtotal ({cartCount} items)</span>
-                <span className="font-semibold text-[#01722c] font-mono">
+                <span className="font-semibold text-[#116931] font-mono">
                   ₹{cartTotal.toFixed(2)}
                 </span>
               </div>
@@ -193,9 +193,9 @@ const CartPage = () => {
                 >
                   <Button
                     aria-label="Proceed to Checkout"
-                    className="w-full bg-[#01722c] hover:bg-emerald-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg transition-all transform hover:translate-y-[-2px]"
+                    className="w-full bg-[#116931] hover:bg-emerald-800 text-white font-bold py-6 text-lg rounded-xl shadow-lg transition-all transform hover:translate-y-[-2px]"
                   >
-                    Proceed to Checkout <ArrowRight className="ml-2 h-5 w-5" />
+                    PROCEED TO CHECKOUT <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
               </div>

@@ -204,16 +204,16 @@ const ProductCard = ({ product }: { product: any }) => {
         <button
           aria-label="Add to cart"
           onClick={handleAddToCart}
-          className="flex-1 border border-primary text-primary text-xs py-2 rounded-md hover:bg-primary hover:text-white transition-colors font-semibold"
+          className="flex-1 border border-primary text-primary text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary hover:text-white transition-colors font-bold"
         >
-          Add to Cart
+          ADD TO CART
         </button>
         <button
           aria-label="Buy now"
           onClick={handleBuyNow}
-          className="flex-1 bg-primary text-white text-xs py-2 rounded-md hover:bg-primary/90 transition-colors font-semibold shadow-sm animate-glow"
+          className="flex-1 bg-primary text-white text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow"
         >
-          Buy Now
+          BUY NOW
         </button>
       </div>
     </Card>
@@ -245,13 +245,13 @@ const BestSellersSection = () => {
       <div className="px-3 sm:px-6 md:px-8 lg:px-12">
         {/* Heading */}
         <div className="mb-12 text-center">
-          <p className="text-[#01722C] font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] mb-3">
+          <p className="text-[#116931] font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] mb-3">
             Most Loved
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#116931] tracking-tight">
             Our Best Sellers
           </h2>
-          <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
+          <div className="h-1 w-24 bg-[#116931]/20 mx-auto mt-6 rounded-full" />
         </div>
 
         {/* Grid */}

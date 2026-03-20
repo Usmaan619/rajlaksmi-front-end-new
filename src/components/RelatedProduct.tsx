@@ -179,7 +179,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       </div>
 
       <div className="space-y-2 flex-1 flex flex-col">
-        <h3 className="font-medium text-foreground text-sm line-clamp-2">
+        <h3 className="font-medium text-foreground text-sm line-clamp-2 min-h-[40px]">
           {pName}
         </h3>
 
@@ -240,19 +240,19 @@ const ProductCard = ({ product }: { product: Product }) => {
           <Button
             aria-label="Add to cart"
             size="sm"
-            className="flex-1 text-xs h-8"
+            className="flex-1 text-[10px] sm:text-[11px] h-8 sm:h-9 font-bold"
             onClick={handleAddToCart}
           >
-            Add to Cart
+            ADD TO CART
           </Button>
           <Button
             aria-label="Buy now"
             size="sm"
             variant="outline"
-            className="flex-1 text-xs h-8 bg-white"
+            className="flex-1 text-[10px] sm:text-[11px] h-8 sm:h-9 bg-white font-bold border-primary text-primary hover:bg-primary hover:text-white animate-glow"
             onClick={handleBuyNow}
           >
-            Buy Now
+            BUY NOW
           </Button>
         </div>
       </div>
