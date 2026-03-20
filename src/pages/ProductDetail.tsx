@@ -14,6 +14,7 @@ import {
   ChevronDown,
   Minus,
   Plus,
+  Play,
 } from "lucide-react";
 import { Rating } from "react-simple-star-rating";
 import { Button } from "@/components/ui/button";
@@ -256,6 +257,7 @@ const ProductDetail = () => {
         createdAt: apiProduct.created_at,
         updatedAt: apiProduct.updated_at,
         purchasePrice: apiProduct.product_purchase_price, // internal but mapping it
+        productVideo: apiProduct.product_video,
       }
     : {
         ...DEFAULT_PRODUCT,
@@ -268,6 +270,7 @@ const ProductDetail = () => {
         stock: 0,
         isFeatured: false,
         bestSeller: false,
+        productVideo: null,
       };
 
   const handleShare = async () => {
@@ -294,7 +297,8 @@ const ProductDetail = () => {
     }
   };
 
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [showVideo, setShowVideo] = useState(false);
   const [selectedSizeIdx, setSelectedSizeIdx] = useState(0);
 
   // sizes is always {weight, price, del_price...}[] after our mapping
@@ -370,14 +374,18 @@ const ProductDetail = () => {
     setTimeout(() => setCopiedCode(null), 1000);
   };
 
-  const prevImage = () =>
-    setSelectedImage((prev) =>
+  const prevImage = () => {
+    setShowVideo(false);
+    setSelectedIndex((prev) =>
       prev === 0 ? product.images.length - 1 : prev - 1,
     );
-  const nextImage = () =>
-    setSelectedImage((prev) =>
+  };
+  const nextImage = () => {
+    setShowVideo(false);
+    setSelectedIndex((prev) =>
       prev === product.images.length - 1 ? 0 : prev + 1,
     );
+  };
 
   const PAYMENT_LOGOS = [
     paymentLogo1,
@@ -474,11 +482,23 @@ const ProductDetail = () => {
             <div>
               {/* Main Image */}
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted mb-4">
-                <img
-                  src={product.images[selectedImage]}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
+                {showVideo && product.productVideo ? (
+                  <video
+                    src={product.productVideo}
+                    className="w-full h-full object-cover"
+                    controls
+                    muted
+                    autoPlay
+                    loop
+                    playsInline
+                  />
+                ) : (
+                  <img
+                    src={product.images[selectedIndex]}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                )}
                 <button
                   aria-label="Previous image"
                   onClick={prevImage}
@@ -501,9 +521,12 @@ const ProductDetail = () => {
                   <button
                     aria-label="Thumbnail image"
                     key={index}
-                    onClick={() => setSelectedImage(index)}
+                    onClick={() => {
+                      setSelectedIndex(index);
+                      setShowVideo(false);
+                    }}
                     className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${
-                      selectedImage === index
+                      !showVideo && selectedIndex === index
                         ? "border-primary"
                         : "border-border"
                     }`}
@@ -515,6 +538,32 @@ const ProductDetail = () => {
                     />
                   </button>
                 ))}
+
+                {/* Video Thumbnail */}
+                {product.productVideo && (
+                  <button
+                    aria-label="Thumbnail video"
+                    onClick={() => setShowVideo(true)}
+                    className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors relative ${
+                      showVideo ? "border-primary" : "border-border"
+                    }`}
+                  >
+                    <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-primary/90 flex items-center justify-center">
+                        <Plus className="h-5 w-5 text-white fill-white rotate-45" style={{ transform: 'rotate(45deg)' }} /> 
+                        <svg className="w-4 h-4 text-white fill-current" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    </div>
+                    {/* Use the first image as video thumbnail preview */}
+                    <img
+                      src={product.images[0]}
+                      alt="Video preview"
+                      className="w-full h-full object-cover opacity-50"
+                    />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -749,18 +798,64 @@ const ProductDetail = () => {
                   variant="outline"
                   onClick={handleAddToCart}
                   disabled={product.stock <= 0}
-                  className="flex-1 bg-white h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-white h-12 text-base font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 shadow-sm"
                 >
                   Add to Cart
                 </Button>
-                <Button
+                
+                {/* Custom keyframes for infinite button animations */}
+                <style dangerouslySetInnerHTML={{__html: `
+                  @keyframes continuous-shine {
+                    0% { left: -100%; opacity: 0; }
+                    10% { opacity: 1; }
+                    50% { left: 200%; opacity: 0; }
+                    100% { left: 200%; opacity: 0; }
+                  }
+                  .shine-effect {
+                    animation: continuous-shine 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
+                  }
+                  @keyframes continuous-glow {
+                    0%, 100% { box-shadow: 0 0 10px rgba(0,166,81,0.4), 4px 4px 10px rgba(0,0,0,0.1), -4px -4px 10px rgba(255,255,255,0.8); transform: scale(1); }
+                    50% { box-shadow: 0 0 25px rgba(0,166,81,0.8), 6px 6px 15px rgba(0,0,0,0.15), -6px -6px 15px rgba(255,255,255,0.9); transform: scale(1.02); }
+                  }
+                  .glow-button {
+                    animation: continuous-glow 2.5s infinite ease-in-out;
+                  }
+                  .arrow-pulse {
+                    animation: bounce-right 1.5s infinite ease-in-out;
+                  }
+                  @keyframes bounce-right {
+                    0%, 100% { transform: translateX(0); }
+                    50% { transform: translateX(4px); }
+                  }
+                `}} />
+
+                <button
                   aria-label="Buy now"
                   onClick={handleBuyNow}
                   disabled={product.stock <= 0}
-                  className="flex-1 h-12 text-base font-semibold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="
+                    flex-1 h-12 text-base font-bold text-white rounded-xl relative overflow-hidden group
+                    active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
+                    bg-gradient-to-r from-primary to-[#18754b] glow-button
+                    hover:bg-gradient-to-r hover:from-[#18754b] hover:to-primary
+                  "
                 >
-                  Buy it now
-                </Button>
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    <span className="tracking-wide">Buy it now</span>
+                    <svg 
+                      className="w-4 h-4 arrow-pulse" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </span>
+                  
+                  {/* Automatic Shine Effect */}
+                  <div className="absolute top-0 -left-[100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] shine-effect" />
+                </button>
               </div>
 
               <div className="mt-5 pt-4 border-t border-border">
@@ -1083,7 +1178,9 @@ const ProductDetail = () => {
                 aria-label="Next review"
                 variant="outline"
                 size="icon"
-                onClick={() => setReviewPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() =>
+                  setReviewPage((p) => Math.min(totalPages, p + 1))
+                }
                 disabled={reviewPage === totalPages}
                 className="bg-white rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground w-10 h-10"
               >

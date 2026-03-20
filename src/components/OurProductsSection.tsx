@@ -15,6 +15,14 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
 
 export interface ProductVideo {
   id: string | number;
@@ -66,9 +74,11 @@ const fallbackProducts: ProductVideo[] = [
 const VideoProductCard = ({
   product,
   isActive,
+  onOpenModal,
 }: {
   product: ProductVideo;
   isActive: boolean;
+  onOpenModal: (product: ProductVideo) => void;
 }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const navigate = useNavigate();
@@ -133,7 +143,7 @@ const VideoProductCard = ({
 
   return (
     <div
-      onClick={() => navigate(`/product/${product.id}`)}
+      onClick={() => onOpenModal(product)}
       className={`relative w-[260px] lg:w-[300px] h-[440px] lg:h-[490px] rounded-2xl overflow-hidden shadow-md group cursor-pointer transition-all duration-700 bg-white mx-auto ${
         isActive
           ? "scale-100 shadow-2xl border border-green-600/20 z-20"
@@ -190,7 +200,7 @@ const VideoProductCard = ({
             e.stopPropagation();
             navigate(`/product/${product.id}`);
           }}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center shadow-md mb-2"
+          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center shadow-md transition-transform hover:scale-110 active:scale-95"
         >
           <ExternalLink className="h-4 w-4" />
         </button>
@@ -210,7 +220,7 @@ const VideoProductCard = ({
               isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
             );
           }}
-          className="absolute top-14 right-4 mt-1 w-9 h-9 rounded-full bg-white text-white flex items-center justify-center shadow-md"
+          className="absolute top-14 right-4 mt-1 w-9 h-9 rounded-full bg-white text-green-600 flex items-center justify-center shadow-md transition-transform hover:scale-110 active:scale-95"
         >
           <Heart
             className={`h-4 w-4 ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"}`}
@@ -220,32 +230,57 @@ const VideoProductCard = ({
 
       {/* Floating Info Box */}
       <div
-        className="absolute bottom-2 left-2 right-2 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg p-2.5"
-        onClick={(e) => e.stopPropagation()}
+        className="absolute bottom-2 left-2 right-2 bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-3 border border-white/20"
+        onClick={(e) => {
+          e.stopPropagation();
+          navigate(`/product/${product.id}`);
+        }}
       >
-        <div className="flex items-center gap-3 mb-2">
-          <img
-            src={product.thumbnail}
-            alt={product.name}
-            className="w-10 h-10 rounded-lg object-cover"
-          />
-          <div>
-            <h3 className="font-semibold text-green-700 text-sm">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="relative">
+            <img
+              src={product.thumbnail}
+              alt={product.name}
+              className="w-12 h-12 rounded-lg object-cover shadow-sm border border-green-100"
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-bold text-green-900 text-sm line-clamp-1 leading-tight">
               {product.name}
             </h3>
-            <p className="text-green-700 font-bold text-sm">
-              ₹{product.price}.00
-            </p>
+            <div className="flex items-baseline gap-0.5 mt-0.5">
+              <span className="text-green-700 font-bold text-xs">₹</span>
+              <span className="text-green-700 font-extrabold text-base">
+                {product.price}
+              </span>
+              <span className="text-green-600/40 text-[10px] font-medium ml-0.5">
+                .00
+              </span>
+            </div>
           </div>
         </div>
 
-        <button
-          aria-label="Add to cart"
-          onClick={handleAddToCart}
-          className="w-full border border-green-700 text-green-700 rounded-md py-1.5 text-xs font-bold hover:bg-green-700 hover:text-white transition-colors duration-300"
-        >
-          ADD TO CART
-        </button>
+        <div className="flex flex-col gap-2">
+          <button
+            aria-label="Add to cart"
+            onClick={handleAddToCart}
+            className="w-full bg-green-700 text-white rounded-lg py-2 text-xs font-bold hover:bg-green-800 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm active:scale-95"
+          >
+            <ShoppingCart className="h-3.5 w-3.5" />
+            ADD TO CART
+          </button>
+
+          <button
+            aria-label="View product"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/product/${product.id}`);
+            }}
+            className="w-full bg-white text-green-700 border border-green-700/30 rounded-lg py-2 text-xs font-bold hover:bg-green-50 transition-all duration-300 active:scale-95"
+          >
+            VIEW PRODUCT
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -256,6 +291,25 @@ const OurProductsSection = () => {
   const [api, setApi] = useState<CarouselApi>();
   const [activeIndex, setActiveIndex] = useState(0);
   const [count, setCount] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState<ProductVideo | null>(
+    null,
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+
+  const openVideoModal = (product: ProductVideo) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const getYoutubeId = (url: string) => {
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|shorts\/)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
 
   // Fetch YouTube shorts from API
   useEffect(() => {
@@ -281,16 +335,28 @@ const OurProductsSection = () => {
               const youtubeId =
                 match && match[2].length === 11 ? match[2] : null;
 
+              const productInfo = item.productId || item.product || {};
+              const name =
+                productInfo.name || item.title || item.name || "A2 Ghee";
+              const price = productInfo.price || item.price || 899;
+              const id =
+                productInfo._id ||
+                productInfo.id ||
+                item._id ||
+                item.id ||
+                Math.random().toString();
+
               return {
-                id: item._id || item.id || Math.random().toString(),
-                // Map backend's title or name for the video
-                name: item.title || item.name || "A2 Ghee",
-                // Map backend's thumbnail if exists, else generic fallback or YouTube thumbnail
+                id,
+                name,
                 thumbnail: youtubeId
                   ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-                  : item.thumbnail || item.image || heroGhee,
-                // Ensure price or use default fallback if shorts API doesn't have prices
-                price: item.price || 899,
+                  : productInfo.image ||
+                    productInfo.thumbnail ||
+                    item.thumbnail ||
+                    item.image ||
+                    heroGhee,
+                price,
                 videoUrl,
               };
             })
@@ -414,6 +480,7 @@ const OurProductsSection = () => {
                   <VideoProductCard
                     product={product}
                     isActive={activeIndex === index}
+                    onOpenModal={openVideoModal}
                   />
                 </CarouselItem>
               ))}
@@ -461,6 +528,97 @@ const OurProductsSection = () => {
           ))}
         </div>
       </div>
+
+      {/* Video Shorts Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-[420px] h-[85vh] p-0 overflow-hidden bg-black border-none sm:rounded-[2.5rem] shadow-[0_0_80px_-15px_rgba(0,0,0,0.8)] z-[60] duration-500 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:duration-500 data-[state=open]:ease-in-out">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{selectedProduct?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="relative w-full h-full flex flex-col pt-10 px-4 pb-4">
+            {selectedProduct && (
+              <>
+                <div className="flex-1 w-full bg-black rounded-xl overflow-hidden shadow-2xl relative">
+                  {getYoutubeId(selectedProduct.videoUrl) ? (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${getYoutubeId(selectedProduct.videoUrl)}?autoplay=1&rel=0&modestbranding=1`}
+                      className="absolute inset-0 w-full h-full border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      title={selectedProduct.name}
+                    />
+                  ) : (
+                    <video
+                      src={selectedProduct.videoUrl}
+                      controls
+                      autoPlay
+                      className="w-full h-full object-contain"
+                    />
+                  )}
+                </div>
+
+                {/* Product Info in Modal */}
+                <div className="mt-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <img
+                      src={selectedProduct.thumbnail}
+                      alt=""
+                      className="w-14 h-14 rounded-xl object-cover border border-white/20 shadow-lg"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-white font-bold text-sm sm:text-base line-clamp-1">
+                        {selectedProduct.name}
+                      </h4>
+                      <div className="flex items-baseline gap-0.5 mt-1">
+                        <span className="text-green-400 font-bold text-xs">
+                          ₹
+                        </span>
+                        <span className="text-green-400 font-extrabold text-lg">
+                          {selectedProduct.price}
+                        </span>
+                        <span className="text-green-400/40 text-[10px] font-medium ml-0.5">
+                          .00
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2 shrink-0">
+                    <Button
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700 text-white font-bold h-9 px-4 shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                      onClick={() => {
+                        addToCart({
+                          id: `product-${selectedProduct.id}`,
+                          name: selectedProduct.name,
+                          price: selectedProduct.price,
+                          image: selectedProduct.thumbnail,
+                          quantity: 1,
+                        });
+                        toast.success(`${selectedProduct.name} added to cart!`);
+                      }}
+                    >
+                      <ShoppingCart className="h-3.5 w-3.5" />
+                      ADD TO CART
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="bg-transparent border-white/30 text-white hover:bg-white hover:text-green-800 font-bold h-9 px-4 shadow-sm transition-all active:scale-95"
+                      onClick={() => {
+                        setIsModalOpen(false);
+                        navigate(`/product/${selectedProduct.id}`);
+                      }}
+                    >
+                      VIEW PRODUCT
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
