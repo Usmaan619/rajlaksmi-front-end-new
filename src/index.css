@@ -231,3 +231,18 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(1, 114, 44, 0.2) #ebf4ee;
 }
+
+/* Custom Glowing Animation - Best for Buy Now/Add to Cart Buttons */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(1, 114, 44, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(1, 114, 44, 0.6);
+  }
+}
+
+.animate-glow {
+  animation: glow 2s infinite ease-in-out;
+}
+

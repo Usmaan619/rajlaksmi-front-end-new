@@ -285,10 +285,10 @@ const ProductCard = ({ product }: { product: Product }) => {
           <Button
             aria-label="Add to Cart"
             size="sm"
-            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9"
+            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 animate-glow"
             onClick={handleAddToCart}
           >
-            Add to Cart
+            ADD TO CART
           </Button>
 
           <Button

@@ -264,7 +264,7 @@ const VideoProductCard = ({
           <button
             aria-label="Add to cart"
             onClick={handleAddToCart}
-            className="w-full bg-green-700 text-white rounded-lg py-2 text-xs font-bold hover:bg-green-800 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm active:scale-95"
+            className="w-full bg-green-700 text-white rounded-lg py-2 text-xs font-bold hover:bg-green-800 transition-all duration-300 flex items-center justify-center gap-2 shadow-sm active:scale-95 animate-glow"
           >
             <ShoppingCart className="h-3.5 w-3.5" />
             ADD TO CART
@@ -586,7 +586,7 @@ const OurProductsSection = () => {
                   <div className="flex flex-col gap-2 shrink-0">
                     <Button
                       size="sm"
-                      className="bg-green-600 hover:bg-green-700 text-white font-bold h-9 px-4 shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                      className="bg-green-600 hover:bg-green-700 text-white font-bold h-9 px-4 shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 animate-glow"
                       onClick={() => {
                         addToCart({
                           id: `product-${selectedProduct.id}`,

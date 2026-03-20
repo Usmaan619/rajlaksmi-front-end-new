@@ -211,7 +211,7 @@ const ProductCard = ({ product }: { product: any }) => {
         <button
           aria-label="Buy now"
           onClick={handleBuyNow}
-          className="flex-1 bg-primary text-white text-xs py-2 rounded-md hover:bg-primary/90 transition-colors font-semibold shadow-sm"
+          className="flex-1 bg-primary text-white text-xs py-2 rounded-md hover:bg-primary/90 transition-colors font-semibold shadow-sm animate-glow"
         >
           Buy Now
         </button>
