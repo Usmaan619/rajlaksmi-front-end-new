@@ -129,7 +129,7 @@ const WishlistPage = () => {
                 <Button
                   aria-label="Add to cart"
                   onClick={(e) => handleAddToCart(e, item)}
-                  className="w-full bg-[#116931] hover:bg-[#06a443] text-white gap-2 font-bold h-9 text-xs sm:text-sm"
+                  className="w-full bg-primary text-white text-[10px] sm:text-[11px] md:text-xs h-10   sm:h-10 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow"
                 >
                   <ShoppingCart size={18} /> ADD TO CART
                 </Button>

@@ -84,3 +84,19 @@ export function getWeightValue(weight: any | undefined | null): number {
 export function sortWeights<T = any>(weights: T[]): T[] {
   return [...weights].sort((a, b) => getWeightValue(a) - getWeightValue(b));
 }
+
+/**
+ * Extracts the numeric value and unit from a weight/volume string for rate calculation.
+ */
+export function getUnitInfo(weightStr: string | undefined | null) {
+  if (!weightStr || weightStr === "N/A") return { unit: "unit", value: 1 };
+  
+  const str = String(weightStr).toLowerCase().trim();
+  const match = str.match(/(\d+(?:\.\d+)?)\s*(kg|g|gm|pcs|pc|packet|pkt|ml|ltr|l)/i);
+  
+  if (match) {
+    return { value: parseFloat(match[1]), unit: match[2].toLowerCase() };
+  }
+  
+  return { unit: weightStr, value: 1 };
+}

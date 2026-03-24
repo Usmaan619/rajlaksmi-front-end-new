@@ -240,7 +240,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           <Button
             aria-label="Add to cart"
             size="sm"
-            className="flex-1 text-[10px] sm:text-[11px] h-8 sm:h-9 font-bold"
+            className="flex-1 text-[10px] sm:text-[11px] h-8 sm:h-9 font-bold bg-primary text-white hover:bg-primary/90 transition-colors shadow-sm animate-glow"
             onClick={handleAddToCart}
           >
             ADD TO CART
@@ -249,7 +249,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             aria-label="Buy now"
             size="sm"
             variant="outline"
-            className="flex-1 text-[10px] sm:text-[11px] h-8 sm:h-9 bg-white font-bold border-primary text-primary hover:bg-primary hover:text-white animate-glow"
+            className="flex-1 text-[10px] sm:text-[11px] h-8 sm:h-9 bg-white font-bold border-primary text-primary hover:bg-primary hover:text-white"
             onClick={handleBuyNow}
           >
             BUY NOW

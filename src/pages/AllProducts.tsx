@@ -22,7 +22,7 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { sortWeights } from "@/lib/utils";
+import { sortWeights, getUnitInfo } from "@/lib/utils";
 
 import Seo from "@/components/Seo";
 
@@ -31,7 +31,7 @@ import ContactSection from "@/components/ContactSection";
 import TestimonialSection from "@/components/TestimonialSection";
 import CertificationsBottomSection from "@/components/CertificationsBottomSection";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 12;
 
 const getFirstImage = (images: any) => {
   if (!images) return "";
@@ -109,6 +109,12 @@ const ProductCard = ({ product }: { product: Product }) => {
   const productImage = getFirstImage(product.product_images);
   const weights = getWeightOptions(product.weight_options);
   const [selectedWeightIdx, setSelectedWeightIdx] = useState(0);
+
+  const unitInfo = getUnitInfo(weights[selectedWeightIdx]?.weight);
+  const ratePerUnit = unitInfo.value > 0 
+    ? (Number(weights[selectedWeightIdx]?.price || product.price) / unitInfo.value) 
+    : 0;
+
   const [showWeights, setShowWeights] = useState(false);
 
   const selectedWeightObj = weights[selectedWeightIdx] || {
@@ -257,6 +263,11 @@ const ProductCard = ({ product }: { product: Product }) => {
               {selectedWeightObj.weight}
               {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
             </button>
+            <div className="mt-1">
+               <span className="text-[10px] text-primary/70 font-semibold block">
+                  Rate: ₹{ratePerUnit.toFixed(2)} / {unitInfo.unit}
+               </span>
+            </div>
             {showWeights && (
               <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-md shadow-lg z-20 min-w-[80px]">
                 {weights.map((w: any, idx: number) => (
@@ -282,24 +293,20 @@ const ProductCard = ({ product }: { product: Product }) => {
         </div>
 
         <div className="flex gap-2 mt-auto">
-          <Button
-            aria-label="Add to Cart"
-            size="sm"
-            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 animate-glow"
+          <button
+            aria-label="Add to cart"
             onClick={handleAddToCart}
+            className="flex-1 border border-primary text-primary text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary hover:text-white transition-colors font-bold"
           >
             ADD TO CART
-          </Button>
-
-          <Button
-            aria-label="Buy Now"
-            size="sm"
-            variant="outline"
-            className="flex-1 text-[11px] sm:text-xs md:text-sm h-8 sm:h-9 bg-white border-border hover:bg-primary/5 font-bold"
+          </button>
+          <button
+            aria-label="Buy now"
             onClick={handleBuyNow}
+            className="flex-1 bg-primary text-white text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow"
           >
             BUY NOW
-          </Button>
+          </button>
         </div>
       </div>
     </Card>

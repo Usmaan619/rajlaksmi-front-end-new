@@ -21,7 +21,7 @@ import { getProducts } from "@/api/product.service";
 import { Product } from "@/types/product";
 import producttest from "@/assets/product-nutmeg.jpg";
 import { Skeleton } from "@/components/ui/skeleton";
-import { sortWeights } from "@/lib/utils";
+import { sortWeights, getUnitInfo } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -153,6 +153,12 @@ const ProductCard = ({ product }: { product: Product }) => {
     product.weight_options || product.product_weight,
   );
   const [selectedWeightIdx, setSelectedWeightIdx] = useState(0);
+
+  const unitInfo = getUnitInfo(weights[selectedWeightIdx]?.weight);
+  const ratePerUnit = unitInfo.value > 0 
+    ? (Number(weights[selectedWeightIdx]?.price || pPrice) / unitInfo.value) 
+    : 0;
+
   const [showWeights, setShowWeights] = useState(false);
 
   const selectedWeightObj = weights[selectedWeightIdx] || {
@@ -278,6 +284,11 @@ const ProductCard = ({ product }: { product: Product }) => {
             {selectedWeightObj.weight}
             {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
           </button>
+          <div className="mt-1">
+             <span className="text-[10px] text-primary/70 font-semibold block">
+                Rate: ₹{ratePerUnit.toFixed(2)} / {unitInfo.unit}
+             </span>
+          </div>
           {showWeights && weights.length > 1 && (
             <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-md shadow-lg z-[50] min-w-[70px]">
               {weights.map((w: any, idx: number) => (
@@ -364,6 +375,7 @@ const CategoryMain = () => {
         minPrice,
         maxPrice,
         weight: weight === "All" || !weight ? undefined : weight,
+        limit: 1000,
       });
 
       if (res.success) {
