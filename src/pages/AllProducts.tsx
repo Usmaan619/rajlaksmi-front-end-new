@@ -111,9 +111,11 @@ const ProductCard = ({ product }: { product: Product }) => {
   const [selectedWeightIdx, setSelectedWeightIdx] = useState(0);
 
   const unitInfo = getUnitInfo(weights[selectedWeightIdx]?.weight);
-  const ratePerUnit = unitInfo.value > 0 
-    ? (Number(weights[selectedWeightIdx]?.price || product.price) / unitInfo.value) 
-    : 0;
+  const ratePerUnit =
+    unitInfo.value > 0
+      ? Number(weights[selectedWeightIdx]?.price || product.price) /
+        unitInfo.value
+      : 0;
 
   const [showWeights, setShowWeights] = useState(false);
 
@@ -168,7 +170,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         w-full
         lg:w-[290px]
         h-auto
-        lg:h-[448px]
+        lg:min-h-[448px]
         cursor-pointer
         bg-popover
         border
@@ -189,11 +191,11 @@ const ProductCard = ({ product }: { product: Product }) => {
       <div className="relative">
         <div className="aspect-square rounded-xl overflow-hidden bg-muted relative">
           <img
-            src={productImage || producttest}
+            src={productImage || ""}
             alt={product.product_name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = producttest;
+              (e.target as HTMLImageElement).src = "";
             }}
           />
         </div>
@@ -233,21 +235,25 @@ const ProductCard = ({ product }: { product: Product }) => {
           {product.product_name}
         </h3>
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-primary font-bold text-base">
-            ₹{currentPrice.toFixed(2)}
-          </span>
-          {pDelPrice > currentPrice && (
-            <span className="text-muted-foreground line-through text-xs">
-              ₹{pDelPrice.toFixed(2)}
+        <div className="mt-1">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-primary font-bold text-base">
+              ₹{currentPrice.toFixed(2)}
             </span>
-          )}
-
-          {currentDiscount > 0 && (
-            <Badge className="bg-primary rounded-md text-primary-foreground text-[10px] px-2 py-0.5">
-              {currentDiscount}% Off
-            </Badge>
-          )}
+            {pDelPrice > currentPrice && (
+              <span className="text-muted-foreground line-through text-xs">
+                ₹{pDelPrice.toFixed(2)}
+              </span>
+            )}
+            {currentDiscount > 0 && (
+              <Badge className="bg-primary rounded-md text-primary-foreground text-[10px] px-2 py-0.5">
+                {currentDiscount}% Off
+              </Badge>
+            )}
+          </div>
+          <span className="text-[10px] text-primary/70 font-semibold block">
+            Rate: ₹{ratePerUnit.toFixed(2)} / {unitInfo.unit}
+          </span>
         </div>
 
         <div className="flex items-center justify-between">
@@ -263,11 +269,6 @@ const ProductCard = ({ product }: { product: Product }) => {
               {selectedWeightObj.weight}
               {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
             </button>
-            <div className="mt-1">
-               <span className="text-[10px] text-primary/70 font-semibold block">
-                  Rate: ₹{ratePerUnit.toFixed(2)} / {unitInfo.unit}
-               </span>
-            </div>
             {showWeights && (
               <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-md shadow-lg z-20 min-w-[80px]">
                 {weights.map((w: any, idx: number) => (
@@ -292,21 +293,22 @@ const ProductCard = ({ product }: { product: Product }) => {
           </div>
         </div>
 
-        <div className="flex gap-2 mt-auto">
-          <button
+        <div className="flex gap-2 mt-auto pt-2">
+          <Button
             aria-label="Add to cart"
+            variant="outline"
             onClick={handleAddToCart}
-            className="flex-1 border border-primary text-primary text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary hover:text-white transition-colors font-bold"
+            className="flex-1 border-primary text-primary text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-primary hover:text-white transition-colors font-bold px-1"
           >
             ADD TO CART
-          </button>
-          <button
+          </Button>
+          <Button
             aria-label="Buy now"
             onClick={handleBuyNow}
-            className="flex-1 bg-primary text-white text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow"
+            className="flex-1 bg-primary text-white text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow px-1"
           >
             BUY NOW
-          </button>
+          </Button>
         </div>
       </div>
     </Card>
@@ -777,7 +779,7 @@ const AllProducts = () => {
         <WhyChooseRajlakshmiSection />
         <ContactSection />
         <TestimonialSection />
-        <CertificationsBottomSection className="bg-[#F0FFF0]" />
+        {/* <CertificationsBottomSection className="bg-[#F0FFF0]" /> */}
       </div>
     </>
   );

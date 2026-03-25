@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Link, useNavigate } from "react-router-dom";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ChapatiImg from "@/assets/aboutus/chapati-aboutis.png";
-import farmerImage from "@/assets/WhyChooseRajlakshmiSection/1.png";
-import teamImage from "@/assets/WhyChooseRajlakshmiSection/2.png";
+import { useNavigate } from "react-router-dom";
+import ChapatiImg from "@/assets/aboutus/quality.webp";
+
+import farmerImage from "@/assets/aboutus/transparency1.webp";
+import teamImage from "@/assets/aboutus/transparency2.webp";
+
 import farmerBgImg from "@/assets/aboutus/farmer-bell-left.png";
+import firstImg from "@/assets/aboutus/first.webp";
+import secImg from "@/assets/aboutus/sec.webp";
 import Seo from "@/components/Seo";
 
 const AboutUsPage = () => {
@@ -87,7 +89,7 @@ const AboutUsPage = () => {
 
                   <div className="w-72 h-72 md:w-96 md:h-96 rounded-3xl overflow-hidden shadow-2xl border-8 border-white relative z-10">
                     <img
-                      src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&h=600&fit=crop"
+                      src={firstImg}
                       alt="Rajlakshmi Javiks founders"
                       className="w-full h-full object-cover"
                     />
@@ -113,7 +115,7 @@ const AboutUsPage = () => {
 
                 <div className="w-72 h-72 md:w-96 md:h-96 rounded-3xl overflow-hidden shadow-2xl border-8 border-white relative z-10">
                   <img
-                    src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&h=600&fit=crop"
+                    src={secImg}
                     alt="Organic products"
                     className="w-full h-full object-cover"
                   />
@@ -280,7 +282,7 @@ hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
           {/* Background overlay */}
           <div className="absolute inset-0  z-10"></div>
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-30"
+            className="absolute inset-0 bg-cover bg-center opacity-55"
             style={{
               backgroundImage: `url(${ChapatiImg})`,
             }}

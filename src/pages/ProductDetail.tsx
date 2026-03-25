@@ -49,13 +49,7 @@ const DEFAULT_PRODUCT = {
     "Naturally grown, protein-rich organic toor dal for everyday healthy meals.",
   rating: 4.5,
   reviews: 112,
-  tags: [
-    "100% Natural",
-    "Chemical-Free",
-    "Lactose-Free",
-    "Gluten-Free",
-    "Traditionally Churned",
-  ],
+  tags: ["100% Natural", "Chemical-Free"],
   images: [productChana, productMaize, productNutmeg, productRice, productOil],
   sizes: [
     { weight: "250g", price: "" },
@@ -319,7 +313,9 @@ const ProductDetail = () => {
   // Wholesale Logic: Extract unit and calculate rate
   const getUnitInfo = (weightStr: string) => {
     if (!weightStr || weightStr === "N/A") return { unit: "unit", value: 1 };
-    const match = weightStr.match(/(\d+(?:\.\d+)?)\s*(kg|g|gm|pcs|pc|packet|pkt|ml|ltr|l)/i);
+    const match = weightStr.match(
+      /(\d+(?:\.\d+)?)\s*(kg|g|gm|pcs|pc|packet|pkt|ml|ltr|l)/i,
+    );
     if (match) {
       return { value: parseFloat(match[1]), unit: match[2].toLowerCase() };
     }
@@ -666,13 +662,13 @@ const ProductDetail = () => {
               </div>
 
               {/* Tags */}
-              <div className="flex flex-wrap gap-2">
+              {/* <div className="flex flex-wrap gap-2">
                 {product.tags.map((tag) => (
                   <span key={tag} className="text-xs text-muted-foreground">
                     {tag} |
                   </span>
                 ))}
-              </div>
+              </div> */}
 
               {/* Offers */}
               {/* <div className="mt-2">

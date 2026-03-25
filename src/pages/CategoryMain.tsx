@@ -8,11 +8,9 @@ import {
   Loader2,
   Search,
 } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 import CertificationsSection from "@/components/CertificationsSection";
 import ContactSection from "@/components/ContactSection";
-import CertificationsBottomSection from "@/components/CertificationsBottomSection";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
@@ -155,9 +153,10 @@ const ProductCard = ({ product }: { product: Product }) => {
   const [selectedWeightIdx, setSelectedWeightIdx] = useState(0);
 
   const unitInfo = getUnitInfo(weights[selectedWeightIdx]?.weight);
-  const ratePerUnit = unitInfo.value > 0 
-    ? (Number(weights[selectedWeightIdx]?.price || pPrice) / unitInfo.value) 
-    : 0;
+  const ratePerUnit =
+    unitInfo.value > 0
+      ? Number(weights[selectedWeightIdx]?.price || pPrice) / unitInfo.value
+      : 0;
 
   const [showWeights, setShowWeights] = useState(false);
 
@@ -259,15 +258,20 @@ const ProductCard = ({ product }: { product: Product }) => {
         {pName}
       </h3>
 
-      <div className="flex items-center gap-1.5 mt-1">
-        <span className="text-[hsl(140,60%,30%)] font-bold text-sm">
-          ₹{currentPrice.toFixed(2)}
-        </span>
-        {pDelPrice > currentPrice && (
-          <span className="text-muted-foreground line-through text-xs">
-            ₹{pDelPrice.toFixed(2)}
+      <div className="mt-1">
+        <div className="flex items-center gap-1.5">
+          <span className="text-[hsl(140,60%,30%)] font-bold text-sm">
+            ₹{currentPrice.toFixed(2)}
           </span>
-        )}
+          {pDelPrice > currentPrice && (
+            <span className="text-muted-foreground line-through text-xs">
+              ₹{pDelPrice.toFixed(2)}
+            </span>
+          )}
+        </div>
+        <span className="text-[10px] text-primary/70 font-semibold block">
+          Rate: ₹{ratePerUnit.toFixed(2)} / {unitInfo.unit}
+        </span>
       </div>
 
       {/* Weight + Rating */}
@@ -284,11 +288,6 @@ const ProductCard = ({ product }: { product: Product }) => {
             {selectedWeightObj.weight}
             {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
           </button>
-          <div className="mt-1">
-             <span className="text-[10px] text-primary/70 font-semibold block">
-                Rate: ₹{ratePerUnit.toFixed(2)} / {unitInfo.unit}
-             </span>
-          </div>
           {showWeights && weights.length > 1 && (
             <div className="absolute top-full left-0 mt-1 bg-white border border-border rounded-md shadow-lg z-[50] min-w-[70px]">
               {weights.map((w: any, idx: number) => (
@@ -315,20 +314,21 @@ const ProductCard = ({ product }: { product: Product }) => {
 
       {/* Buttons */}
       <div className="flex gap-2 mt-auto pt-2">
-        <button
+        <Button
           aria-label="Add to Cart"
+          variant="outline"
           onClick={handleAddToCart}
-          className="flex-1 border border-[#116931] text-[#116931] text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-[#116931] hover:text-white transition-colors font-bold"
+          className="flex-1 border-[#116931] text-[#116931] text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-[#116931] hover:text-white transition-colors font-bold px-1"
         >
           ADD TO CART
-        </button>
-        <button
+        </Button>
+        <Button
           aria-label="Buy Now"
           onClick={handleBuyNow}
-          className="flex-1 bg-[#116931] text-white text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-[#0d5427] transition-colors font-bold animate-glow shadow-sm"
+          className="flex-1 bg-[#116931] text-white text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-[#0d5427] transition-colors font-bold animate-glow shadow-sm px-1"
         >
           BUY NOW
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -540,45 +540,72 @@ const CategoryMain = () => {
           {/* Pagination */}
           {!loading && totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-12 py-2">
-              <button
+              <Button
                 aria-label="Previous Page"
+                variant="outline"
+                size="icon"
+                className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                disabled={currentPage === 1}
                 onClick={() => {
                   setCurrentPage((p) => Math.max(1, p - 1));
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                disabled={currentPage === 1}
-                className="flex items-center gap-1 text-sm text-muted-foreground disabled:opacity-40 hover:text-foreground transition-colors"
               >
-                <ChevronLeft size={16} /> Previous
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  aria-label={`Page ${i + 1}`}
-                  key={i}
-                  onClick={() => {
-                    setCurrentPage(i + 1);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  className={`w-9 h-9 rounded-full text-sm font-medium transition-all ${
-                    currentPage === i + 1
-                      ? "bg-[hsl(140,60%,30%)] text-white shadow-md scale-110"
-                      : "text-muted-foreground hover:bg-muted"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <button
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+
+              {Array.from({ length: totalPages }, (_, i) => {
+                const pageNum = i + 1;
+                // Dynamic pagination: show current, first, last, and neighbors
+                if (
+                  pageNum === 1 ||
+                  pageNum === totalPages ||
+                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                ) {
+                  return (
+                    <Button
+                      aria-label={`Page ${pageNum}`}
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "ghost"}
+                      className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
+                        currentPage === pageNum
+                          ? "bg-primary text-white shadow-md scale-110"
+                          : "hover:text-primary hover:bg-primary/5"
+                      }`}
+                      onClick={() => {
+                        setCurrentPage(pageNum);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                } else if (
+                  (pageNum === 2 && currentPage > 3) ||
+                  (pageNum === totalPages - 1 && currentPage < totalPages - 2)
+                ) {
+                  return (
+                    <span key={pageNum} className="px-1 text-muted-foreground">
+                      ...
+                    </span>
+                  );
+                }
+                return null;
+              })}
+
+              <Button
                 aria-label="Next Page"
+                variant="outline"
+                size="icon"
+                className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                disabled={currentPage === totalPages}
                 onClick={() => {
                   setCurrentPage((p) => Math.min(totalPages, p + 1));
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
-                disabled={currentPage === totalPages}
-                className="flex items-center gap-1 text-sm text-muted-foreground disabled:opacity-40 hover:text-foreground transition-colors"
               >
-                Next <ChevronRight size={16} />
-              </button>
+                <ChevronRight className="h-5 w-5" />
+              </Button>
             </div>
           )}
         </section>
@@ -586,7 +613,7 @@ const CategoryMain = () => {
         <CertificationsSection />
 
         {/* Why Choose Section (Dynamic Title) */}
-        <section className="mx-4 md:mx-16 lg:mx-24 mb-12 rounded-3xl overflow-hidden bg-white shadow-sm border border-gray-100">
+        {/* <section className="mx-4 md:mx-16 lg:mx-24 mb-12 rounded-3xl overflow-hidden bg-white shadow-sm border border-gray-100">
           <div className="grid md:grid-cols-2 gap-0">
             <div className="p-8 md:p-12 flex flex-col justify-center">
               <h2 className="text-xl md:text-2xl font-bold text-[hsl(140,60%,30%)] mb-4">
@@ -632,10 +659,10 @@ const CategoryMain = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent md:hidden" />
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
       <ContactSection />
-      <CertificationsBottomSection className="bg-white" />
+      {/* <CertificationsBottomSection className="bg-white" /> */}
     </>
   );
 };

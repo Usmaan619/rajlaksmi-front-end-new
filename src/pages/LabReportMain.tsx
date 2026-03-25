@@ -3,8 +3,8 @@ import { CheckCircle, ChevronDown, Download, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import labrepotImage from "@/assets/labreport/labreport.png";
-import farmerImage from "@/assets/WhyChooseRajlakshmiSection/1.png";
-import teamImage from "@/assets/WhyChooseRajlakshmiSection/2.png";
+import farmerImage from "@/assets/aboutus/transparency1.webp";
+import teamImage from "@/assets/aboutus/transparency2.webp";
 import farmerBgImg from "@/assets/aboutus/aboutusbgfarmerImg.png";
 
 import pesticideImg from "@/assets/labreport/1.png";

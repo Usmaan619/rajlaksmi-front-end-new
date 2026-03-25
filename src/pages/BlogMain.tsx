@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import {
   ArrowRight,
   Search,
+  ChevronLeft,
   ChevronRight,
   SlidersHorizontal,
   X,
@@ -368,42 +369,75 @@ const BlogMain = () => {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-2 mt-12 py-2">
                   <Button
                     aria-label="Previous Page"
-                    variant="ghost"
-                    size="sm"
-                    className="text-sm text-muted-foreground mr-2"
-                    disabled={!pagination?.hasPrev}
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.max(1, prev - 1))
-                    }
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                    disabled={currentPage === 1}
+                    onClick={() => {
+                      setCurrentPage((p) => Math.max(1, p - 1));
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
-                    Previous
+                    <ChevronLeft className="h-5 w-5" />
                   </Button>
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <Button
-                      aria-label={`Page ${i + 1}`}
-                      key={i}
-                      variant={currentPage === i + 1 ? "default" : "outline"}
-                      size="icon"
-                      className={`w-9 h-9 rounded-md ${currentPage === i + 1 ? "bg-primary text-primary-foreground" : ""}`}
-                      onClick={() => setCurrentPage(i + 1)}
-                    >
-                      {i + 1}
-                    </Button>
-                  ))}
+
+                  {Array.from({ length: totalPages }, (_, i) => {
+                    const pageNum = i + 1;
+                    if (
+                      pageNum === 1 ||
+                      pageNum === totalPages ||
+                      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                    ) {
+                      return (
+                        <Button
+                          aria-label={`Page ${pageNum}`}
+                          key={pageNum}
+                          variant={currentPage === pageNum ? "default" : "ghost"}
+                          className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
+                            currentPage === pageNum
+                              ? "bg-primary text-white shadow-md scale-110"
+                              : "hover:text-primary hover:bg-primary/5"
+                          }`}
+                          onClick={() => {
+                            setCurrentPage(pageNum);
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    } else if (
+                      (pageNum === 2 && currentPage > 3) ||
+                      (pageNum === totalPages - 1 &&
+                        currentPage < totalPages - 2)
+                    ) {
+                      return (
+                        <span
+                          key={pageNum}
+                          className="px-1 text-muted-foreground"
+                        >
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  })}
+
                   <Button
                     aria-label="Next Page"
-                    variant="ghost"
-                    size="sm"
-                    className="text-sm text-muted-foreground ml-2"
-                    disabled={!pagination?.hasNext}
-                    onClick={() =>
-                      setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                    }
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                    disabled={currentPage === totalPages}
+                    onClick={() => {
+                      setCurrentPage((p) => Math.min(totalPages, p + 1));
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
-                    Next <ChevronRight className="w-4 h-4 inline" />
+                    <ChevronRight className="h-5 w-5" />
                   </Button>
                 </div>
               )}

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import { Button } from "@/components/ui/button";
 import Seo from "@/components/Seo";
 
 import fassaiImg from "@/assets/bottomCertified/fssaiLogo.png";
 import labtestedImg from "@/assets/bottomCertified/labtested.png";
 import organicLogoImg from "@/assets/bottomCertified/organicLogo.png";
 import premiumLogoImg from "@/assets/bottomCertified/premiumLogo.png";
+import weMaintainImg from "@/assets/labreport/WeMaintain.webp";
 
 const certifications = [
   {
@@ -99,37 +99,72 @@ const Certifications = () => {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-8">
-              <button
+            <div className="flex items-center justify-center gap-2 mt-12 py-2">
+              <Button
                 aria-label="Previous Page"
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                variant="outline"
+                size="icon"
+                className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
                 disabled={currentPage === 1}
-                className="w-8 h-8 rounded-full border border-[hsl(140,40%,80%)] flex items-center justify-center text-[#116931] disabled:opacity-40"
+                onClick={() => {
+                  setCurrentPage((p) => Math.max(1, p - 1));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
               >
-                <ChevronLeft size={16} />
-              </button>
-              <span className="text-sm text-muted-foreground">Previous</span>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  aria-label={`Page ${i + 1}`}
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`text-sm px-1 ${currentPage === i + 1 ? "font-bold text-foreground" : "text-muted-foreground"}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <span className="text-sm text-muted-foreground">Next</span>
-              <button
-                aria-label="Next Page"
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(totalPages, p + 1))
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+
+              {Array.from({ length: totalPages }, (_, i) => {
+                const pageNum = i + 1;
+                if (
+                  pageNum === 1 ||
+                  pageNum === totalPages ||
+                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                ) {
+                  return (
+                    <Button
+                      aria-label={`Page ${pageNum}`}
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "ghost"}
+                      className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
+                        currentPage === pageNum
+                          ? "bg-primary text-white shadow-md scale-110"
+                          : "hover:text-primary hover:bg-primary/5"
+                      }`}
+                      onClick={() => {
+                        setCurrentPage(pageNum);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                } else if (
+                  (pageNum === 2 && currentPage > 3) ||
+                  (pageNum === totalPages - 1 && currentPage < totalPages - 2)
+                ) {
+                  return (
+                    <span key={pageNum} className="px-1 text-muted-foreground">
+                      ...
+                    </span>
+                  );
                 }
+                return null;
+              })}
+
+              <Button
+                aria-label="Next Page"
+                variant="outline"
+                size="icon"
+                className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
                 disabled={currentPage === totalPages}
-                className="w-8 h-8 rounded-full border border-[#116931] flex items-center justify-center text-[#116931] disabled:opacity-40"
+                onClick={() => {
+                  setCurrentPage((p) => Math.min(totalPages, p + 1));
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
               >
-                <ChevronRight size={16} />
-              </button>
+                <ChevronRight className="h-5 w-5" />
+              </Button>
             </div>
           )}
         </section>
@@ -163,7 +198,7 @@ const Certifications = () => {
             </div>
             <div className="relative min-h-[250px] md:min-h-full">
               <img
-                src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&h=400&fit=crop"
+                src={weMaintainImg}
                 alt="Fresh organic vegetables and produce"
                 className="w-full h-full object-cover"
               />

@@ -1,5 +1,5 @@
 import { CheckCircle } from "lucide-react";
-import farmersImage from "@/assets/banner-main-page/banner1.png";
+import farmersImage from "@/assets/banner-main-page/banner1.webp";
 
 const benefits = [
   "Sustainable Farming Techniques",

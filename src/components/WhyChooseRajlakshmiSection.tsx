@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import farmerImage from "@/assets/WhyChooseRajlakshmiSection/1.png";
-import teamImage from "@/assets/WhyChooseRajlakshmiSection/2.png";
+import farmerImage from "@/assets/WhyChooseRajlakshmiSection/1.webp";
+import teamImage from "@/assets/WhyChooseRajlakshmiSection/2.webp";
 import farmerBgImg from "@/assets/aboutus/aboutusbgfarmerImg.png";
 import { useNavigate } from "react-router-dom";
 
