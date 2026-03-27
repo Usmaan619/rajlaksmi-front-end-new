@@ -75,9 +75,17 @@ const CheckoutPage = () => {
     null,
   );
   const [isAddingAddress, setIsAddingAddress] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [paymentMethod, setPaymentMethod] = useState("ONLINE");
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [shippingInfo, setShippingInfo] = useState<{
+    charge: number;
+    courier: string;
+    estimate: string;
+    totalWeight: number;
+  } | null>(null);
+  const [isShippingLoading, setIsShippingLoading] = useState(false);
+  const [shippingError, setShippingError] = useState<string | null>(null);
 
   const addressForm = useForm<AddressFormValues>({
     resolver: zodResolver(addressSchema),
@@ -121,9 +129,13 @@ const CheckoutPage = () => {
       if (data.success) {
         setAddresses(data.addresses);
         const defaultAddr = data.addresses.find((a: Address) => a.is_default);
-        if (defaultAddr) setSelectedAddressId(defaultAddr.id);
-        else if (data.addresses.length > 0)
+        if (defaultAddr) {
+          setSelectedAddressId(defaultAddr.id);
+          fetchShippingRates(defaultAddr.pincode);
+        } else if (data.addresses.length > 0) {
           setSelectedAddressId(data.addresses[0].id);
+          fetchShippingRates(data.addresses[0].pincode);
+        }
       }
     } catch (error) {
       console.error("Error fetching addresses:", error);
@@ -131,6 +143,48 @@ const CheckoutPage = () => {
       setIsFetching(false);
     }
   };
+
+  const fetchShippingRates = async (pincode: string) => {
+    if (!pincode || pincode.length < 6) return;
+    
+    setIsShippingLoading(true);
+    setShippingError(null);
+    try {
+      const response = await api.post("/checkout/get-shipping", {
+        cartItems: cart.map(item => ({
+          weight: item.weight,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        pincode: pincode,
+        payment_type: "PREPAID"
+      });
+
+      if (response.data.success) {
+        setShippingInfo({
+          charge: response.data.shippingCharge,
+          courier: response.data.courierName,
+          estimate: response.data.estimatedDelivery,
+          totalWeight: response.data.totalWeight
+        });
+      } else {
+        setShippingError(response.data.message || "Shipping not available");
+        setShippingInfo(null);
+      }
+    } catch (err) {
+      setShippingError("Shipping calculation failed");
+      setShippingInfo(null);
+    } finally {
+      setIsShippingLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedAddressId) {
+      const addr = addresses.find(a => a.id === selectedAddressId);
+      if (addr) fetchShippingRates(addr.pincode);
+    }
+  }, [selectedAddressId, paymentMethod]);
 
   const onAddressSubmit = async (values: AddressFormValues) => {
     if (!user?.id) return;
@@ -195,7 +249,7 @@ const CheckoutPage = () => {
       }
 
       const payload = {
-        user_total_amount: subtotal + 50, // total + shipping
+        user_total_amount: subtotal + (shippingInfo?.charge || 0), // total + real-time shipping
         purchase_price: cart[0]?.price || 0,
         product_quantity: cart.reduce((acc, item) => acc + item.quantity, 0),
         cart: cart.map(({ image, ...item }) => item),
@@ -204,7 +258,7 @@ const CheckoutPage = () => {
         user_email: user.email,
         user_mobile_num: selectedAddress.phone,
         shipping_address_id: selectedAddressId,
-        payment_method: "ONLINE",
+        payment_method: paymentMethod,
         user_state: selectedAddress.state,
         user_city: selectedAddress.city,
         user_pincode: selectedAddress.pincode,
@@ -648,7 +702,7 @@ const CheckoutPage = () => {
                           </p>
                           <p className="text-xs text-slate-500">
                             Qty: {item.quantity}{" "}
-                            {item.weight && `| ${formatWeight(item.weight)}`}
+                            {item.weight && `| ${item.weight}`}
                           </p>
                         </div>
                       </div>
@@ -664,13 +718,50 @@ const CheckoutPage = () => {
                     <span>Subtotal</span>
                     <span>₹{cartTotal}</span>
                   </div>
-                  <div className="flex justify-between text-sm text-slate-600">
-                    <span>Shipping Fee</span>
-                    <span>₹50</span>
-                  </div>
+                  {shippingInfo && (
+                    <div className="space-y-1 py-2 bg-emerald-50/50 rounded-lg px-3 border border-emerald-100">
+                      <div className="flex justify-between text-sm font-semibold text-slate-700">
+                        <span className="flex items-center gap-1">
+                          <Truck className="h-3.5 w-3.5 text-emerald-600" />
+                          {shippingInfo.courier || "Courier Partner"}
+                        </span>
+                        <span className="text-emerald-700 font-bold">
+                          {shippingInfo.charge != null && shippingInfo.charge > 0
+                            ? `₹${shippingInfo.charge}`
+                            : "FREE"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-[11px] text-slate-500">
+                        <span>Est. Delivery: {shippingInfo.estimate || "3-5 business days"}</span>
+                        <span>Wt: {shippingInfo.totalWeight?.toFixed(2)} kg</span>
+                      </div>
+                    </div>
+                  )}
+                  {isShippingLoading && (
+                    <div className="flex items-center gap-2 py-1 text-sm text-slate-400">
+                      <Loader2 className="animate-spin h-3 w-3" />
+                      Calculating shipping...
+                    </div>
+                  )}
+                  {shippingError && (
+                    <div className="py-1 text-xs text-red-500 flex flex-col gap-1">
+                      <span>{shippingError}</span>
+                      <Button 
+                        variant="link" 
+                        size="sm" 
+                        className="p-0 h-auto w-fit text-emerald-600"
+                        onClick={() => {
+                          const addr = addresses.find(a => a.id === selectedAddressId);
+                          if (addr) fetchShippingRates(addr.pincode);
+                        }}
+                      >
+                        Retry
+                      </Button>
+                    </div>
+                  )}
                   <div className="flex justify-between text-lg font-extrabold text-emerald-900 border-t border-slate-100 pt-3 mt-3">
                     <span>Total</span>
-                    <span>₹{cartTotal + 50}</span>
+                    <span>₹{cartTotal + (shippingInfo?.charge || 0)}</span>
                   </div>
                 </div>
               </CardContent>
