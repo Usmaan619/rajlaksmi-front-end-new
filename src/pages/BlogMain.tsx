@@ -194,8 +194,8 @@ const BlogMain = () => {
 
   const fetchBlogs = async () => {
     setIsLoading(true);
-    // 2-second delay for skeleton as requested
-    const delay = new Promise((resolve) => setTimeout(resolve, 2000));
+    // 300ms delay for skeleton as requested
+    const delay = new Promise((resolve) => setTimeout(resolve, 300));
 
     try {
       const [res] = await Promise.all([

@@ -152,7 +152,7 @@ const ProductDetail = () => {
       if (!id) return;
       setIsLoading(true);
       // Artificial delay for skeleton as requested
-      const delay = new Promise((resolve) => setTimeout(resolve, 2000));
+      const delay = new Promise((resolve) => setTimeout(resolve, 300));
 
       try {
         await delay;

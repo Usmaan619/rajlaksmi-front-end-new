@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { CheckCircle, ChevronDown, Download, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import labrepotImage from "@/assets/labreport/labreport.png";
+import labrepotImage from "@/assets/labreport/labreport.webp";
 import farmerImage from "@/assets/aboutus/transparency1.webp";
 import teamImage from "@/assets/aboutus/transparency2.webp";
 import farmerBgImg from "@/assets/aboutus/aboutusbgfarmerImg.png";
 
+import testingAuthorityImg from "@/assets/labreport/testing-authority.webp";
+import standardsImg from "@/assets/labreport/Standards.webp";
 import pesticideImg from "@/assets/labreport/1.png";
 import metalImg from "@/assets/labreport/2.png";
 import microbeImg from "@/assets/labreport/3.png";
@@ -236,13 +238,13 @@ const LabReportsPage = () => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                  <button
+                  {/* <button
                     aria-label="Download Report"
                     className="bg-[#01722C] hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
                   >
                     <Download size={20} />
                     Download Report
-                  </button>
+                  </button> */}
                   <button
                     aria-label="Contact Support"
                     className=" border-2 border-[#01722C] text-[#01722C] hover:bg-green-50 font-semibold px-6 py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
@@ -416,7 +418,7 @@ const LabReportsPage = () => {
                 {/* Team image - back */}
                 <div className="absolute top-0 right-0 w-[67%]">
                   <img
-                    src={teamImage}
+                    src={standardsImg}
                     alt="Rajlakshmi team"
                     className="w-full h-full object-cover rounded-2xl shadow-lg aspect-[4/3]"
                   />
@@ -425,8 +427,8 @@ const LabReportsPage = () => {
                 {/* Farmer image - front */}
                 <div className="absolute bottom-0 left-0 w-[40%] z-10">
                   <img
-                    src={farmerImage}
-                    alt="Rajasthani farmer"
+                    src={testingAuthorityImg}
+                    alt="Testing Authority"
                     className="w-full h-full object-cover rounded-2xl shadow-xl aspect-[3/4]"
                   />
                 </div>
