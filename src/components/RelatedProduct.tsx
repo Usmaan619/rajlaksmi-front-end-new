@@ -24,7 +24,12 @@ import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { getProducts } from "@/api/product.service";
 import { Product } from "@/types/product";
-import { sortWeights } from "@/lib/utils";
+import {
+  sortWeights,
+  getWeightMultiplier,
+  parseProductWeights,
+  getDisplayWeight,
+} from "@/lib/utils";
 
 const getFirstImage = (images: any) => {
   if (!images) return "";
@@ -38,26 +43,7 @@ const getFirstImage = (images: any) => {
   }
 };
 
-const getWeightOptions = (weight: any) => {
-  let options: any[] = [];
-  if (!weight) return [{ weight: "N/A", price: "" }];
-
-  if (Array.isArray(weight)) {
-    options = weight;
-  } else {
-    try {
-      const parsed = JSON.parse(weight);
-      options = Array.isArray(parsed) ? parsed : [parsed];
-    } catch (e) {
-      options = [weight];
-    }
-  }
-
-  options = options.map((opt) =>
-    typeof opt === "string" ? { weight: String(opt), price: "" } : opt,
-  );
-  return sortWeights(options);
-};
+// Replaced by parseProductWeights from utils.ts
 
 const ProductCard = ({ product }: { product: Product }) => {
   const navigate = useNavigate();
@@ -79,7 +65,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const pRating = product.rating || "4.5";
 
   const productImage = getFirstImage(product.product_images);
-  const weights = getWeightOptions(
+  const weights = parseProductWeights(
     product.weight_options || product.product_weight,
   );
   const [selectedWeightIdx, setSelectedWeightIdx] = useState(0);
@@ -89,9 +75,12 @@ const ProductCard = ({ product }: { product: Product }) => {
     weight: "N/A",
     price: "",
   };
-  const currentPrice = selectedWeightObj.price
+  const weightMultiplier = getWeightMultiplier(selectedWeightObj.weight);
+  const currentPrice = (selectedWeightObj.price
     ? Number(selectedWeightObj.price)
-    : pPrice;
+    : pPrice) * weightMultiplier;
+  
+  const currentDelPrice = pDelPrice * weightMultiplier;
 
   let currentDiscount = pDiscount;
   if (selectedWeightObj.price && pDelPrice > currentPrice) {
@@ -138,11 +127,14 @@ const ProductCard = ({ product }: { product: Product }) => {
  group hover:shadow-card transition-all duration-300 p-[20px] flex flex-col gap-[10px]"
     >
       <div className="relative">
-        <div className="aspect-square rounded-xl overflow-hidden bg-muted">
+        <div className="aspect-square rounded-xl overflow-hidden bg-white border border-gray-100">
           <img
             src={productImage || producttest}
             alt={pName}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            width="265"
+            height="265"
+            loading="lazy"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
               (e.target as HTMLImageElement).src = producttest;
             }}
@@ -156,10 +148,10 @@ const ProductCard = ({ product }: { product: Product }) => {
             toggleWishlist({
               id: `${product.id}`,
               name: pName,
-              price: pPrice,
+              price: currentPrice,
               image: productImage,
-              originalPrice: pDelPrice,
-              discount: pDiscount,
+              originalPrice: currentDelPrice,
+              discount: currentDiscount,
               weightOptions: weights,
             });
             toast.success(
@@ -187,9 +179,9 @@ const ProductCard = ({ product }: { product: Product }) => {
           <span className="text-primary font-bold text-base">
             ₹{currentPrice.toFixed(2)}
           </span>
-          {pDelPrice > currentPrice && (
+          {currentDelPrice > currentPrice && (
             <span className="text-muted-foreground line-through text-xs">
-              ₹{pDelPrice.toFixed(2)}
+              ₹{currentDelPrice.toFixed(2)}
             </span>
           )}
           {currentDiscount > 0 && (
@@ -209,7 +201,7 @@ const ProductCard = ({ product }: { product: Product }) => {
               }}
               className="flex items-center gap-1 px-2 py-1 rounded-md border text-xs bg-white"
             >
-              {selectedWeightObj.weight}
+              {getDisplayWeight(selectedWeightObj.weight)}
               {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
             </button>
             {showWeights && weights.length > 1 && (
@@ -224,7 +216,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                       setShowWeights(false);
                     }}
                   >
-                    {w.weight}
+                    {getDisplayWeight(w.weight)}
                   </div>
                 ))}
               </div>

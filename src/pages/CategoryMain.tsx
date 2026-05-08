@@ -19,7 +19,13 @@ import { getProducts } from "@/api/product.service";
 import { Product } from "@/types/product";
 import producttest from "@/assets/product-nutmeg.jpg";
 import { Skeleton } from "@/components/ui/skeleton";
-import { sortWeights, getUnitInfo } from "@/lib/utils";
+import {
+  sortWeights,
+  getUnitInfo,
+  getWeightValue,
+  parseProductWeights,
+  getDisplayWeight,
+} from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -35,26 +41,7 @@ const getFirstImage = (images: any) => {
   }
 };
 
-const getWeightOptions = (weight: any) => {
-  let options: any[] = [];
-  if (!weight) return [{ weight: "N/A", price: "" }];
-
-  if (Array.isArray(weight)) {
-    options = weight;
-  } else {
-    try {
-      const parsed = JSON.parse(weight);
-      options = Array.isArray(parsed) ? parsed : [parsed];
-    } catch (e) {
-      options = [weight];
-    }
-  }
-
-  options = options.map((opt) =>
-    typeof opt === "string" ? { weight: String(opt), price: "" } : opt,
-  );
-  return sortWeights(options);
-};
+// Replaced by parseProductWeights from utils.ts
 
 const ProductSkeleton = () => (
   <div className="w-full lg:w-[290px] border border-gray-100 rounded-2xl p-3 flex flex-col gap-3 bg-white">
@@ -147,16 +134,18 @@ const ProductCard = ({ product }: { product: Product }) => {
   const pRating = product.rating || "4.5";
 
   const productImage = getFirstImage(product.product_images);
-  const weights = getWeightOptions(
+  const weights = parseProductWeights(
     product.weight_options || product.product_weight,
   );
   const [selectedWeightIdx, setSelectedWeightIdx] = useState(0);
 
   const unitInfo = getUnitInfo(weights[selectedWeightIdx]?.weight);
-  const ratePerUnit =
-    unitInfo.value > 0
-      ? Number(weights[selectedWeightIdx]?.price || pPrice) / unitInfo.value
-      : 0;
+  const weightInKg = getWeightValue(weights[selectedWeightIdx]?.weight) / 1000;
+  const ratePerUnit = weights[selectedWeightIdx]?.selling_rate > 0
+    ? weights[selectedWeightIdx].selling_rate
+    : weightInKg > 0
+      ? Number(weights[selectedWeightIdx]?.price || pPrice) / weightInKg
+      : Number(weights[selectedWeightIdx]?.price || pPrice);
 
   const [showWeights, setShowWeights] = useState(false);
 
@@ -270,7 +259,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           )}
         </div>
         <span className="text-[10px] text-primary/70 font-semibold block">
-          Rate: ₹{ratePerUnit.toFixed(2)} / {unitInfo.unit}
+          Rate: ₹{ratePerUnit.toFixed(2)} / {/kg|g|gm|ml|ltr|l/i.test(selectedWeightObj.weight) ? "kg" : unitInfo.unit}
         </span>
       </div>
 
@@ -285,7 +274,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             }}
             className="flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] bg-white"
           >
-            {selectedWeightObj.weight}
+            {getDisplayWeight(selectedWeightObj.weight)}
             {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
           </button>
           {showWeights && weights.length > 1 && (
@@ -300,7 +289,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                     setShowWeights(false);
                   }}
                 >
-                  {w.weight}
+                  {getDisplayWeight(w.weight)}
                 </div>
               ))}
             </div>
@@ -453,9 +442,13 @@ const CategoryMain = () => {
                 "500ml",
                 "1000ml",
                 "250g",
-                "500g",
-                "1kg",
-                "5kg",
+                "500gm Sample",
+                "10kg",
+                "30kg",
+                "50kg",
+                "100kg",
+                "500kg",
+                "1000kg",
               ]}
               value={weight}
               onChange={setWeight}

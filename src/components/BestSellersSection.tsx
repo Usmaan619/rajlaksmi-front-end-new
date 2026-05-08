@@ -7,35 +7,33 @@ import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { getHomeProducts } from "@/api/product.service";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getWeightMultiplier, parseProductWeights, getDisplayWeight } from "@/lib/utils";
 
 const ProductCard = ({ product }: { product: any }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isFavorite = isInWishlist(`product-best-${product.id}`);
-  const weights = Array.isArray(product.product_weight)
-    ? product.product_weight
-    : product.product_weight
-      ? [product.product_weight]
-      : [];
+  const weights = parseProductWeights(product.product_weight);
   const [selectedUnitIdx, setSelectedUnitIdx] = useState(0);
   const selectedUnit = weights[selectedUnitIdx];
   const selectedUnitWeight =
     typeof selectedUnit === "object" ? selectedUnit.weight : selectedUnit;
+  const weightMultiplier = getWeightMultiplier(selectedUnitWeight);
   const currentPrice =
-    typeof selectedUnit === "object" && selectedUnit.price
+    (typeof selectedUnit === "object" && selectedUnit.price
       ? Number(selectedUnit.price)
-      : product.product_price;
+      : Number(product.product_price)) * weightMultiplier;
+  
+  const currentDelPrice = 
+    (typeof selectedUnit === "object" && selectedUnit.del_price
+      ? Number(selectedUnit.del_price)
+      : Number(product.product_del_price)) * weightMultiplier;
 
   let currentDiscount = product.discount || 0;
-  if (
-    typeof selectedUnit === "object" &&
-    selectedUnit.price &&
-    product.product_del_price > currentPrice
-  ) {
+  if (currentDelPrice > currentPrice) {
     currentDiscount = Math.round(
-      ((product.product_del_price - currentPrice) / product.product_del_price) *
-        100,
+      ((currentDelPrice - currentPrice) / currentDelPrice) * 100,
     );
   } else if (currentPrice >= product.product_del_price) {
     currentDiscount = 0;
@@ -111,13 +109,11 @@ const ProductCard = ({ product }: { product: any }) => {
             toggleWishlist({
               id: `${product.id}`,
               name: product.product_name,
-              price: product.product_price,
+              price: currentPrice,
               image: product.product_images[0],
-              originalPrice: product.product_del_price,
-              discount: product.discount,
-              weightOptions: Array.isArray(product.product_weight)
-                ? product.product_weight
-                : [product.product_weight],
+              originalPrice: currentDelPrice,
+              discount: currentDiscount,
+              weightOptions: weights.map((w: any) => w.weight),
             });
             toast.success(
               isFavorite ? `Removed from Wishlist` : `Added to Wishlist`,
@@ -145,9 +141,9 @@ const ProductCard = ({ product }: { product: any }) => {
             ₹{currentPrice}
           </span>
 
-          {product.product_del_price > currentPrice && (
+          {currentDelPrice > currentPrice && (
             <span className="text-xs sm:text-sm line-through text-gray-400">
-              ₹{product.product_del_price}
+              ₹{currentDelPrice}
             </span>
           )}
 
@@ -169,7 +165,7 @@ const ProductCard = ({ product }: { product: any }) => {
               }}
               className="flex items-center gap-1 border rounded px-2 py-1 text-[11px] sm:text-xs"
             >
-              {selectedUnitWeight}
+              {getDisplayWeight(selectedUnitWeight)}
               {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
             </button>
 
@@ -186,7 +182,7 @@ const ProductCard = ({ product }: { product: any }) => {
                     }}
                     className="block w-full px-3 py-2 text-xs text-left hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
                   >
-                    {typeof unit === "object" ? unit.weight : unit}
+                    {getDisplayWeight(typeof unit === "object" ? unit.weight : unit)}
                   </button>
                 ))}
               </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, Search, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, Loader2, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -22,7 +22,13 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { sortWeights, getUnitInfo } from "@/lib/utils";
+import {
+  sortWeights,
+  getUnitInfo,
+  getWeightValue,
+  parseProductWeights,
+  getDisplayWeight,
+} from "@/lib/utils";
 
 import Seo from "@/components/Seo";
 
@@ -45,41 +51,7 @@ const getFirstImage = (images: any) => {
   }
 };
 
-const getWeightOptions = (weight: any): any[] => {
-  let options: any[] = [];
-
-  if (!weight) return [{ weight: "N/A", price: "" }];
-
-  if (Array.isArray(weight)) {
-    options = weight;
-  } else {
-    try {
-      const parsed = JSON.parse(weight);
-      if (Array.isArray(parsed)) {
-        options = parsed;
-      } else {
-        options = [parsed];
-      }
-    } catch (e) {
-      if (
-        typeof weight === "string" &&
-        (weight.includes("Size") || weight.includes("KG"))
-      ) {
-        const matches = weight.match(/\d+(\.\d+)?(kg|g|gm|ml|l|ltr)/gi);
-        options =
-          matches && matches.length > 0 ? matches : [{ weight: weight }];
-      } else {
-        options = [{ weight: weight }];
-      }
-    }
-  }
-
-  options = options.map((opt) =>
-    typeof opt === "string" ? { weight: String(opt), price: "" } : opt,
-  );
-
-  return sortWeights(options);
-};
+// Replaced by parseProductWeights from utils.ts
 
 const ProductSkeleton = () => (
   <div className="w-full lg:w-[290px] border border-gray-100 rounded-[20px] p-3 flex flex-col gap-[10px] bg-white">
@@ -107,15 +79,16 @@ const ProductCard = ({ product }: { product: Product }) => {
   const isFavorite = isInWishlist(`product-all-${product.id}`);
 
   const productImage = getFirstImage(product.product_images);
-  const weights = getWeightOptions(product.weight_options);
+  const weights = parseProductWeights(product.weight_options);
   const [selectedWeightIdx, setSelectedWeightIdx] = useState(0);
 
   const unitInfo = getUnitInfo(weights[selectedWeightIdx]?.weight);
-  const ratePerUnit =
-    unitInfo.value > 0
-      ? Number(weights[selectedWeightIdx]?.price || product.price) /
-        unitInfo.value
-      : 0;
+  const weightInKg = getWeightValue(weights[selectedWeightIdx]?.weight) / 1000;
+  const ratePerUnit = weights[selectedWeightIdx]?.selling_rate > 0
+    ? weights[selectedWeightIdx].selling_rate
+    : weightInKg > 0
+      ? Number(weights[selectedWeightIdx]?.price || product.price) / weightInKg
+      : Number(weights[selectedWeightIdx]?.price || product.price);
 
   const [showWeights, setShowWeights] = useState(false);
 
@@ -252,7 +225,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             )}
           </div>
           <span className="text-[10px] text-primary/70 font-semibold block">
-            Rate: ₹{ratePerUnit.toFixed(2)} / {unitInfo.unit}
+            Rate: ₹{ratePerUnit.toFixed(2)} / {/kg|g|gm|ml|ltr|l/i.test(selectedWeightObj.weight) ? "kg" : unitInfo.unit}
           </span>
         </div>
 
@@ -266,7 +239,7 @@ const ProductCard = ({ product }: { product: Product }) => {
               }}
               className="flex items-center gap-1 px-2 py-1 rounded-md border text-xs bg-white"
             >
-              {selectedWeightObj.weight}
+              {getDisplayWeight(selectedWeightObj.weight)}
               {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
             </button>
             {showWeights && (
@@ -281,7 +254,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                       setShowWeights(false);
                     }}
                   >
-                    {w.weight}
+                    {getDisplayWeight(w.weight)}
                   </div>
                 ))}
               </div>
@@ -318,22 +291,164 @@ const ProductCard = ({ product }: { product: Product }) => {
 const categoryOrder = [
   "PULSES",
   "MILLET",
-  "RICE  WHEAT",
   "MASALA",
   "SWEETS",
   "HONEY",
   "DRY FRUITS",
   "SEEDS",
   "OTHER ITEMS",
-  "OILS  GHEE",
-  "RLJ PRODUCTS",
   "HOME MADE AACHAR",
+  "FRUITS DRINKS / CHUTNEY",
+  "RICE & WHEAT",
+  "OILS & GHEE",
+  "RLJ PRODUCTS",
   "KHAKHRA",
   "KHAPLI WHEAT KHAKHRA (EMMER WHEAT)",
   "MILLETS KHAKHRA",
   "FASTING / UPVAS SPECIAL - GLUTEN FREE KHAKHRA",
   "ROASTED MILLET DRY BHAKRI",
 ];
+
+interface FilterContentProps {
+  searchQuery: string;
+  setSearchQuery: (val: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (val: string) => void;
+  selectedPriceRange: string;
+  setSelectedPriceRange: (val: string) => void;
+  categories: Category[];
+  searchParams: any;
+  setSearchParams: any;
+  loading: boolean;
+  handleApplyFilters: () => void;
+  handleClearFilters: () => void;
+}
+
+const FilterContent = ({
+  searchQuery,
+  setSearchQuery,
+  selectedCategory,
+  setSelectedCategory,
+  selectedPriceRange,
+  setSelectedPriceRange,
+  categories,
+  searchParams,
+  setSearchParams,
+  loading,
+  handleApplyFilters,
+  handleClearFilters,
+}: FilterContentProps) => (
+  <div className="space-y-8">
+    {/* Search */}
+    <div className="relative group">
+      <Input
+        placeholder="Search products..."
+        className="pr-10 bg-white border-border rounded-xl focus:ring-primary focus:border-primary transition-all duration-300"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleApplyFilters()}
+      />
+      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+        {loading && searchQuery && (
+          <Loader2 className="h-3 w-3 animate-spin text-primary" />
+        )}
+        <Search className="h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+      </div>
+    </div>
+
+    {/* Category Filter */}
+    <div className="space-y-3">
+      <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+        Categories
+      </h3>
+      <div className="flex flex-col gap-1 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+        <button
+          onClick={() => {
+            setSelectedCategory("all");
+            const params = new URLSearchParams(searchParams);
+            params.delete("category");
+            params.set("page", "1");
+            setSearchParams(params);
+          }}
+          className={`text-left px-3 py-2 rounded-lg text-sm transition-all ${
+            selectedCategory === "all"
+              ? "bg-primary text-white font-bold shadow-sm"
+              : "text-muted-foreground hover:bg-muted hover:text-foreground"
+          }`}
+        >
+          All Products
+        </button>
+        {categories?.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => {
+              setSelectedCategory(cat.category_name);
+              const params = new URLSearchParams(searchParams);
+              params.set("category", cat.category_name);
+              params.set("page", "1");
+              setSearchParams(params);
+            }}
+            className={`text-left px-3 py-2 rounded-lg text-sm transition-all ${
+              selectedCategory === cat.category_name
+                ? "bg-primary text-white font-bold shadow-sm"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+            }`}
+          >
+            {cat.category_name}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Price Filter */}
+    <div className="space-y-3">
+      <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2">
+        <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
+        Price Range
+      </h3>
+      <div className="flex flex-col gap-1">
+        {[
+          { label: "All Prices", value: "all" },
+          { label: "₹0 - ₹500", value: "0-500" },
+          { label: "₹500 - ₹1000", value: "500-1000" },
+          { label: "₹1000+", value: "1000-+" },
+        ].map((range) => (
+          <button
+            key={range.value}
+            onClick={() => {
+              setSelectedPriceRange(range.value);
+              const params = new URLSearchParams(searchParams);
+              if (range.value === "all") params.delete("price");
+              else params.set("price", range.value);
+              params.set("page", "1");
+              setSearchParams(params);
+            }}
+            className={`text-left px-3 py-2 rounded-lg text-sm transition-all ${
+              selectedPriceRange === range.value
+                ? "bg-primary/10 text-primary font-bold border border-primary/20"
+                : "text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent"
+            }`}
+          >
+            {range.label}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* Actions */}
+    <div className="pt-4 flex flex-col gap-3 border-top border-dashed">
+      <Button
+        aria-label="Clear All Filters"
+        variant="ghost"
+        className="w-full text-muted-foreground text-xs hover:text-destructive"
+        onClick={handleClearFilters}
+      >
+        Reset All Filters
+      </Button>
+    </div>
+  </div>
+);
 
 const AllProducts = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -381,25 +496,52 @@ const AllProducts = () => {
     }
   };
 
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Sync URL params to local state
+  useEffect(() => {
+    const search = searchParams.get("search") || "";
+    const category = searchParams.get("category") || "all";
+    const weight = searchParams.get("weight") || "all";
+    const price = searchParams.get("price") || "all";
+    const page = parseInt(searchParams.get("page") || "1");
+
+    setSearchQuery(search);
+    setSelectedCategory(category);
+    setSelectedWeight(weight);
+    setSelectedPriceRange(price);
+    setCurrentPage(page);
+  }, [searchParams]);
+
   const fetchAllProducts = useCallback(async () => {
     setLoading(true);
     setError(null);
+
+    // Get values directly from searchParams to be the source of truth
+    const urlQuery = searchParams.get("search") || "";
+    const urlCategory = searchParams.get("category") || "all";
+    const urlWeight = searchParams.get("weight") || "all";
+    const urlPriceRange = searchParams.get("price") || "all";
+    const urlPage = parseInt(searchParams.get("page") || "1");
+
     try {
       let minPrice: number | undefined;
       let maxPrice: number | undefined;
 
-      if (selectedPriceRange !== "all") {
-        const [min, max] = selectedPriceRange.split("-");
+      if (urlPriceRange !== "all") {
+        const [min, max] = urlPriceRange.split("-");
         minPrice = parseInt(min);
         maxPrice = max === "+" ? undefined : parseInt(max);
       }
 
       const res = await getProducts({
-        page: currentPage,
+        page: urlPage,
         limit: ITEMS_PER_PAGE,
-        search: searchQuery || undefined,
-        category: selectedCategory === "all" ? undefined : selectedCategory,
-        weight: selectedWeight === "all" ? undefined : selectedWeight,
+        search: urlQuery || undefined,
+        category: urlCategory === "all" ? undefined : urlCategory,
+        weight: urlWeight === "all" ? undefined : urlWeight,
         minPrice,
         maxPrice,
       });
@@ -407,7 +549,6 @@ const AllProducts = () => {
       if (res.success) {
         const productData = res.products || res.data || [];
 
-        // Map backend fields to frontend names if needed
         const mappedProducts = productData.map((p: any) => ({
           ...p,
           price: p.product_price !== undefined ? p.product_price : p.price,
@@ -425,31 +566,40 @@ const AllProducts = () => {
           setTotalPages(1);
         }
       } else {
-        setError("Failed to fetch products");
+        setError("No products found for this criteria");
       }
     } catch (err: any) {
       setError(err.message || "Something went wrong while fetching products");
     } finally {
       setLoading(false);
     }
-  }, [
-    currentPage,
-    searchQuery,
-    selectedCategory,
-    selectedWeight,
-    selectedPriceRange,
-  ]);
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     fetchAllProducts();
   }, [fetchAllProducts]);
 
+  // Debounce search update to URL
+  useEffect(() => {
+    // Only debounce if the searchQuery in state is different from searchParams
+    const currentUrlSearch = searchParams.get("search") || "";
+    if (searchQuery === currentUrlSearch) return;
+
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
+      if (searchQuery) {
+        params.set("search", searchQuery);
+      } else {
+        params.delete("search");
+      }
+      params.set("page", "1");
+      setSearchParams(params);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery, searchParams, setSearchParams]);
+
   const handleApplyFilters = () => {
-    setCurrentPage(1);
     const params: any = {};
     if (searchQuery) params.search = searchQuery;
     if (selectedCategory !== "all") params.category = selectedCategory;
@@ -465,86 +615,24 @@ const AllProducts = () => {
     setSelectedCategory("all");
     setSelectedWeight("all");
     setSelectedPriceRange("all");
-    setCurrentPage(1);
     setSearchParams({});
     setMobileFilterOpen(false);
   };
 
-  const FilterContent = () => (
-    <div className="space-y-5">
-      {/* Search */}
-      <div className="relative">
-        <Input
-          placeholder="Find your products"
-          className="pr-10 bg-white border-border"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleApplyFilters()}
-        />
-        <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-      </div>
-
-      {/* Category Filter */}
-      <div>
-        <label className="text-sm font-medium text-foreground mb-1.5 block">
-          Category
-        </label>
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="bg-popover border-border">
-            <SelectValue placeholder="All" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            {categories?.map((cat) => (
-              <SelectItem key={cat.id} value={cat.category_name}>
-                {cat.category_name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Price Filter */}
-      <div>
-        <label className="text-sm font-medium text-foreground mb-1.5 block">
-          Price Range
-        </label>
-        <Select
-          value={selectedPriceRange}
-          onValueChange={setSelectedPriceRange}
-        >
-          <SelectTrigger className="bg-popover border-border">
-            <SelectValue placeholder="All" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="0-500">₹0 - ₹500</SelectItem>
-            <SelectItem value="500-1000">₹500 - ₹1000</SelectItem>
-            <SelectItem value="1000-+">₹1000+</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Buttons */}
-      <div className="flex gap-3">
-        <Button
-          aria-label="Clear Filters"
-          variant="outline"
-          className="bg-white flex-1 border-border text-muted-foreground"
-          onClick={handleClearFilters}
-        >
-          Clear
-        </Button>
-        <Button
-          aria-label="Apply Filters"
-          className="flex-1 bg-primary text-primary-foreground"
-          onClick={handleApplyFilters}
-        >
-          Apply
-        </Button>
-      </div>
-    </div>
-  );
+  const filterProps = {
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    setSelectedCategory,
+    selectedPriceRange,
+    setSelectedPriceRange,
+    categories,
+    searchParams,
+    setSearchParams,
+    loading,
+    handleApplyFilters,
+    handleClearFilters,
+  };
 
   return (
     <>
@@ -575,11 +663,11 @@ const AllProducts = () => {
               <Button
                 aria-label="Filter Products"
                 variant="outline"
-                size="icon"
-                className="lg:hidden"
+                className="lg:hidden gap-2 items-center rounded-xl border-[#116931] text-[#116931] hover:bg-[#116931] hover:text-white transition-colors"
                 onClick={() => setMobileFilterOpen(true)}
               >
-                <Search className="h-4 w-4" />
+                <Filter className="h-4 w-4" />
+                <span className="text-sm font-medium">Filters</span>
               </Button>
             </div>
 
@@ -657,11 +745,10 @@ const AllProducts = () => {
                       disabled={currentPage === 1}
                       onClick={() => {
                         const newPage = currentPage - 1;
-                        setCurrentPage(newPage);
-                        setSearchParams({
-                          ...Object.fromEntries(searchParams.entries()),
-                          page: newPage.toString(),
-                        });
+                        if (newPage < 1) return;
+                        const params = new URLSearchParams(searchParams);
+                        params.set("page", newPage.toString());
+                        setSearchParams(params);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     >
@@ -740,37 +827,39 @@ const AllProducts = () => {
                 )}
               </div>
 
-              {/* Desktop Sidebar */}
               <aside className="hidden lg:block w-72 shrink-0">
                 <div className="sticky top-28">
-                  <FilterContent />
+                  <FilterContent {...filterProps} />
                 </div>
               </aside>
             </div>
           </div>
         </main>
 
-        {/* Mobile Filter Modal */}
         {mobileFilterOpen && (
-          <div className="fixed inset-0 z-50 bg-black/40 flex">
-            <div className="bg-white w-80 h-full p-6 overflow-y-auto">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Filters</h3>
+          <div className="fixed inset-0 z-[60] bg-black/5 backdrop-blur-sm flex justify-end">
+            <div className="bg-white w-[85%] max-w-sm h-full shadow-2xl animate-in slide-in-from-right duration-300 p-6 overflow-y-auto">
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center gap-2">
+                  <Filter className="h-5 w-5 text-primary" />
+                  <h3 className="text-xl font-bold">Filters</h3>
+                </div>
                 <Button
                   aria-label="Close Filters"
                   variant="ghost"
-                  size="sm"
+                  size="icon"
+                  className="rounded-full hover:bg-muted"
                   onClick={() => setMobileFilterOpen(false)}
                 >
-                  Close
+                  <X className="h-5 w-5" />
                 </Button>
               </div>
-              <FilterContent />
+              <FilterContent {...filterProps} />
             </div>
 
             {/* Click outside to close */}
             <div
-              className="flex-1"
+              className="absolute inset-0 -z-10"
               onClick={() => setMobileFilterOpen(false)}
             />
           </div>

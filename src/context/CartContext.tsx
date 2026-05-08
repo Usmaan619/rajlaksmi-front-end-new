@@ -14,6 +14,7 @@ export interface CartItem {
   quantity: number;
   weight?: string;
   originalId?: string;
+  gst_percent?: number;
 }
 
 interface CartContextType {

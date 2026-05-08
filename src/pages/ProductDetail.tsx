@@ -15,6 +15,7 @@ import {
   Minus,
   Plus,
   Play,
+  MessageCircle,
 } from "lucide-react";
 import { Rating } from "react-simple-star-rating";
 import { Button } from "@/components/ui/button";
@@ -99,7 +100,13 @@ import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { getProductReviews } from "@/api/feedback.service";
-import { sortWeights, getWeightValue } from "@/lib/utils";
+import {
+  sortWeights,
+  getWeightValue,
+  getWeightMultiplier,
+  parseProductWeights,
+  getDisplayWeight,
+} from "@/lib/utils";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
@@ -197,42 +204,7 @@ const ProductDetail = () => {
           ? apiProduct.product_images
           : DEFAULT_PRODUCT.images,
         sizes: (() => {
-          if (!apiProduct.product_weight) return [];
-          let parsed;
-          if (Array.isArray(apiProduct.product_weight)) {
-            parsed = apiProduct.product_weight;
-          } else {
-            try {
-              parsed = JSON.parse(apiProduct.product_weight);
-              if (!Array.isArray(parsed)) parsed = [parsed];
-            } catch {
-              parsed = [apiProduct.product_weight];
-            }
-          }
-
-          // Ensure each item is an object with at least a weight property
-          const mapped: {
-            weight: string;
-            price: number;
-            purchase_price: number;
-            del_price: number;
-          }[] = parsed.map((item: any) => {
-            if (typeof item === "object" && item !== null) {
-              return {
-                weight: String(item.weight || ""),
-                price: Number(item.price) || 0,
-                purchase_price: Number(item.purchase_price) || 0,
-                del_price: Number(item.del_price) || 0,
-              };
-            }
-            return {
-              weight: String(item),
-              price: Number(apiProduct.product_price) || 0,
-              purchase_price: Number(apiProduct.product_purchase_price) || 0,
-              del_price: Number(apiProduct.product_del_price) || 0,
-            };
-          });
-
+          const mapped = parseProductWeights(apiProduct.product_weight);
           return mapped.sort(
             (a, b) => getWeightValue(a.weight) - getWeightValue(b.weight),
           );
@@ -252,6 +224,7 @@ const ProductDetail = () => {
         updatedAt: apiProduct.updated_at,
         purchasePrice: apiProduct.product_purchase_price, // internal but mapping it
         productVideo: apiProduct.product_video,
+        gst_percent: apiProduct.gst_percent || 0,
       }
     : {
         ...DEFAULT_PRODUCT,
@@ -265,6 +238,7 @@ const ProductDetail = () => {
         isFeatured: false,
         bestSeller: false,
         productVideo: null,
+        gst_percent: 0,
       };
 
   const handleShare = async () => {
@@ -300,15 +274,55 @@ const ProductDetail = () => {
     weight: string;
     price: number;
     del_price: number;
+    selling_rate?: number;
+    mrp_rate?: number;
   }[];
+
+  // Specific requirement: Ensure the specific weights are available or calculated
+  const getCalculatedPrice = (weightStr: string, basePrice: number) => {
+    const val = getWeightValue(weightStr);
+    const baseKgPrice = basePrice;
+
+    if (val === 500) return baseKgPrice * 0.3; // 500g sample 30%
+    if (val === 1000) return baseKgPrice * 0.3; // 1kg 30% (as requested)
+    if (val === 5000) return baseKgPrice * 5;
+    if (val === 10000) return baseKgPrice * 10 * 0.2; // 20%
+    if (val === 30000) return baseKgPrice * 30 * 0.18; // 18%
+    if (val === 50000) return baseKgPrice * 50 * 0.15; // 15%
+    if (val === 100000) return baseKgPrice * 100 * 0.14; // 14%
+    if (val === 500000) return baseKgPrice * 500 * 0.13; // 13%
+    if (val >= 1000000) return baseKgPrice * (val / 1000) * 0.12; // 12% for 1000kg+
+
+    // Default fallback
+    return baseKgPrice * (val / 1000);
+
+    // Default fallback: use weight value multiplier if not specified
+    const weightVal = getWeightValue(weightStr) / 1000;
+    return baseKgPrice * weightVal;
+  };
+
   const selectedSizeInfo = sizesArr[selectedSizeIdx] || {
     weight: "N/A",
     price: product.price,
     del_price: product.originalPrice,
   };
 
-  const currentPrice = selectedSizeInfo.price || product.price;
-  const currentDelPrice = selectedSizeInfo.del_price || product.originalPrice;
+  const weightMultiplier = getWeightMultiplier(selectedSizeInfo.weight);
+
+  // Use DB price if it exists (>0), otherwise calculate
+  const finalBasePrice =
+    selectedSizeInfo.price > 0
+      ? selectedSizeInfo.price
+      : getCalculatedPrice(selectedSizeInfo.weight, product.price);
+
+  const currentPrice = finalBasePrice;
+  const currentDelPrice =
+    selectedSizeInfo.del_price > 0
+      ? selectedSizeInfo.del_price
+      : selectedSizeInfo.price > 0
+        ? selectedSizeInfo.price * 1.5
+        : product.originalPrice *
+          (getWeightValue(selectedSizeInfo.weight) / 1000);
 
   // Wholesale Logic: Extract unit and calculate rate
   const getUnitInfo = (weightStr: string) => {
@@ -323,7 +337,14 @@ const ProductDetail = () => {
   };
 
   const unitInfo = getUnitInfo(selectedSizeInfo.weight);
-  const ratePerUnit = currentPrice / (unitInfo.value || 1);
+  // Calculate rate per KG for display (useful if price is entered per packet for gm/ml)
+  const weightInKg = getWeightValue(selectedSizeInfo.weight) / 1000;
+  const ratePerUnit =
+    selectedSizeInfo.selling_rate && selectedSizeInfo.selling_rate > 0
+      ? selectedSizeInfo.selling_rate
+      : weightMultiplier === 1 && weightInKg > 0
+        ? (selectedSizeInfo.price || product.price) / weightInKg
+        : selectedSizeInfo.price || product.price;
 
   let currentDiscount = product.discount;
   if (currentDelPrice > currentPrice) {
@@ -359,6 +380,7 @@ const ProductDetail = () => {
       image: product.images[0],
       quantity: quantity,
       weight: selectedSizeInfo.weight,
+      gst_percent: product.gst_percent,
     });
     toast.success(`${product.name} added to cart!`);
   };
@@ -371,9 +393,32 @@ const ProductDetail = () => {
       image: product.images[0],
       quantity: quantity,
       weight: selectedSizeInfo.weight,
+      gst_percent: product.gst_percent,
     });
     navigate("/cart");
   };
+
+  const [customQty, setCustomQty] = useState("");
+  const [showCustomInput, setShowCustomInput] = useState(false);
+
+  const handleWhatsAppInquiry = (weight: string) => {
+    const message = `Hello Rajlaxmi Javik, I am interested in purchasing ${product.name}. \nWeight: ${weight} \nPrice: ₹${currentPrice.toFixed(2)} \nProduct Link: ${window.location.href}`;
+    const encodedMsg = encodeURIComponent(message);
+    window.open(`https://wa.me/919424075196?text=${encodedMsg}`, "_blank");
+  };
+
+  const handleCustomWhatsAppInquiry = () => {
+    if (!customQty) {
+      toast.error("Please enter a custom quantity");
+      return;
+    }
+    const message = `Hello Rajlaxmi Javik, I have a custom quantity inquiry for ${product.name}. \nQuantity: ${customQty} \nProduct Link: ${window.location.href}`;
+    const encodedMsg = encodeURIComponent(message);
+    window.open(`https://wa.me/919424075196?text=${encodedMsg}`, "_blank");
+  };
+
+  const selectedWeightVal = getWeightValue(selectedSizeInfo.weight);
+  const isBulkOrder = selectedWeightVal >= 5000; // 5kg and above is considered bulk
 
   const reviews = allReviews;
 
@@ -492,15 +537,34 @@ const ProductDetail = () => {
               {/* Main Image */}
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted mb-4">
                 {showVideo && product.productVideo ? (
-                  <video
-                    src={product.productVideo}
-                    className="w-full h-full object-cover"
-                    controls
-                    muted
-                    autoPlay
-                    loop
-                    playsInline
-                  />
+                  product.productVideo.includes("youtube.com") ||
+                  product.productVideo.includes("youtu.be") ? (
+                    <div className="absolute inset-0">
+                      <iframe
+                        className="w-full h-full rounded-2xl"
+                        src={
+                          product.productVideo
+                            .replace("shorts/", "embed/")
+                            .replace("watch?v=", "embed/")
+                            .split("&")[0] + "?autoplay=1"
+                        }
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      ></iframe>
+                    </div>
+                  ) : (
+                    <video
+                      src={product.productVideo}
+                      className="w-full h-full object-cover"
+                      controls
+                      muted
+                      autoPlay
+                      loop
+                      playsInline
+                    />
+                  )
                 ) : (
                   <img
                     src={product.images[selectedIndex]}
@@ -559,16 +623,18 @@ const ProductDetail = () => {
                   >
                     <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                       <div className="w-8 h-8 rounded-full bg-primary/90 flex items-center justify-center">
-                        <Plus
-                          className="h-5 w-5 text-white fill-white rotate-45"
-                          style={{ transform: "rotate(45deg)" }}
-                        />
-                        <svg
-                          className="w-4 h-4 text-white fill-current"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
+                        {product.productVideo &&
+                        (product.productVideo.includes("youtube.com") ||
+                          product.productVideo.includes("youtu.be")) ? (
+                          <i className="bi bi-youtube text-white text-lg"></i>
+                        ) : (
+                          <svg
+                            className="w-4 h-4 text-white fill-current"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        )}
                       </div>
                     </div>
                     {/* Use the first image as video thumbnail preview */}
@@ -630,10 +696,10 @@ const ProductDetail = () => {
                       toggleWishlist({
                         id: product.name,
                         name: product.name,
-                        price: product.price,
+                        price: currentPrice,
                         image: product.images[0],
-                        originalPrice: product.originalPrice,
-                        discount: product.discount,
+                        originalPrice: currentDelPrice,
+                        discount: currentDiscount,
                         weightOptions: product.sizes.map((s: any) =>
                           typeof s === "object" ? s.weight : String(s),
                         ),
@@ -728,21 +794,64 @@ const ProductDetail = () => {
                   Size
                 </h3>
                 <div className="flex flex-wrap gap-2">
+                  {/* Standard Variants */}
                   {sizesArr.map((sizeObj, idx) => (
                     <button
                       aria-label="Size selector"
                       key={idx}
-                      onClick={() => setSelectedSizeIdx(idx)}
-                      className={`px-4 py-2 rounded-md text-sm font-medium border transition-colors ${
-                        selectedSizeIdx === idx
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "border-border text-foreground hover:border-primary"
+                      onClick={() => {
+                        setSelectedSizeIdx(idx);
+                        setShowCustomInput(false);
+                      }}
+                      className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200 ${
+                        selectedSizeIdx === idx && !showCustomInput
+                          ? "bg-primary text-primary-foreground border-primary shadow-md transform scale-105"
+                          : "border-border text-foreground hover:border-primary hover:bg-primary/5"
                       }`}
                     >
-                      {sizeObj.weight}
+                      {getDisplayWeight(sizeObj.weight)}
                     </button>
                   ))}
+
+                  {/* Custom Quantity Button */}
+                  <button
+                    onClick={() => {
+                      setShowCustomInput(!showCustomInput);
+                      // setSelectedSizeIdx(-1); // Deselect others
+                    }}
+                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200 ${
+                      showCustomInput
+                        ? "bg-emerald-600 text-white border-emerald-600 shadow-md transform scale-105"
+                        : "border-emerald-200 text-emerald-700 hover:border-emerald-600 hover:bg-emerald-50"
+                    }`}
+                  >
+                    Custom Quantity
+                  </button>
                 </div>
+
+                {showCustomInput && (
+                  <div className="mt-4 p-4 border border-emerald-100 bg-emerald-50/30 rounded-xl animate-in fade-in slide-in-from-top-2 duration-300">
+                    <p className="text-xs font-semibold text-emerald-800 mb-2 uppercase tracking-wider">
+                      Inquire for Bulk/Custom Order
+                    </p>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="e.g. 25 kg"
+                        value={customQty}
+                        onChange={(e) => setCustomQty(e.target.value)}
+                        className="flex-1 px-4 py-2 rounded-lg border border-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
+                      />
+                      <Button
+                        onClick={handleCustomWhatsAppInquiry}
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                      >
+                        <MessageCircle className="w-4 h-4 mr-2" />
+                        Inquire
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Availability */}
@@ -776,10 +885,42 @@ const ProductDetail = () => {
                     </>
                   )}
                 </div>
+
+                {isBulkOrder && (
+                  <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg mt-2 flex items-start gap-3">
+                    <MessageCircle className="w-5 h-5 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-amber-800">
+                        Bulk Pricing Applied
+                      </p>
+                      <p className="text-xs text-amber-700">
+                        For more information / query and rate for quantities
+                        10kg, 30kg, 50kg, 100kg, 500kg and 1000+, you can also
+                        connect via WhatsApp.
+                      </p>
+                      <button
+                        onClick={() =>
+                          handleWhatsAppInquiry(selectedSizeInfo.weight)
+                        }
+                        className="text-xs font-bold text-amber-900 mt-1 hover:underline flex items-center gap-1"
+                      >
+                        Connect on WhatsApp <ChevronRight className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                )}
                 {/* Unit Rate for Wholesalers */}
                 {unitInfo.value > 0 && (
                   <p className="text-sm font-semibold text-primary/80">
-                    Rate: ₹{ratePerUnit.toFixed(2)} / {unitInfo.unit}
+                    Rate: ₹{ratePerUnit.toFixed(2)} /{" "}
+                    {/kg|g|gm|ml|ltr|l/i.test(selectedSizeInfo.weight)
+                      ? "kg"
+                      : unitInfo.unit}
+                  </p>
+                )}
+                {product.gst_percent > 0 && (
+                  <p className="text-xs font-medium text-emerald-600 mt-1">
+                    GST: {product.gst_percent}% (to be added at checkout)
                   </p>
                 )}
               </div>
