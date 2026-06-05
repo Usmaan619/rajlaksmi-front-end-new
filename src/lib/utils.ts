@@ -67,6 +67,7 @@ export function getWeightValue(weight: any | undefined | null): number {
   const num = parseFloat(numMatch[1]);
 
   // Detect unit
+  if (/tin/i.test(str)) return num * 15000; // 1 TIN = 15kg = 15000g
   if (/kg/.test(str)) return num * 1000; // kg → g
   if (/mg/.test(str)) return num / 1000; // mg → g
   if (/gm/.test(str) || /g/.test(str)) return num; // g / gm → g
@@ -80,16 +81,18 @@ export function getWeightValue(weight: any | undefined | null): number {
 /**
  * Calculates a multiplier for the price based on weight/volume.
  * Assumes the input price is 'rate per kg' or 'rate per liter'.
- * 
+ *
  * e.g. "500gm" returns 0.5
  *      "2kg" returns 2
  *      "1ltr" returns 1
  *      "250ml" returns 0.25
  */
-export function getWeightMultiplier(weightStr: string | undefined | null): number {
+export function getWeightMultiplier(
+  weightStr: string | undefined | null,
+): number {
   if (!weightStr) return 1;
   const str = String(weightStr).toLowerCase().trim();
-  
+
   // Extract numeric part (supports decimals)
   const numMatch = str.match(/^([\d.]+)/);
   if (!numMatch) return 1;
@@ -98,8 +101,9 @@ export function getWeightMultiplier(weightStr: string | undefined | null): numbe
   // KG / L / LTR are the base units where the price is 'rate per kg/l'
   // So for 2kg, we multiply the rate by 2.
   if (/kg|ltr|l\b|lt\b/.test(str)) return num;
-  
-  // For Grams, ML, Pieces, etc., the price entered in the database is 
+  if (/tin/i.test(str)) return num * 15; // 1 TIN = 15kg
+
+  // For Grams, ML, Pieces, etc., the price entered in the database is
   // usually the final price for that specific unit/packet.
   // e.g. "500gm" price is already for 500gm.
   return 1;
@@ -118,14 +122,16 @@ export function sortWeights<T = any>(weights: T[]): T[] {
  */
 export function getUnitInfo(weightStr: string | undefined | null) {
   if (!weightStr || weightStr === "N/A") return { unit: "unit", value: 1 };
-  
+
   const str = String(weightStr).toLowerCase().trim();
-  const match = str.match(/(\d+(?:\.\d+)?)\s*(kg|g|gm|pcs|pc|packet|pkt|ml|ltr|l)/i);
-  
+  const match = str.match(
+    /(\d+(?:\.\d+)?)\s*(kg|g|gm|pcs|pc|packet|pkt|ml|ltr|l|btl|bottle|tin)/i,
+  );
+
   if (match) {
     return { value: parseFloat(match[1]), unit: match[2].toLowerCase() };
   }
-  
+
   return { unit: weightStr, value: 1 };
 }
 
@@ -156,6 +162,7 @@ export function parseProductWeights(productWeight: any): any[] {
           del_price: Number(item.del_price) || 0,
           selling_rate: Number(item.selling_rate) || 0,
           mrp_rate: Number(item.mrp_rate) || 0,
+          pricing_mode: item.pricing_mode || "per_kg",
         };
       }
       return {
@@ -163,6 +170,7 @@ export function parseProductWeights(productWeight: any): any[] {
         price: 0,
         purchase_price: 0,
         del_price: 0,
+        pricing_mode: "per_kg",
       };
     })
     .filter((item: any) => {
@@ -177,10 +185,10 @@ export function parseProductWeights(productWeight: any): any[] {
  */
 export function getDisplayWeight(weight: any): string {
   if (!weight) return "";
-  
+
   const weightStr = String(weight);
   const normalized = weightStr.toLowerCase().replace(/\s/g, "");
-  
+
   if (
     normalized === "500gm" ||
     normalized === "500g" ||

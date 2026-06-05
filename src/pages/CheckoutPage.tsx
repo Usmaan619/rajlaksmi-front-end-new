@@ -49,8 +49,6 @@ import {
 import api from "@/api/axios";
 import RLJLOGOJAVIK from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
 
-
-
 /* ─── Zod Schema ─────────────────────────────────────────────── */
 const addressSchema = z.object({
   full_name: z.string().min(2, "Name must be at least 2 characters"),
@@ -97,15 +95,17 @@ const CheckoutPage = () => {
   const [isFetching, setIsFetching] = useState(true);
   const [shippingInfo, setShippingInfo] = useState<{
     charge: number;
+    baseCharge: number;
     courier: string;
     estimate: string;
     totalWeight: number;
+    gst: number;
   } | null>(null);
   const [isShippingLoading, setIsShippingLoading] = useState(false);
   const [shippingError, setShippingError] = useState<string | null>(null);
 
   /* ─── Computed values ───────────────────────────────────────── */
-  const gstTotal = useMemo(
+  const itemsGstTotal = useMemo(
     () =>
       cart.reduce(
         (acc, item) =>
@@ -115,9 +115,12 @@ const CheckoutPage = () => {
     [cart],
   );
 
-  const hasGST = gstTotal > 0;
+  const shippingGST = shippingInfo?.gst || 0;
+  const totalGST = itemsGstTotal + shippingGST;
+
+  const hasGST = totalGST > 0;
   const shippingCharge = shippingInfo?.charge || 0;
-  const grandTotal = cartTotal + gstTotal + shippingCharge;
+  const grandTotal = cartTotal + itemsGstTotal + shippingCharge;
 
   /* ─── Address Form ──────────────────────────────────────────── */
   const addressForm = useForm<AddressFormValues>({
@@ -193,24 +196,35 @@ const CheckoutPage = () => {
     try {
       const response = await api.post("/checkout/get-shipping", {
         cartItems: cart.map((item) => ({
-          name:     item.name,
-          weight:   item.weight,
+          name: item.name,
+          weight: item.weight,
           quantity: item.quantity,
-          price:    item.price,
+          price: item.price,
         })),
         pincode,
       });
 
       if (response.data.success) {
-        const { shippingCharge, courierName, estimatedDelivery, totalWeight, slabInfo } = response.data;
+        const {
+          shippingCharge,
+          courierName,
+          estimatedDelivery,
+          totalWeight,
+          slabInfo,
+          shippingGST,
+        } = response.data;
         setShippingInfo({
-          charge:      shippingCharge,
-          courier:     slabInfo?.label || courierName || "Standard Courier",
-          estimate:    estimatedDelivery,
+          charge: shippingCharge,
+          baseCharge: baseShippingCharge || shippingCharge - (shippingGST || 0),
+          courier: slabInfo?.label || courierName || "Standard Courier",
+          estimate: estimatedDelivery,
           totalWeight: totalWeight,
+          gst: shippingGST || 0,
         });
       } else {
-        setShippingError(response.data.message || "Shipping not available for this pincode");
+        setShippingError(
+          response.data.message || "Shipping not available for this pincode",
+        );
         setShippingInfo(null);
       }
     } catch {
@@ -914,31 +928,43 @@ const CheckoutPage = () => {
 
               <CardContent className="p-5 space-y-4">
                 {/* Breakdown rows */}
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   <div className="flex justify-between text-sm text-slate-600">
                     <span>Subtotal</span>
-                    <span className="font-semibold">
+                    <span className="font-semibold text-slate-800">
                       ₹{cartTotal.toFixed(2)}
                     </span>
                   </div>
 
-                  {hasGST && (
+                  {shippingInfo && shippingInfo.gst > 0 && (
                     <div className="flex justify-between text-sm text-slate-600">
                       <span className="flex items-center gap-1">
                         <Tag className="h-3 w-3 text-emerald-500" />
                         GST
                       </span>
                       <span className="font-semibold text-emerald-700">
-                        +₹{gstTotal.toFixed(2)}
+                        +₹{shippingInfo.gst.toFixed(2)}
                       </span>
                     </div>
                   )}
 
-                  {/* Shipping */}
-                  <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 space-y-1.5">
-                    <div className="flex justify-between text-sm font-semibold text-slate-700">
-                      <span className="flex items-center gap-1.5">
-                        <Truck className="h-3.5 w-3.5 text-emerald-600" />
+                  {itemsGstTotal > 0 && (
+                    <div className="flex justify-between text-sm text-slate-600">
+                      <span className="flex items-center gap-1">
+                        <Tag className="h-3 w-3 text-emerald-500" />
+                        Product Tax
+                      </span>
+                      <span className="font-semibold text-emerald-700">
+                        +₹{itemsGstTotal.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Shipping Section */}
+                  <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 space-y-3">
+                    <div className="flex justify-between items-center text-sm font-bold text-slate-800">
+                      <span className="flex items-center gap-2">
+                        <Truck className="h-4 w-4 text-emerald-600" />
                         Shipping
                       </span>
                       {isShippingLoading ? (
@@ -947,11 +973,11 @@ const CheckoutPage = () => {
                           Calculating...
                         </span>
                       ) : shippingInfo ? (
-                        <span className="text-emerald-700 font-bold">
-                          {shippingInfo.charge > 0
-                            ? `₹${shippingInfo.charge.toFixed(2)}`
-                            : "FREE"}
-                        </span>
+                        <div className="text-right">
+                          <span className="text-emerald-700 block">
+                            ₹{shippingInfo.charge.toFixed(2)}
+                          </span>
+                        </div>
                       ) : (
                         <span className="text-slate-400 font-normal text-xs">
                           Select address
@@ -959,10 +985,27 @@ const CheckoutPage = () => {
                       )}
                     </div>
 
-                    {shippingInfo && (
-                      <div className="flex justify-between text-[11px] text-slate-400">
-                        <span>{shippingInfo.courier || "Courier Partner"}</span>
-                        <span>Est. {shippingInfo.estimate || "3-7 days"}</span>
+                    {shippingInfo && !isShippingLoading && (
+                      <div className="space-y-2 mt-1 border-t border-slate-200/60 pt-2">
+                        <div className="flex justify-between text-[12px] text-slate-600">
+                          <span className="text-slate-500">
+                            {shippingInfo.courier}
+                          </span>
+                          <span className="font-bold text-slate-700">
+                            {shippingInfo.totalWeight.toFixed(2)} kg
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between text-[11px] text-slate-400 italic">
+                          <span>
+                            Est. {shippingInfo.estimate || "7-14 business days"}
+                          </span>
+                          {shippingInfo.gst > 0 && (
+                            <span className="text-emerald-600 font-medium">
+                              (Inc. ₹{shippingInfo.gst.toFixed(2)} GST)
+                            </span>
+                          )}
+                        </div>
                       </div>
                     )}
 
@@ -990,17 +1033,17 @@ const CheckoutPage = () => {
 
                 {/* Grand Total */}
                 <div className="flex justify-between items-center">
-                  <span className="font-extrabold text-slate-800 text-base">
+                  <span className="font-extrabold text-slate-800 text-lg">
                     Total
                   </span>
-                  <span className="font-extrabold text-emerald-900 text-xl">
+                  <span className="font-extrabold text-emerald-900 text-2xl">
                     ₹{grandTotal.toFixed(2)}
                   </span>
                 </div>
 
-                {hasGST && (
-                  <p className="text-[11px] text-slate-400 -mt-2">
-                    Includes ₹{gstTotal.toFixed(2)} GST
+                {totalGST > 0 && (
+                  <p className="text-[11px] text-center text-slate-400 -mt-1 bg-slate-50 py-1 rounded-full border border-slate-100">
+                    Total GST included: ₹{totalGST.toFixed(2)}
                   </p>
                 )}
               </CardContent>

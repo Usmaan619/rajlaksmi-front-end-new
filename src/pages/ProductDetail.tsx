@@ -92,6 +92,27 @@ This dal is rich in protein and essential nutrients, making it a perfect choice 
     "Suitable for all age groups",
   ],
   ingredients: "100% Organic Toor Dal\n(No additives, no preservatives)",
+  whyChoose: [
+    "Certified Organic Quality",
+    "Naturally Grown Without Harmful Chemicals",
+    "Unpolished for Better Nutrition",
+    "Hygienically Cleaned & Packed",
+    "Rich Authentic Taste & Aroma",
+    "Ideal for Daily Indian Cooking",
+    "Premium Farm Fresh Quality",
+    "No Artificial Polishing or Preservatives",
+  ],
+  storageInstructions:
+    "Store in a cool, dry place away from moisture and direct sunlight. Keep in an airtight container after opening to maintain freshness and natural aroma.",
+  commonUses: [
+    "Dal Tadka",
+    "Dal Fry",
+    "Sambhar",
+    "Khichdi",
+    "Lentil Soup",
+    "Traditional Indian Curries",
+    "Healthy Protein Meals",
+  ],
   longDescription: `Our Organic Toor Dal is cultivated using traditional and sustainable farming methods without the use of harmful chemicals or pesticides. Each grain is carefully selected and processed to preserve its natural nutrition, taste, and aroma.
 This dal is rich in protein and essential nutrients, making it a perfect choice for daily meals. Whether you're preparing simple dal or traditional recipes, our toor dal ensures purity and great taste in every bite.`,
 };
@@ -198,6 +219,13 @@ const ProductDetail = () => {
           ? apiProduct.health_benefits.split("\n").filter(Boolean)
           : DEFAULT_PRODUCT.healthBenefits,
         ingredients: apiProduct.ingredients || DEFAULT_PRODUCT.ingredients,
+        whyChoose: apiProduct.why_choose
+          ? apiProduct.why_choose.split("\n").filter(Boolean)
+          : [],
+        storageInstructions: apiProduct.storage_instructions || "",
+        commonUses: apiProduct.common_uses
+          ? apiProduct.common_uses.split("\n").filter(Boolean)
+          : [],
         longDescription:
           apiProduct.full_description || DEFAULT_PRODUCT.longDescription,
         images: apiProduct.product_images?.length
@@ -324,11 +352,10 @@ const ProductDetail = () => {
         : product.originalPrice *
           (getWeightValue(selectedSizeInfo.weight) / 1000);
 
-  // Wholesale Logic: Extract unit and calculate rate
   const getUnitInfo = (weightStr: string) => {
     if (!weightStr || weightStr === "N/A") return { unit: "unit", value: 1 };
     const match = weightStr.match(
-      /(\d+(?:\.\d+)?)\s*(kg|g|gm|pcs|pc|packet|pkt|ml|ltr|l)/i,
+      /(\d+(?:\.\d+)?)\s*(kg|g|gm|pcs|pc|packet|pkt|ml|ltr|l|btl|bottle|tin)/i,
     );
     if (match) {
       return { value: parseFloat(match[1]), unit: match[2].toLowerCase() };
@@ -339,12 +366,26 @@ const ProductDetail = () => {
   const unitInfo = getUnitInfo(selectedSizeInfo.weight);
   // Calculate rate per KG for display (useful if price is entered per packet for gm/ml)
   const weightInKg = getWeightValue(selectedSizeInfo.weight) / 1000;
-  const ratePerUnit =
-    selectedSizeInfo.selling_rate && selectedSizeInfo.selling_rate > 0
-      ? selectedSizeInfo.selling_rate
-      : weightMultiplier === 1 && weightInKg > 0
-        ? (selectedSizeInfo.price || product.price) / weightInKg
-        : selectedSizeInfo.price || product.price;
+
+  let ratePerUnit = selectedSizeInfo.price || product.price;
+
+  if (selectedSizeInfo.pricing_mode === "fixed") {
+    if (
+      unitInfo.value > 1 &&
+      /^(btl|bottle|pcs|pc|piece|packet|pkt)$/i.test(unitInfo.unit)
+    ) {
+      ratePerUnit = (selectedSizeInfo.price || product.price) / unitInfo.value;
+    } else {
+      ratePerUnit = selectedSizeInfo.price || product.price;
+    }
+  } else if (
+    selectedSizeInfo.selling_rate &&
+    selectedSizeInfo.selling_rate > 0
+  ) {
+    ratePerUnit = selectedSizeInfo.selling_rate;
+  } else if (weightMultiplier === 1 && weightInKg > 0) {
+    ratePerUnit = (selectedSizeInfo.price || product.price) / weightInKg;
+  }
 
   let currentDiscount = product.discount;
   if (currentDelPrice > currentPrice) {
@@ -911,12 +952,31 @@ const ProductDetail = () => {
                 )}
                 {/* Unit Rate for Wholesalers */}
                 {unitInfo.value > 0 && (
-                  <p className="text-sm font-semibold text-primary/80">
-                    Rate: ₹{ratePerUnit.toFixed(2)} /{" "}
-                    {/kg|g|gm|ml|ltr|l/i.test(selectedSizeInfo.weight)
-                      ? "kg"
-                      : unitInfo.unit}
-                  </p>
+                  <div className="flex flex-col gap-0.5">
+                    {/tin/i.test(selectedSizeInfo.weight) && weightInKg > 0 ? (
+                      <>
+                        <p className="text-sm font-semibold text-primary/80">
+                          Rate: ₹{((selectedSizeInfo.price || product.price) / weightInKg).toFixed(2)} / kg
+                        </p>
+                        <p className="text-xs font-medium text-muted-foreground">
+                          (₹{(selectedSizeInfo.price || product.price).toFixed(2)} / TIN — 1 TIN = 15kg)
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-sm font-semibold text-primary/80">
+                        Rate: ₹{ratePerUnit.toFixed(2)} /{" "}
+                        {selectedSizeInfo.pricing_mode === "fixed"
+                          ? unitInfo.unit.toUpperCase() === "BTL"
+                            ? "BTL"
+                            : unitInfo.unit.toUpperCase() === "PCS"
+                              ? "PCS"
+                              : unitInfo.unit
+                          : /\b(kg|g|gm|ml|ltr|l)\b/i.test(selectedSizeInfo.weight)
+                            ? "kg"
+                            : unitInfo.unit}
+                      </p>
+                    )}
+                  </div>
                 )}
                 {product.gst_percent > 0 && (
                   <p className="text-xs font-medium text-emerald-600 mt-1">
@@ -1160,6 +1220,70 @@ const ProductDetail = () => {
                       {product.ingredients}
                     </AccordionContent>
                   </AccordionItem>
+                  {product.whyChoose && product.whyChoose.length > 0 && (
+                    <AccordionItem
+                      value="item-3a"
+                      className="border-b border-[hsl(120,20%,85%)]"
+                    >
+                      <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                        <span className="flex-1">
+                          Why Choose Our {product.name}?
+                        </span>
+                        <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                          <ChevronDown className="h-5 w-5" />
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">
+                        <ul className="space-y-2">
+                          {product.whyChoose.map((item: string, i: number) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <span className="text-primary mt-1">•</span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </AccordionContent>
+                    </AccordionItem>
+                  )}
+                  {product.storageInstructions && (
+                    <AccordionItem
+                      value="item-3b"
+                      className="border-b border-[hsl(120,20%,85%)]"
+                    >
+                      <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                        <span className="flex-1">Storage Instructions</span>
+                        <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                          <ChevronDown className="h-5 w-5" />
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
+                        {product.storageInstructions}
+                      </AccordionContent>
+                    </AccordionItem>
+                  )}
+                  {product.commonUses && product.commonUses.length > 0 && (
+                    <AccordionItem
+                      value="item-3c"
+                      className="border-b border-[hsl(120,20%,85%)]"
+                    >
+                      <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                        <span className="flex-1">Common Uses</span>
+                        <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                          <ChevronDown className="h-5 w-5" />
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">
+                        <ul className="space-y-2">
+                          {product.commonUses.map((item: string, i: number) => (
+                            <li key={i} className="flex items-start gap-2">
+                              <span className="text-primary mt-1">•</span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </AccordionContent>
+                    </AccordionItem>
+                  )}
                   <AccordionItem value="item-4" className="border-none">
                     <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
                       <span className="flex-1">Additional Information</span>

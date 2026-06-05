@@ -83,7 +83,7 @@ const OrderDetailsPage = () => {
   }
 
   if (!order) return null;
-
+  // https://codeforphilly.org/people/Gauswarn
   return (
     <div className="min-h-screen bg-slate-50/50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-8">
@@ -173,20 +173,32 @@ const OrderDetailsPage = () => {
                   <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
                     <Package size={20} className="text-primary" /> Order Summary
                   </h3>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div className="flex justify-between text-sm font-medium text-slate-600">
                       <span>Subtotal</span>
-                      <span>₹{order.total_amount}</span>
+                      <span className="text-slate-900 font-bold">
+                        ₹{order.total_amount}
+                      </span>
                     </div>
                     <div className="flex justify-between text-sm font-medium text-slate-600">
-                      <span>Shipping</span>
-                      <span className="text-emerald-600">Free</span>
-                    </div>
-                    <div className="pt-3 border-t border-slate-100 flex justify-between items-center bg-slate-50/50 -mx-6 px-6 py-4 mt-6">
-                      <span className="text-base font-bold text-slate-900">
-                        Total
+                      <span className="flex items-center gap-1.5">
+                        <Truck size={14} className="text-emerald-600" />
+                        Shipping
                       </span>
-                      <span className="text-xl font-extrabold text-primary">
+                      <span className="text-emerald-700 font-bold">
+                        Included
+                      </span>
+                    </div>
+                    <div className="pt-4 border-t border-slate-100 flex justify-between items-center bg-slate-50/80 -mx-6 px-6 py-4 mt-4">
+                      <div>
+                        <span className="text-base font-bold text-slate-900 block">
+                          Total Amount
+                        </span>
+                        <p className="text-[10px] text-slate-400 font-medium">
+                          All taxes included
+                        </p>
+                      </div>
+                      <span className="text-2xl font-black text-primary">
                         ₹{order.total_amount}
                       </span>
                     </div>

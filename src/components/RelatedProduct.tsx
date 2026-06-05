@@ -76,10 +76,10 @@ const ProductCard = ({ product }: { product: Product }) => {
     price: "",
   };
   const weightMultiplier = getWeightMultiplier(selectedWeightObj.weight);
-  const currentPrice = (selectedWeightObj.price
-    ? Number(selectedWeightObj.price)
-    : pPrice) * weightMultiplier;
-  
+  const currentPrice =
+    (selectedWeightObj.price ? Number(selectedWeightObj.price) : pPrice) *
+    weightMultiplier;
+
   const currentDelPrice = pDelPrice * weightMultiplier;
 
   let currentDiscount = pDiscount;
@@ -134,7 +134,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             width="265"
             height="265"
             loading="lazy"
-            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             onError={(e) => {
               (e.target as HTMLImageElement).src = producttest;
             }}
