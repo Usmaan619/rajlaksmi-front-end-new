@@ -14,14 +14,14 @@ import {
 import Autoplay from "embla-carousel-autoplay";
 
 const logos = [
-  { src: FssaiLogo, alt: "FSSAI certified" },
-  { src: IndiaOrganicLogo, alt: "India Organic" },
-  { src: Usda, alt: "USDA Organic" },
-  { src: Apeda, alt: "APEDA certified" },
-  { src: impandexpot, alt: "Import and Export certified" },
+  { src: FssaiLogo, alt: "FSSAI certified organic food products by Rajlakshmi Javiks International" },
+  { src: IndiaOrganicLogo, alt: "100% Natural and Organic food certification India" },
+  { src: Usda, alt: "Guaranteed Original authentic organic products certification" },
+  { src: Apeda, alt: "APEDA certified organic food export quality products" },
+  { src: impandexpot, alt: "Import and Export certification for international organic trade" },
   {
     src: NPOP,
-    alt: "NPOP National Programme for Organic Production certified",
+    alt: "NPOP National Programme for Organic Production certified by Government of India",
   },
 ];
 
@@ -32,16 +32,15 @@ const CertificationsSection: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-10 sm:mb-14">
           <p className="text-[#116931] font-semibold text-[11px] sm:text-xs uppercase tracking-[0.3em] mb-3">
-            Quality Guaranteed
+            Quality Guaranteed — Certified Organic Purity
           </p>
 
           <h2 className="text-2xl sm:text-3xl font-bold text-[#116931] tracking-tight font-serif mb-3">
-            Our Trusted Certifications
+            Our Trusted Certifications & Quality Standards
           </h2>
 
-          <p className="text-gray-500 text-sm sm:text-base max-w-xl mx-auto">
-            Adhering to the highest global standards to bring you pure,
-            authentic, and safe organic products from the heart of India.
+          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            At Rajlakshmi Javiks International, every organic food product we sell meets the highest national and international quality standards. Our certifications from FSSAI, APEDA, and NPOP guarantee that you receive genuine, lab-tested, and chemical-free organic food — from pure A2 Gir Cow Bilona Ghee to cold-pressed oils, organic pulses, millets, dry fruits, and natural spices. We adhere to rigorous testing protocols and transparent supply chain practices to bring you authentic, safe, and nutritious organic products from the heart of India.
           </p>
         </div>
 

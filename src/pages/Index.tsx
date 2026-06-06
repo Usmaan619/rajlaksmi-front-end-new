@@ -17,24 +17,30 @@ const TestimonialSection = lazy(() => import("@/components/TestimonialSection"))
 const CategoryProductsSection = lazy(() => import("@/components/CategoryProductsSection"));
 const OurProductsSection = lazy(() => import("@/components/OurProductsSection"));
 const FarmerDividerExclusive = lazy(() => import("@/components/FarmerDividerExclusive"));
+const HomepageSeoContent = lazy(() => import("@/components/HomepageSeoContent"));
 
 const Index = () => {
   return (
     <>
       <Seo
-        title="Rajlakshmi Javiks International | Pure A2 Gir Cow Ghee & Organic Foods"
-        description="Rajlakshmi Javiks International is a trusted Indore-based wholesaler of 100% pure Bilona A2 Gir Cow Ghee, organic pulses, millets, and dry fruits. Established in 2019 with a focus on purity and health."
+        title="Rajlakshmi Javiks International | Buy Pure A2 Gir Cow Bilona Ghee & Organic Foods Online in India"
+        description="Rajlakshmi Javiks International — India's trusted Indore-based wholesaler & retailer of 100% pure Bilona A2 Gir Cow Ghee, organic pulses, millets, cold-pressed oils, dry fruits, and natural spices. FSSAI & APEDA certified. PAN India delivery. Buy organic food products online at best prices. Established 2019."
         url="https://rajlakshmijaviks.com/"
       />
 
       <h1 className="sr-only">
-        Rajlakshmi Javiks International is a retail trader and wholesaler based
-        in Indore, Madhya Pradesh, specializing in organic and natural food
-        products. Established in 2019, the business offers pure organic A2 cow
-        ghee, oils, dry fruits, grains, pulses, spices, millets, and other
-        natural foods, all with lab-tested quality and available for PAN India
-        delivery. Our A2 Gir Cow Ghee Vedik Bilona and Organic Kashmiri Saffron
-        are highly rated for their authenticity and purity.
+        Rajlakshmi Javiks International — Buy Pure Organic A2 Gir Cow Bilona
+        Ghee, Cold-Pressed Oils, Organic Pulses, Millets, Dry Fruits, Seeds,
+        and Natural Spices Online in India. We are a FSSAI-certified and
+        APEDA-certified retail trader and wholesaler based in Indore, Madhya
+        Pradesh, India, specializing in 100% organic and natural food products
+        since 2019. Our A2 Gir Cow Ghee is prepared using the traditional Vedic
+        Bilona method with grass-fed indigenous cow milk. We offer lab-tested,
+        chemical-free, preservative-free organic food with PAN India delivery
+        and cash on delivery options. Shop A2 ghee online, buy organic pulses,
+        order cold-pressed mustard oil, purchase organic dry fruits, and explore
+        our complete range of certified organic groceries at the best wholesale
+        and retail prices in India.
       </h1>
 
       <div className="min-h-screen flex flex-col">
@@ -55,6 +61,7 @@ const Index = () => {
             <AboutSection />
             <ContactSection />
             <TestimonialSection />
+            <HomepageSeoContent />
           </Suspense>
         </main>
       </div>

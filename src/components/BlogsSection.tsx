@@ -107,12 +107,15 @@ const BlogsSection = () => {
         {/* Section Header */}
         <div className="mb-14 text-center relative flex flex-col items-center">
           <p className="text-[#01722C] font-semibold text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-3">
-            The Wisdom of Tradition
+            Organic Living — Tips, Recipes & Traditional Wisdom
           </p>
           <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
-            Our Stories & Blogs
+            Our Stories, Health Tips & Organic Food Blogs
           </h2>
           <div className="h-1 w-24 bg-[#01722C]/20 mt-6 rounded-full" />
+          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-2xl leading-relaxed">
+            Explore expert articles on the benefits of A2 Gir Cow Ghee, how cold-pressed oils improve heart health, why organic millets are ideal for diabetic-friendly diets, traditional Bilona ghee-making methods, and practical tips for switching your family to a chemical-free organic lifestyle. Knowledge is the first step towards purity.
+          </p>
         </div>
 
         {/* Mobile: Horizontal Scroll with Auto-slide | Tablet/Desktop: Grid */}

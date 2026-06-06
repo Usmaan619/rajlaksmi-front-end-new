@@ -26,6 +26,7 @@ import {
   parseProductWeights,
   getDisplayWeight,
 } from "@/lib/utils";
+import Seo from "@/components/Seo";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -415,14 +416,22 @@ const CategoryMain = () => {
 
   return (
     <>
+      <Seo
+        title={`${categoryName || "Organic Products"} | Buy Online — Rajlakshmi Javiks International`}
+        description={`Shop certified organic ${categoryName || "food products"} online from Rajlakshmi Javiks International. 100% pure, lab-tested, chemical-free products sourced from trusted farms. FSSAI certified. PAN India delivery.`}
+        url={`/categories?category=${encodeURIComponent(categoryName)}`}
+      />
+      <h1 className="sr-only">
+        {`Buy ${categoryName || "Organic Food Products"} Online — Rajlakshmi Javiks International. 100% pure, FSSAI-certified, lab-tested organic ${categoryName || "food products"} at wholesale and retail prices with PAN India delivery from Indore, Madhya Pradesh.`}
+      </h1>
       <div className="min-h-screen bg-gray-50/30">
         {/* Header Title */}
         <section className="px-4 md:px-16 lg:px-24 pt-8 pb-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground">
             {categoryName || "Organic Products"}
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Pure, naturally grown products for your healthy lifestyle.
+          </h2>
+          <p className="text-sm text-muted-foreground mt-2 max-w-2xl leading-relaxed">
+            Browse our complete collection of certified organic {categoryName || "food products"} — lab-tested, chemical-free, and sourced directly from trusted organic farms across India. All products carry FSSAI certification and are available for PAN India delivery with cash on delivery options.
           </p>
         </section>
 

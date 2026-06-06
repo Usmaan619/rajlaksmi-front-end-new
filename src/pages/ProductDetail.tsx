@@ -956,10 +956,17 @@ const ProductDetail = () => {
                     {/tin/i.test(selectedSizeInfo.weight) && weightInKg > 0 ? (
                       <>
                         <p className="text-sm font-semibold text-primary/80">
-                          Rate: ₹{((selectedSizeInfo.price || product.price) / weightInKg).toFixed(2)} / kg
+                          Rate: ₹
+                          {(
+                            (selectedSizeInfo.price || product.price) /
+                            weightInKg
+                          ).toFixed(2)}{" "}
+                          / kg
                         </p>
                         <p className="text-xs font-medium text-muted-foreground">
-                          (₹{(selectedSizeInfo.price || product.price).toFixed(2)} / TIN — 1 TIN = 15kg)
+                          (₹
+                          {(selectedSizeInfo.price || product.price).toFixed(2)}{" "}
+                          / TIN — 1 TIN = 15kg)
                         </p>
                       </>
                     ) : (
@@ -971,7 +978,9 @@ const ProductDetail = () => {
                             : unitInfo.unit.toUpperCase() === "PCS"
                               ? "PCS"
                               : unitInfo.unit
-                          : /\b(kg|g|gm|ml|ltr|l)\b/i.test(selectedSizeInfo.weight)
+                          : /\b(kg|g|gm|ml|ltr|l)\b/i.test(
+                                selectedSizeInfo.weight,
+                              )
                             ? "kg"
                             : unitInfo.unit}
                       </p>

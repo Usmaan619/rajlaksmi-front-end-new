@@ -96,12 +96,15 @@ const TestimonialSection = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="mb-14 text-center">
           <p className="text-[#01722C] font-semibold text-xs sm:text-sm uppercase tracking-[0.3em] mb-3">
-            Pure Love
+            Trusted by Thousands of Indian Families
           </p>
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
-            Testimonial
+            What Our Customers Say About Rajlakshmi Javiks
           </h2>
           <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
+          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Hear from real customers who have experienced the purity and authenticity of our organic food products. From A2 Gir Cow Bilona Ghee to organic dry fruits and cold-pressed oils, our customers across India trust Rajlakshmi Javiks for lab-tested quality, honest pricing, and reliable PAN India delivery.
+          </p>
         </div>
 
         <div className="relative max-w-6xl mx-auto">

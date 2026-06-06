@@ -69,11 +69,10 @@ const ContactSection = () => {
           <div className="space-y-8">
             <div>
               <h2 className="font-heading text-2xl lg:text-3xl font-bold text-primary mb-3">
-                Send Us a Message
+                Contact Rajlakshmi Javiks International — We're Here to Help
               </h2>
-              <p className="text-foreground/70 text-sm lg:text-base">
-                Get in touch with us to know more about our products, quality
-                process, and how we ensure purity in every batch.
+              <p className="text-foreground/70 text-sm lg:text-base leading-relaxed">
+                Have questions about our organic food products, bulk order pricing, wholesale enquiries, or delivery across India? Get in touch with our team based in Indore, Madhya Pradesh. We are happy to help you with product recommendations, quality certifications, custom B2B organic food supply, and everything you need to know about our pure A2 Bilona Ghee, cold-pressed oils, and certified organic grocery range.
               </p>
             </div>
 

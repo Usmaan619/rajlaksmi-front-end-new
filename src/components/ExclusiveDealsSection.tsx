@@ -108,14 +108,14 @@ const ExclusiveDealsSection = () => {
         {/* Heading */}
         <div className="mb-12 text-center">
           <p className="text-[#01722C] font-semibold text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-3">
-            Pure Savings, Pure Life
+            Pure Savings, Pure Organic Life
           </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
-            Special Deals
+            Exclusive Organic Food Deals & Offers
           </h2>
           <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
-          <p className="mt-5 text-gray-600 italic text-sm sm:text-base md:text-lg font-medium">
-            Hand-picked organic essentials at up to -40% off.
+          <p className="mt-5 text-gray-600 text-sm sm:text-base md:text-lg font-medium max-w-2xl mx-auto leading-relaxed">
+            Save on hand-picked organic essentials with exclusive discounts on pure A2 Gir Cow Bilona Ghee, cold-pressed cooking oils, and premium natural food products. Limited-time organic food offers — buy pure, save more.
           </p>
         </div>
 

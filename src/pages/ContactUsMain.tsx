@@ -29,6 +29,7 @@ import {
 import { createContactAPI } from "@/api/contact.service";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
+import Seo from "@/components/Seo";
 
 const Label = ({ text }: { text: string }) => (
   <label className="text-foreground/70 text-sm">
@@ -71,6 +72,14 @@ const ContactMainPage = () => {
 
   return (
     <>
+      <Seo
+        title="Contact Us | Rajlakshmi Javiks International — Organic Food Enquiries, Wholesale & Support"
+        description="Contact Rajlakshmi Javiks International for organic food product enquiries, bulk wholesale orders, B2B pricing, order tracking, and customer support. Based in Indore, MP. Call +91-8769215905 or email us. PAN India organic food delivery."
+        url="/contact"
+      />
+      <h1 className="sr-only">
+        Contact Rajlakshmi Javiks International — Organic Food Company in Indore, Madhya Pradesh. Reach us for product enquiries, A2 Gir Cow Bilona Ghee orders, bulk organic food purchasing, wholesale pricing, certification details, delivery support, and B2B partnerships.
+      </h1>
       <ContactBanner />
       <section className="py-12 lg:py-20 bg-[#F0FFF0] overflow-hidden">
         <div className="container mx-auto px-4">
@@ -81,8 +90,8 @@ const ContactMainPage = () => {
                 <h2 className="font-heading text-2xl lg:text-3xl font-bold text-primary mb-3">
                   Send Us a Message
                 </h2>
-                <p className="text-foreground/70 text-sm lg:text-base">
-                  Get in touch with us to know more about our products.
+                <p className="text-foreground/70 text-sm lg:text-base leading-relaxed">
+                  Have a question about our organic food products, A2 Gir Cow Bilona Ghee, cold-pressed oils, or bulk order pricing? Need help tracking an order or understanding our FSSAI certifications? Fill out the form below and our team will respond within 24 hours (Mon-Sat, 10 AM to 8 PM IST).
                 </p>
               </div>
 

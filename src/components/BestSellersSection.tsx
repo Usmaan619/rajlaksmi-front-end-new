@@ -242,12 +242,15 @@ const BestSellersSection = () => {
         {/* Heading */}
         <div className="mb-12 text-center">
           <p className="text-[#116931] font-semibold text-xs sm:text-sm uppercase tracking-[0.2em] mb-3">
-            Most Loved
+            Most Loved by Indian Families
           </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#116931] tracking-tight">
-            Our Best Sellers
+            Our Best-Selling Organic Products
           </h2>
           <div className="h-1 w-24 bg-[#116931]/20 mx-auto mt-6 rounded-full" />
+          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Discover the organic food products that thousands of health-conscious customers across India love and trust. From our signature A2 Gir Cow Bilona Ghee to premium organic pulses, cold-pressed oils, and natural dry fruits — these best sellers are chosen for their unmatched purity, exceptional taste, and verified quality certifications.
+          </p>
         </div>
 
         {/* Grid */}

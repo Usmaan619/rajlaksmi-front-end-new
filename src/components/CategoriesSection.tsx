@@ -132,13 +132,16 @@ const CategoriesSection = () => {
         {/* Header */}
         <div className="mb-14 text-center">
           <p className="text-[#01722C] font-semibold text-xs uppercase tracking-[0.3em] mb-4">
-            Pure & Authentic
+            Pure & Authentic Organic Food Categories
           </p>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
-            Shop by Category
+            Shop Organic Products by Category
           </h2>
           <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
+          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Browse our complete collection of certified organic food products across all categories — from pure A2 Bilona Ghee and cold-pressed oils to organic millets, pulses, dry fruits, natural spices, seeds, khakhra, and artisanal homemade aachar. Every category is curated with products that are lab-tested, chemical-free, and sourced from trusted organic farms across India.
+          </p>
         </div>
 
         {/* Scrollable Container */}

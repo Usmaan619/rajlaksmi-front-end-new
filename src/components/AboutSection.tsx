@@ -11,7 +11,7 @@ const AboutSection = () => {
           {/* Background image */}
           <img
             src={aboutFarmersBgImage}
-            alt="farmer background"
+            alt="Indian organic farmer background illustration"
             loading="lazy"
             decoding="async"
             className="
@@ -32,20 +32,33 @@ const AboutSection = () => {
             {/* Content */}
             <div className="w-full md:w-1/2 space-y-4">
               <h2 className="font-heading text-2xl lg:text-3xl font-bold text-primary">
-                About Rajlakshmi Javiks
+                About Rajlakshmi Javiks International
               </h2>
 
               <p className="text-primary font-semibold text-sm lg:text-base">
-                Pure. Natural. Trusted.
+                Pure. Natural. Trusted Since 2019.
               </p>
 
               <p className="text-foreground/80 text-sm lg:text-base leading-relaxed">
-                Rajlakshmi Javiks International is a retail trader and
+                Rajlakshmi Javiks International is a leading retail trader and
                 wholesaler based in Indore, Madhya Pradesh, specializing in
-                organic and natural food products. Established in 2019, we offer
-                pure organic A2 cow ghee, oils, dry fruits, grains, pulses, and
-                spices, all with lab-tested quality and available for PAN India
-                delivery.
+                premium organic and natural food products. Since our establishment
+                in 2019, we have been committed to offering 100% pure organic
+                A2 Gir Cow Bilona Ghee, cold-pressed oils, premium dry fruits,
+                whole grains, organic pulses, natural millets, and authentic
+                Indian spices — all rigorously lab-tested for quality and purity.
+              </p>
+
+              <p className="text-foreground/80 text-sm lg:text-base leading-relaxed">
+                Our products are sourced directly from certified organic farming
+                communities across central India, ensuring complete traceability
+                from farm to your kitchen. We hold FSSAI, APEDA, and NPOP
+                certifications, and every product is available for PAN India
+                delivery with secure packaging. Whether you are a health-conscious
+                individual, a family seeking chemical-free groceries, or a business
+                looking for wholesale organic food supplies, Rajlakshmi Javiks is
+                your trusted partner for authentic, pure, and affordable organic
+                nutrition.
               </p>
 
               <Link to="/about">
@@ -64,7 +77,7 @@ const AboutSection = () => {
               <div className="rounded-2xl overflow-hidden ">
                 <img
                   src={aboutFarmersImage}
-                  alt="Farmers with organic products"
+                  alt="Indian farmers with organic food products grown for Rajlakshmi Javiks International"
                   width="600"
                   height="400"
                   loading="lazy"
