@@ -10,6 +10,7 @@ import firstImg from "@/assets/aboutus/first.webp";
 import secImg from "@/assets/aboutus/sec.webp";
 import Seo from "@/components/Seo";
 import CompetitorComparisonSection from "@/components/CompetitorComparisonSection";
+import FAQSection from "@/components/FAQSection";
 
 const AboutUsPage = () => {
   const navigate = useNavigate();
@@ -445,6 +446,36 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
           </div>
         </section>
       </div>
+
+      <FAQSection
+        title="About Rajlakshmi Javiks – Frequently Asked Questions"
+        faqs={[
+          {
+            question: "When was Rajlakshmi Javiks International established?",
+            answer: "Rajlakshmi Javiks International was established in 2019 in Indore, Madhya Pradesh, and has since grown to become one of India's most trusted organic food brands serving over 17,000 health-conscious customers.",
+          },
+          {
+            question: "What products does Rajlakshmi Javiks sell?",
+            answer: "We offer a wide range of premium organic food products including A2 Gir Cow Bilona Ghee, cold-pressed oils, organic dry fruits, whole grain millets, chemical-free pulses, natural spices, Kashmiri Saffron, and artisanal homemade products.",
+          },
+          {
+            question: "Are Rajlakshmi Javiks products certified?",
+            answer: "Yes, all our products hold valid FSSAI certification, APEDA certification, and comply with NPOP (National Programme for Organic Production) standards, ensuring complete purity and traceability.",
+          },
+          {
+            question: "Where does Rajlakshmi Javiks source its products from?",
+            answer: "We work directly with organic farming communities in Madhya Pradesh, Rajasthan, and Karnataka, ensuring fair trade practices, sustainable agriculture, and complete supply chain traceability.",
+          },
+          {
+            question: "Does Rajlakshmi Javiks deliver across India?",
+            answer: "Yes, we offer PAN India delivery through our reliable logistics network, ensuring that our organic products reach every doorstep across India safely and fresh.",
+          },
+          {
+            question: "How does Rajlakshmi Javiks ensure product quality?",
+            answer: "Every product goes through multi-stage quality checks: farm-level organic compliance, post-harvest pesticide residue testing, NABL-accredited lab purity testing, hygienic processing, and vacuum-sealed packaging for maximum freshness.",
+          },
+        ]}
+      />
     </>
   );
 };

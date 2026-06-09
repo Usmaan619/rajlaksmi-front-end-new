@@ -1,4 +1,6 @@
 
+import FAQSection from "@/components/FAQSection";
+
 const PrivacyPolicy = () => {
   return (
     <>
@@ -207,6 +209,36 @@ const PrivacyPolicy = () => {
           </div>
         </div>
       </div>
+
+      <FAQSection
+        title="Privacy Policy – Frequently Asked Questions"
+        faqs={[
+          {
+            question: "What personal information does Rajlakshmi Javiks collect?",
+            answer: "We collect your name, email address, phone number, shipping/billing address, order details, and technical information like IP address and browser type when you interact with our website.",
+          },
+          {
+            question: "Does Rajlakshmi Javiks sell my personal data to third parties?",
+            answer: "No, we never sell or rent your personal data. We only share necessary information with delivery partners, payment gateways, and legal authorities when required by law.",
+          },
+          {
+            question: "How does Rajlakshmi Javiks protect my data?",
+            answer: "We implement industry-standard security measures including encryption, secure servers, and access controls to protect your personal information from unauthorized access, misuse, or disclosure.",
+          },
+          {
+            question: "Can I request deletion of my account and data?",
+            answer: "Yes, you have the right to request deletion of your account and personal data at any time. Simply contact us at support@rajlakshmijaviks.com and we will process your request.",
+          },
+          {
+            question: "Does Rajlakshmi Javiks use cookies?",
+            answer: "Yes, we use cookies to enhance your browsing experience, remember your preferences, and analyze website traffic. You can manage or disable cookies through your browser settings.",
+          },
+          {
+            question: "How long does Rajlakshmi Javiks retain my data?",
+            answer: "We retain your data only as long as required for legal and business purposes. Once the retention period expires, your data is securely deleted from our systems.",
+          },
+        ]}
+      />
     </>
   );
 };

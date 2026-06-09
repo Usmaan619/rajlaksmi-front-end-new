@@ -1,4 +1,6 @@
 
+import FAQSection from "@/components/FAQSection";
+
 const TermAndCondition = () => {
   return (
     <>
@@ -176,6 +178,36 @@ const TermAndCondition = () => {
           </div>
         </div>
       </div>
+
+      <FAQSection
+        title="Terms & Conditions – Frequently Asked Questions"
+        faqs={[
+          {
+            question: "What happens if I violate the Terms & Conditions?",
+            answer: "If you violate our Terms & Conditions, we reserve the right to restrict or terminate your access to our website and services without prior notice.",
+          },
+          {
+            question: "Can Rajlakshmi Javiks change these Terms & Conditions?",
+            answer: "Yes, we reserve the right to modify or update these Terms & Conditions at any time. Changes will be effective immediately upon posting on the website. Continued use of our website after changes constitutes acceptance of the updated terms.",
+          },
+          {
+            question: "Which courts have jurisdiction over disputes?",
+            answer: "All disputes arising from these Terms & Conditions shall be subject to the exclusive jurisdiction of the courts in Indore, Madhya Pradesh, India.",
+          },
+          {
+            question: "Can I use content from Rajlakshmi Javiks website?",
+            answer: "No, all content on our website including text, graphics, logos, images, and software is the intellectual property of Rajlakshmijaviks International. Unauthorized reproduction, distribution, or use is strictly prohibited.",
+          },
+          {
+            question: "Is my payment information safe on your website?",
+            answer: "Yes, we use secure payment gateways and do not store your card details on our servers. All transactions are processed through encrypted, PCI-compliant payment systems.",
+          },
+          {
+            question: "What are my responsibilities as a user?",
+            answer: "As a user, you agree to provide accurate information during registration, pay all applicable charges, refrain from unlawful activities on the platform, and indemnify Rajlakshmijaviks International from any claims arising from misuse.",
+          },
+        ]}
+      />
     </>
   );
 };

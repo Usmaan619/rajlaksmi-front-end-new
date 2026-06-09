@@ -18,6 +18,7 @@ import Footer from "@/components/Footer";
 import { getAllBlogs, getBlogCategories } from "@/api/blog.service";
 import { createNewsletterAPI } from "@/api/contact.service";
 import { toast } from "@/hooks/use-toast";
+import FAQSection from "@/components/FAQSection";
 
 import blogImg from "@/assets/blog/blogheader.png";
 
@@ -541,6 +542,36 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
             </div>
           </div>
         </section>
+
+        <FAQSection
+          title="Blog – Frequently Asked Questions"
+          faqs={[
+            {
+              question: "How often does Rajlakshmi Javiks publish new blog posts?",
+              answer: "We regularly publish new articles, guides, and health tips about organic food, natural living, and healthy recipes. Subscribe to our newsletter to stay updated with the latest posts.",
+            },
+            {
+              question: "Can I suggest a topic for the Rajlakshmi Javiks blog?",
+              answer: "Absolutely! We welcome topic suggestions from our readers. Please reach out to us at rajlaxmiorganicfoods@gmail.com with your ideas and we will do our best to cover them.",
+            },
+            {
+              question: "Are the health tips on your blog backed by research?",
+              answer: "Yes, our blog articles are written by knowledgeable contributors and are based on established nutritional science, Ayurvedic wisdom, and practical health expertise. However, always consult a healthcare professional for medical advice.",
+            },
+            {
+              question: "Can I share blog articles from Rajlakshmi Javiks?",
+              answer: "Yes, we encourage you to share our articles with friends and family! You can share blog links directly on social media or via WhatsApp to spread awareness about organic and healthy living.",
+            },
+            {
+              question: "Do you have blogs about recipes using your products?",
+              answer: "Yes, we regularly share authentic Indian recipes using our organic products like A2 Bilona Ghee, cold-pressed oils, organic pulses, millets, and spices. Check our recipe category for delicious and healthy cooking ideas.",
+            },
+            {
+              question: "How can I subscribe to the Rajlakshmi Javiks newsletter?",
+              answer: "You can subscribe to our newsletter using the email subscription form in the blog sidebar. We send weekly organic food tips, exclusive offers, and new article updates directly to your inbox.",
+            },
+          ]}
+        />
       </main>
     </div>
   );

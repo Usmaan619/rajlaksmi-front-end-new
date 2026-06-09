@@ -1,5 +1,7 @@
 
 
+import FAQSection from "@/components/FAQSection";
+
 const RefundPolicy = () => {
   return (
     <>
@@ -177,6 +179,36 @@ const RefundPolicy = () => {
           </div>
         </div>
       </div>
+
+      <FAQSection
+        title="Return & Refund Policy – Frequently Asked Questions"
+        faqs={[
+          {
+            question: "Can I return a product after delivery?",
+            answer: "Once an order is confirmed, we generally do not accept return or refund requests. However, in case of damaged, missing, or spoiled products, we are happy to work with you to find a fair solution.",
+          },
+          {
+            question: "What should I do if I receive a damaged product?",
+            answer: "Notify us within 2 days of delivery at rajlaxmiorganicfoods@gmail.com. Include your order number, invoice image, 1 outer box image, 2 clear product images, and an unboxing video. We will process a replacement promptly.",
+          },
+          {
+            question: "How long does a refund take to process?",
+            answer: "If a refund is approved, it will be credited within 7-10 working days to the original payment method used during purchase.",
+          },
+          {
+            question: "What if a product is missing from my order?",
+            answer: "Notify us within 2 days of delivery with your order number, invoice image, outer box image, images of the opened box, and an unboxing video. We will re-send the missing product promptly.",
+          },
+          {
+            question: "Can I return a product due to taste or color variation?",
+            answer: "No, returns are not accepted for variance in taste, texture, color, or aroma. Our products are natural and handmade, so no two batches are identical. This is a sign of authenticity.",
+          },
+          {
+            question: "How quickly will I get a response to my refund request?",
+            answer: "We respond to all refund-related emails within 24-48 hours, and provide full assistance thereafter to resolve your concern as quickly as possible.",
+          },
+        ]}
+      />
     </>
   );
 };

@@ -33,6 +33,7 @@ import paymentLogo3 from "@/assets/product-detail-visa/master-card.webp";
 import paymentLogo4 from "@/assets/product-detail-visa/Bhim.webp";
 import paymentLogo5 from "@/assets/product-detail-visa/razor-pay.webp";
 import Seo from "@/components/Seo";
+import { Helmet } from "react-helmet-async";
 import RelatedProduct from "@/components/RelatedProduct";
 import WriteReviewModal from "@/components/WriteReviewModal";
 import BentoGrid from "@/components/BentoGrid";
@@ -543,6 +544,43 @@ const ProductDetail = () => {
         image={product.images[0]}
       />
 
+      <Helmet>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org/",
+            "@type": "Product",
+            name: product.name,
+            image: product.images,
+            description: product.subtitle || product.description,
+            sku: product.id || id,
+            brand: {
+              "@type": "Brand",
+              name: "Rajlakshmi Javiks",
+            },
+            offers: {
+              "@type": "Offer",
+              url: `https://rajlakshmijaviks.com/product/${id}`,
+              priceCurrency: "INR",
+              price: currentPrice,
+              itemCondition: "https://schema.org/NewCondition",
+              availability:
+                product.stock > 0
+                  ? "https://schema.org/InStock"
+                  : "https://schema.org/OutOfStock",
+            },
+            ...(reviewStats.totalReviews > 0
+              ? {
+                  aggregateRating: {
+                    "@type": "AggregateRating",
+                    ratingValue: reviewStats.averageRating,
+                    reviewCount: reviewStats.totalReviews,
+                  },
+                }
+              : {}),
+          })}
+        </script>
+      </Helmet>
+
       <h1 className="sr-only">
         {product.name} is a high-quality organic product by Rajlakshmi Javiks.
         Perfect for healthy cooking, Ayurveda remedies, and sustainable living.
@@ -550,7 +588,7 @@ const ProductDetail = () => {
       </h1>
 
       <div className="min-h-screen bg-white">
-        <main className="container mx-auto px-4 py-6 lg:py-10">
+        <main className="container mx-auto px-4 pt-6 pb-[140px] lg:py-10">
           {/* Breadcrumb */}
           <div className="flex items-center gap-2 mb-6">
             <Link
@@ -1026,8 +1064,11 @@ const ProductDetail = () => {
                 </div>
               </div>
 
+
+
               {/* Action Buttons */}
-              <div className="flex gap-3">
+              <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white p-3 shadow-[0_-8px_20px_-10px_rgba(0,0,0,0.15)] border-t border-gray-100 md:static md:bg-transparent md:p-0 md:shadow-none md:border-none flex flex-col gap-2 md:block pb-2">
+                <div className="flex gap-3 md:mb-2">
                 <Button
                   aria-label="Add to cart"
                   variant="outline"
@@ -1103,7 +1144,7 @@ const ProductDetail = () => {
               </div>
 
               {/* Wholesale / Bulk Inquiry Button */}
-              <div className="pt-2">
+              <div className="md:pt-2">
                 <a
                   href={`https://wa.me/918769215905?text=${encodeURIComponent(
                     `Hello Rajlakshmi Javik, I'm interested in bulk quantities of ${product.name} (${selectedSizeInfo.weight}). Kindly share your best wholesale rates.`,
@@ -1121,6 +1162,7 @@ const ProductDetail = () => {
                   </svg>
                   WHATSAPP FOR WHOLESALE
                 </a>
+              </div>
               </div>
 
               <div className="mt-5 pt-4 border-t border-border">

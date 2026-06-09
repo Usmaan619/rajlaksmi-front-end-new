@@ -1,5 +1,6 @@
 import React from "react";
 import { FaWhatsapp } from "react-icons/fa";
+import { useLocation } from "react-router-dom";
 
 /**
  * WhatsAppButton Component
@@ -10,6 +11,13 @@ import { FaWhatsapp } from "react-icons/fa";
  * On mobile, it opens the WhatsApp app.
  */
 const WhatsAppButton: React.FC = () => {
+  const location = useLocation();
+
+  // Hide the floating button on the product details page to prevent overlap with fixed action buttons
+  if (location.pathname.startsWith("/product/")) {
+    return null;
+  }
+
   const handleClick = () => {
     const phoneNumber = "918769215905";
     const message = encodeURIComponent("Hello, I visited gauswarn.com and need more information.");

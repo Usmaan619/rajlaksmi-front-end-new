@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/accordion";
 import { ChevronDown } from "lucide-react";
 
-const faqs = [
+const defaultFaqs = [
   {
     question: "Are Rajlakshmi Javiks products 100% organic?",
     answer:
@@ -39,11 +39,21 @@ const faqs = [
   },
 ];
 
-const FAQSection = () => {
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQSectionProps {
+  faqs?: FAQItem[];
+  title?: string;
+}
+
+const FAQSection = ({ faqs = defaultFaqs, title = "Frequently Asked Questions (FAQs)" }: FAQSectionProps) => {
   return (
     <section className="w-full max-w-4xl mx-auto px-4 py-16">
       <h2 className="text-3xl md:text-4xl font-bold text-center mb-10 text-[hsl(120,60%,30%)]">
-        Frequently Asked Questions (FAQs)
+        {title}
       </h2>
       <Accordion type="single" collapsible className="w-full">
         {faqs.map((faq, index) => (

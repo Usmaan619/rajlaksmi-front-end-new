@@ -1,4 +1,6 @@
 
+import FAQSection from "@/components/FAQSection";
+
 const ShippingPolicy = () => {
   return (
     <>
@@ -141,6 +143,36 @@ const ShippingPolicy = () => {
           </div>
         </div>
       </div>
+
+      <FAQSection
+        title="Shipping Policy – Frequently Asked Questions"
+        faqs={[
+          {
+            question: "How long does delivery take for Rajlakshmi Javiks orders?",
+            answer: "All orders are delivered within 5-10 working days. Orders are not shipped on weekends or public holidays. During high order volumes, slight delays may occur and we will notify you via email or phone.",
+          },
+          {
+            question: "How can I track my order?",
+            answer: "Once your order is shipped, you will receive a confirmation email with a tracking number and link. You can also track your order through your account dashboard on our website.",
+          },
+          {
+            question: "What happens if my package is damaged during delivery?",
+            answer: "Rajlakshmijaviks International is not responsible for products damaged during shipping. However, you should contact the shipment carrier or our support team within 48 hours to file a claim. Please save all packaging materials and damaged goods.",
+          },
+          {
+            question: "What if my package is returned as undeliverable?",
+            answer: "If a package is returned due to incorrect address or incomplete information provided by you, additional shipping charges may apply for reshipping the order.",
+          },
+          {
+            question: "Do you ship across all of India?",
+            answer: "Yes, we offer PAN India delivery. We partner with reliable logistics providers to ensure your organic products reach you safely, no matter where you are in India.",
+          },
+          {
+            question: "How can I contact support for shipping queries?",
+            answer: "You can reach our support team at rajlaxmiorganicfoods@gmail.com or call us at +91 8769115905 (Mon-Sat: 10:00 AM – 8:00 PM).",
+          },
+        ]}
+      />
     </>
   );
 };
