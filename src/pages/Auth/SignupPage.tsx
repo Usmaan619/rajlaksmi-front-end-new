@@ -29,14 +29,9 @@ import {
 
 import {
   googleLoginAPI,
-  facebookLoginAPI,
   signupAPI,
 } from "@/api/auth.service";
 import { useGoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-const FacebookLogin = React.lazy(() =>
-  import("@greatsumini/react-facebook-login"),
-);
-import { FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 const signupSchema = z
@@ -135,40 +130,7 @@ const SignupPage = () => {
     onError: () => console.log("Google Login Failed"),
   });
 
-  const handleFacebookSuccess = async (response: {
-    accessToken: string;
-    id?: string;
-    userID?: string;
-    name?: string;
-    email?: string;
-    picture?: { data: { url: string } };
-  }) => {
-    if (response.accessToken) {
-      try {
-        const res = await facebookLoginAPI(response.accessToken);
-        if (res.success && res.user && res.token) {
-          login(res.user, res.token);
-          toast.success("Login Successful");
-          navigate("/");
-        } else if (res.success) {
-          const userObj = res.user || {
-            id: response.id || response.userID || "",
-            full_name: response.name || "User",
-            email: response.email || "",
-            profile_image: response.picture?.data?.url || "",
-          };
-          login(userObj, res.token);
-          toast.success("Login Successful");
-          navigate("/");
-        } else {
-          toast.error(res.message || "Facebook Login failed");
-        }
-      } catch (err) {
-        console.error("Facebook Login API error", err);
-        toast.error("An error occurred during Facebook login.");
-      }
-    }
-  };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 p-4 py-12">
@@ -384,39 +346,6 @@ const SignupPage = () => {
               <FcGoogle className="w-6 h-6" />
             </Button>
 
-            <React.Suspense fallback={null}>
-              <FacebookLogin
-                appId={import.meta.env.VITE_FACEBOOK_APP_ID || "733633632296577"}
-                autoLoad={false}
-                fields="name,email,picture"
-                onSuccess={handleFacebookSuccess}
-                onFail={(error: any) => {
-                  console.log("Login Failed!", error);
-                }}
-                onProfileSuccess={React.useCallback(
-                  (response: {
-                    name?: string;
-                    email?: string;
-                    picture?: { data: { url: string } };
-                  }) => {
-                    console.log("Get Profile Success!", response);
-                  },
-                  [],
-                )}
-                render={({ onClick }) => (
-                  <Button
-                    aria-label="Sign Up with Facebook"
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={onClick}
-                    className="w-12 h-12 rounded-full border-gray-200 hover:bg-gray-50 text-[#1877F2] flex items-center justify-center transition-all"
-                  >
-                    <FaFacebook className="w-6 h-6" />
-                  </Button>
-                )}
-              />
-            </React.Suspense>
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
