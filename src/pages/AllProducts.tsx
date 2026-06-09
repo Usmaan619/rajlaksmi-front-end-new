@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { ChevronLeft, ChevronRight, Search, Loader2, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -455,8 +455,10 @@ const AllProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const observerRef = useRef<HTMLDivElement>(null);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(
@@ -516,15 +518,21 @@ const AllProducts = () => {
   }, [searchParams]);
 
   const fetchAllProducts = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
     // Get values directly from searchParams to be the source of truth
     const urlQuery = searchParams.get("search") || "";
     const urlCategory = searchParams.get("category") || "all";
     const urlWeight = searchParams.get("weight") || "all";
     const urlPriceRange = searchParams.get("price") || "all";
     const urlPage = parseInt(searchParams.get("page") || "1");
+
+    const isAppending = urlPage > 1;
+
+    if (isAppending) {
+      setIsFetchingMore(true);
+    } else {
+      setLoading(true);
+    }
+    setError(null);
 
     try {
       let minPrice: number | undefined;
@@ -559,21 +567,50 @@ const AllProducts = () => {
               : p.weight_options,
         }));
 
-        setProducts(mappedProducts);
+        setProducts(prev => {
+          if (isAppending) {
+            const existingIds = new Set(prev.map(p => p.id));
+            const newProducts = mappedProducts.filter((p: any) => !existingIds.has(p.id));
+            return [...prev, ...newProducts];
+          }
+          return mappedProducts;
+        });
         if (res.pagination) {
           setTotalPages(res.pagination.totalPages || 1);
         } else {
           setTotalPages(1);
         }
       } else {
-        setError("No products found for this criteria");
+        if (!isAppending) setError("No products found for this criteria");
       }
     } catch (err: any) {
-      setError(err.message || "Something went wrong while fetching products");
+      if (!isAppending) setError(err.message || "Something went wrong while fetching products");
     } finally {
       setLoading(false);
+      setIsFetchingMore(false);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !loading && !isFetchingMore && currentPage < totalPages) {
+          const params = new URLSearchParams(searchParams);
+          params.set("page", (currentPage + 1).toString());
+          setSearchParams(params);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [loading, isFetchingMore, currentPage, totalPages, searchParams, setSearchParams]);
 
   useEffect(() => {
     fetchAllProducts();
@@ -734,95 +771,19 @@ const AllProducts = () => {
                   </div>
                 )}
 
-                {/* Pagination */}
-                {!loading && !error && totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 mt-12 py-2">
-                    <Button
-                      aria-label="Previous Page"
-                      variant="outline"
-                      size="icon"
-                      className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                      disabled={currentPage === 1}
-                      onClick={() => {
-                        const newPage = currentPage - 1;
-                        if (newPage < 1) return;
-                        const params = new URLSearchParams(searchParams);
-                        params.set("page", newPage.toString());
-                        setSearchParams(params);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                    >
-                      <ChevronLeft className="h-5 w-5" />
-                    </Button>
-
-                    {Array.from({ length: totalPages }, (_, i) => {
-                      const pageNum = i + 1;
-                      // Dynamic pagination: show current, first, last, and neighbors
-                      if (
-                        pageNum === 1 ||
-                        pageNum === totalPages ||
-                        (pageNum >= currentPage - 1 &&
-                          pageNum <= currentPage + 1)
-                      ) {
-                        return (
-                          <Button
-                            aria-label={`Page ${pageNum}`}
-                            key={pageNum}
-                            variant={
-                              currentPage === pageNum ? "default" : "ghost"
-                            }
-                            className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
-                              currentPage === pageNum
-                                ? "bg-primary text-white shadow-md scale-110"
-                                : "hover:text-primary hover:bg-primary/5"
-                            }`}
-                            onClick={() => {
-                              setCurrentPage(pageNum);
-                              setSearchParams({
-                                ...Object.fromEntries(searchParams.entries()),
-                                page: pageNum.toString(),
-                              });
-                              window.scrollTo({ top: 0, behavior: "smooth" });
-                            }}
-                          >
-                            {pageNum}
-                          </Button>
-                        );
-                      } else if (
-                        (pageNum === 2 && currentPage > 3) ||
-                        (pageNum === totalPages - 1 &&
-                          currentPage < totalPages - 2)
-                      ) {
-                        return (
-                          <span
-                            key={pageNum}
-                            className="px-1 text-muted-foreground"
-                          >
-                            ...
-                          </span>
-                        );
-                      }
-                      return null;
-                    })}
-
-                    <Button
-                      aria-label="Next Page"
-                      variant="outline"
-                      size="icon"
-                      className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                      disabled={currentPage === totalPages}
-                      onClick={() => {
-                        const newPage = currentPage + 1;
-                        setCurrentPage(newPage);
-                        setSearchParams({
-                          ...Object.fromEntries(searchParams.entries()),
-                          page: newPage.toString(),
-                        });
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                    >
-                      <ChevronRight className="h-5 w-5" />
-                    </Button>
+                {/* Infinite Scroll Loader */}
+                {!loading && !error && (
+                  <div ref={observerRef} className="w-full flex justify-center py-8 mt-4">
+                    {isFetchingMore ? (
+                      <div className="flex items-center gap-2 text-primary">
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                        <span className="font-medium">Loading more products...</span>
+                      </div>
+                    ) : currentPage < totalPages ? (
+                      <span className="text-muted-foreground text-sm">Scroll for more</span>
+                    ) : products.length > 0 ? (
+                      <span className="text-muted-foreground text-sm">You've reached the end</span>
+                    ) : null}
                   </div>
                 )}
               </div>

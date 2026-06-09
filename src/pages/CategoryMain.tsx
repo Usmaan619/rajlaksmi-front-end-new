@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   ChevronDown,
   ChevronLeft,
@@ -326,6 +326,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 
 const CategoryMain = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -333,6 +334,7 @@ const CategoryMain = () => {
   const categoryName = searchParams.get("category") || "";
 
   const [currentPage, setCurrentPage] = useState(1);
+  const observerRef = useRef<HTMLDivElement>(null);
   const [availability, setAvailability] = useState("");
   const [weight, setWeight] = useState("");
   const [filterBy, setFilterBy] = useState("");
@@ -342,53 +344,22 @@ const CategoryMain = () => {
     setLoading(true);
     setError(null);
     try {
-      let minPrice: number | undefined;
-      let maxPrice: number | undefined;
-
-      if (filterBy) {
-        if (filterBy === "Under ₹300") {
-          minPrice = 0;
-          maxPrice = 300;
-        } else if (filterBy === "₹300 - ₹500") {
-          minPrice = 300;
-          maxPrice = 500;
-        } else if (filterBy === "₹500 - ₹1000") {
-          minPrice = 500;
-          maxPrice = 1000;
-        } else if (filterBy === "Above ₹1000") {
-          minPrice = 1000;
-        }
-      }
-
       const res = await getProducts({
         category: categoryName || undefined,
-        minPrice,
-        maxPrice,
-        weight: weight === "All" || !weight ? undefined : weight,
         limit: 1000,
       });
 
       if (res.success) {
         let fetched = res.products || res.data || [];
-
-        // Local Sorting
-        if (sortBy === "Price: Low to High") {
-          fetched.sort(
-            (a, b) =>
-              (a.product_price || a.price) - (b.product_price || b.price),
-          );
-        } else if (sortBy === "Price: High to Low") {
-          fetched.sort(
-            (a, b) =>
-              (b.product_price || b.price) - (a.product_price || a.price),
-          );
-        } else if (sortBy === "Rating") {
-          fetched.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-        } else if (sortBy === "Discount") {
-          fetched.sort((a, b) => (b.discount || 0) - (a.discount || 0));
-        }
-
-        setProducts(fetched);
+        
+        // Normalize properties
+        fetched = fetched.map((p: any) => ({
+          ...p,
+          price: p.product_price !== undefined ? p.product_price : p.price,
+          mrp: p.product_del_price !== undefined ? p.product_del_price : p.mrp,
+        }));
+        
+        setAllProducts(fetched);
       } else {
         setError("Failed to fetch products");
       }
@@ -397,7 +368,7 @@ const CategoryMain = () => {
     } finally {
       setLoading(false);
     }
-  }, [categoryName, filterBy, weight, availability, sortBy]);
+  }, [categoryName]);
 
   useEffect(() => {
     fetchProducts();
@@ -405,14 +376,78 @@ const CategoryMain = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [categoryName, availability, weight, filterBy, sortBy]);
+    
+    let filtered = [...allProducts];
+
+    // 1. Filter by Availability
+    if (availability) {
+      if (availability === "In Stock") {
+        filtered = filtered.filter((p: any) => p.STATUS !== "0" && p.STATUS !== "INACTIVE");
+      } else if (availability === "Out of Stock") {
+        filtered = filtered.filter((p: any) => p.STATUS === "0" || p.STATUS === "INACTIVE");
+      }
+    }
+
+    // 2. Filter by Weight
+    if (weight && weight !== "All") {
+      filtered = filtered.filter((p: any) => {
+        const wOpts = p.weight_options || p.product_weight;
+        if (typeof wOpts === "string") return wOpts.includes(weight);
+        if (Array.isArray(wOpts)) return wOpts.some((w: any) => JSON.stringify(w).includes(weight));
+        return false;
+      });
+    }
+
+    // 3. Filter by Price
+    if (filterBy) {
+      filtered = filtered.filter((p: any) => {
+        const pPrice = Number(p.price) || 0;
+        if (filterBy === "Under ₹300") return pPrice < 300;
+        if (filterBy === "₹300 - ₹500") return pPrice >= 300 && pPrice <= 500;
+        if (filterBy === "₹500 - ₹1000") return pPrice >= 500 && pPrice <= 1000;
+        if (filterBy === "Above ₹1000") return pPrice > 1000;
+        return true;
+      });
+    }
+
+    // 4. Sorting
+    if (sortBy === "Price: Low to High") {
+      filtered.sort((a: any, b: any) => Number(a.price) - Number(b.price));
+    } else if (sortBy === "Price: High to Low") {
+      filtered.sort((a: any, b: any) => Number(b.price) - Number(a.price));
+    } else if (sortBy === "Rating") {
+      filtered.sort((a: any, b: any) => Number(b.rating || 0) - Number(a.rating || 0));
+    } else if (sortBy === "Discount") {
+      filtered.sort((a: any, b: any) => Number(b.discount || 0) - Number(a.discount || 0));
+    }
+
+    setProducts(filtered);
+  }, [allProducts, categoryName, availability, weight, filterBy, sortBy]);
 
   const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const visibleProducts = products.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE,
+    0,
+    currentPage * ITEMS_PER_PAGE,
   );
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && currentPage < totalPages) {
+          setCurrentPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [currentPage, totalPages]);
 
   return (
     <>
@@ -539,75 +574,17 @@ const CategoryMain = () => {
             </div>
           )}
 
-          {/* Pagination */}
-          {!loading && totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-12 py-2">
-              <Button
-                aria-label="Previous Page"
-                variant="outline"
-                size="icon"
-                className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                disabled={currentPage === 1}
-                onClick={() => {
-                  setCurrentPage((p) => Math.max(1, p - 1));
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-
-              {Array.from({ length: totalPages }, (_, i) => {
-                const pageNum = i + 1;
-                // Dynamic pagination: show current, first, last, and neighbors
-                if (
-                  pageNum === 1 ||
-                  pageNum === totalPages ||
-                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-                ) {
-                  return (
-                    <Button
-                      aria-label={`Page ${pageNum}`}
-                      key={pageNum}
-                      variant={currentPage === pageNum ? "default" : "ghost"}
-                      className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
-                        currentPage === pageNum
-                          ? "bg-primary text-white shadow-md scale-110"
-                          : "hover:text-primary hover:bg-primary/5"
-                      }`}
-                      onClick={() => {
-                        setCurrentPage(pageNum);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                } else if (
-                  (pageNum === 2 && currentPage > 3) ||
-                  (pageNum === totalPages - 1 && currentPage < totalPages - 2)
-                ) {
-                  return (
-                    <span key={pageNum} className="px-1 text-muted-foreground">
-                      ...
-                    </span>
-                  );
-                }
-                return null;
-              })}
-
-              <Button
-                aria-label="Next Page"
-                variant="outline"
-                size="icon"
-                className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                disabled={currentPage === totalPages}
-                onClick={() => {
-                  setCurrentPage((p) => Math.min(totalPages, p + 1));
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
+          {/* Infinite Scroll Loader */}
+          {!loading && !error && (
+            <div ref={observerRef} className="w-full flex justify-center py-8">
+              {currentPage < totalPages ? (
+                <div className="flex items-center gap-2 text-primary">
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                  <span className="font-medium">Loading more products...</span>
+                </div>
+              ) : visibleProducts.length > 0 ? (
+                <span className="text-muted-foreground text-sm">You've reached the end</span>
+              ) : null}
             </div>
           )}
         </section>
