@@ -86,7 +86,7 @@ const FilterDropdown = ({
         <ChevronDown size={14} />
       </button>
       {open && (
-        <div className="absolute top-full mt-1 left-0 bg-background border border-border rounded-lg shadow-lg z-[60] min-w-[160px]">
+        <div className="absolute top-full mt-1 left-0 bg-background border border-border rounded-lg shadow-lg z-[60] min-w-[160px] max-h-[300px] overflow-y-auto">
           <button
             aria-label="Select All"
             onClick={() => {

@@ -207,6 +207,7 @@ const CheckoutPage = () => {
       if (response.data.success) {
         const {
           shippingCharge,
+          baseShippingCharge,
           courierName,
           estimatedDelivery,
           totalWeight,
@@ -592,7 +593,7 @@ const CheckoutPage = () => {
             </Card>
 
             {/* Shipping Address */}
-            <Card className="border-none shadshadow-lg-sm">
+            <Card className="border-none shadow-sm">
               <CardHeader className="border-b border-slate-100 pb-4">
                 <CardTitle className="flex items-center gap-2 text-slate-800 text-base">
                   <Truck className="h-5 w-5 text-emerald-600" />
@@ -614,7 +615,7 @@ const CheckoutPage = () => {
                             onClick={() => setSelectedAddressId(addr.id)}
                             className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer ${
                               selectedAddressId === addr.id
-                                ? "border-emerald-500 bg-emerald-50/40 shadshadow-lg-sm"
+                                ? "border-emerald-500 bg-emerald-50/40 shadow-sm"
                                 : "border-slate-200 hover:border-emerald-300 bg-white"
                             }`}
                           >
@@ -902,7 +903,7 @@ const CheckoutPage = () => {
               ].map(({ icon: Icon, text }) => (
                 <div
                   key={text}
-                  className="flex flex-col items-center gap-2 p-4 shadow-lg bg-white rounded-xl border border-slate-100 shadshadow-lg-sm"
+                  className="flex flex-col items-center gap-2 p-4 shadow-sm bg-white rounded-xl border border-slate-100"
                 >
                   <Icon className="h-5 w-5 text-emerald-600" />
                   <span className="text-xs font-semibold text-slate-600 text-center">
@@ -915,7 +916,7 @@ const CheckoutPage = () => {
 
           {/* ── Right: Order Summary ── */}
           <div className="space-y-4">
-            <Card className="border-none shadshadow-lg-sm sticky top-4">
+            <Card className="border-none shadow-sm sticky top-4">
               {/* Header */}
               <CardHeader className="bg-[#116931] rounded-t-xl py-5 px-6">
                 <CardTitle className="text-white flex justify-between items-center">
