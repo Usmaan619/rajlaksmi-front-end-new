@@ -6,6 +6,7 @@ import {
   HelpCircle,
   ArrowLeftRight,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -91,7 +92,7 @@ const ContactMainPage = () => {
                   Send Us a Message
                 </h2>
                 <p className="text-foreground/70 text-sm lg:text-base leading-relaxed">
-                  Have a question about our organic food products, A2 Gir Cow Bilona Ghee, cold-pressed oils, or bulk order pricing? Need help tracking an order or understanding our FSSAI certifications? Fill out the form below and our team will respond within 24 hours (Mon-Sat, 10 AM to 8 PM IST).
+                  Have a question about our <Link to="/categories" className="text-green-700 hover:underline">organic food products</Link>, <Link to="/products?category=OILS+%26+GHEE" className="text-green-700 hover:underline">A2 Gir Cow Bilona Ghee</Link>, <Link to="/products?category=OILS+%26+GHEE" className="text-green-700 hover:underline">cold-pressed oils</Link>, or <Link to="/b2b" className="text-green-700 hover:underline">bulk order pricing</Link>? Need help tracking an order or understanding our <Link to="/certifications" className="text-green-700 hover:underline">FSSAI certifications</Link>? Fill out the form below and our team will respond within 24 hours (Mon-Sat, 10 AM to 8 PM IST).
                 </p>
               </div>
 
@@ -378,10 +379,10 @@ const ContactBanner = () => {
               Get in Touch with Rajlakshmi Javiks International
             </h2>
             <p className="text-base md:text-lg text-gray-700 leading-relaxed mb-4">
-              We are deeply committed to bringing you the purest, highest-quality certified organic food products directly from trusted Indian farms. Whether you need expert guidance choosing the right Ayurvedic staples, require support tracking your recent bulk order, or wish to understand more about our rigorous FSSAI and organic certifications, our dedicated support team is always just a message away.
+              We are deeply committed to bringing you the purest, highest-quality <Link to="/certifications" className="text-green-700 hover:underline">certified organic food products</Link> directly from trusted Indian farms. Whether you need expert guidance choosing the right Ayurvedic staples, require support tracking your recent <Link to="/b2b" className="text-green-700 hover:underline">bulk order</Link>, or wish to understand more about our rigorous FSSAI and organic certifications, our dedicated support team is always just a message away.
             </p>
             <p className="text-base md:text-lg text-gray-700 leading-relaxed">
-              As a premier organic food manufacturer and B2B distributor based in Indore, Madhya Pradesh, we prioritize clear communication and exceptional customer service. Reach out to us today to experience the authentic taste of tradition backed by modern reliability.
+              As a premier organic food manufacturer and <Link to="/b2b" className="text-green-700 hover:underline">B2B distributor</Link> based in Indore, Madhya Pradesh, we prioritize clear communication and exceptional customer service. Reach out to us today to experience the authentic taste of tradition backed by modern reliability.
             </p>
           </div>
 

@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
   Building2,
@@ -247,31 +248,31 @@ const B2BMainPage = () => {
               <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
                 <h3 className="text-xl font-bold text-green-800 mb-3">Bulk Organic Grains & Pulses</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Source the finest chemical-free organic rice, wheat, ancient millets, and unpolished pulses in bulk. Our grains are sourced directly from traditional organic farming clusters, ensuring high nutritional integrity, perfect moisture content, and long shelf life for retailers and food manufacturers.
+                  Source the finest chemical-free <Link to="/categories?category=RICE+%26+WHEAT" className="text-green-700 hover:underline">organic rice, wheat</Link>, ancient millets, and unpolished pulses in bulk. Our grains are sourced directly from traditional organic farming clusters, ensuring high nutritional integrity, perfect moisture content, and long shelf life for retailers and food manufacturers.
                 </p>
               </div>
               <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
                 <h3 className="text-xl font-bold text-green-800 mb-3">Wholesale Cold-Pressed Oils</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  We are a premier B2B supplier of Kacchi Ghani cold-pressed mustard oil, groundnut oil, and coconut oil. Extracted at room temperature to preserve vital nutrients and pure aroma, our oils are ideal for Ayurvedic products wholesale buyers, health-conscious restaurants, and premium grocery outlets.
+                  We are a premier B2B supplier of Kacchi Ghani <Link to="/categories?category=OILS+%26+GHEE" className="text-green-700 hover:underline">cold-pressed mustard oil, groundnut oil, and coconut oil</Link>. Extracted at room temperature to preserve vital nutrients and pure aroma, our oils are ideal for Ayurvedic products wholesale buyers, health-conscious restaurants, and premium grocery outlets.
                 </p>
               </div>
               <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
                 <h3 className="text-xl font-bold text-green-800 mb-3">Organic Spices & Masalas</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Elevate your product line with our sun-dried, deeply aromatic organic spices. We supply high-curcumin turmeric, robust cumin, and authentic spice blends in bulk quantities. Perfect for white label organic products, export partners, and premium spice distributors seeking pure, unadulterated quality.
+                  Elevate your product line with our sun-dried, deeply aromatic <Link to="/categories?category=MASALA" className="text-green-700 hover:underline">organic spices</Link>. We supply high-curcumin turmeric, robust cumin, and authentic spice blends in bulk quantities. Perfect for white label organic products, export partners, and premium spice distributors seeking pure, unadulterated quality.
                 </p>
               </div>
               <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
                 <h3 className="text-xl font-bold text-green-800 mb-3">A2 Bilona Ghee & Dairy</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Discover the authentic taste of tradition with our pure A2 Bilona Ghee, crafted from the milk of grass-fed indigenous cows. Our bulk ghee supply is highly sought after by luxury hotels, Ayurvedic practitioners, and holistic wellness brands requiring the highest standard of purity and nutritional value.
+                  Discover the authentic taste of tradition with our pure <Link to="/categories?category=OILS+%26+GHEE" className="text-green-700 hover:underline">A2 Bilona Ghee</Link>, crafted from the milk of grass-fed indigenous cows. Our bulk ghee supply is highly sought after by luxury hotels, Ayurvedic practitioners, and holistic wellness brands requiring the highest standard of purity and nutritional value.
                 </p>
               </div>
               <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
                 <h3 className="text-xl font-bold text-green-800 mb-3">Premium Dry Fruits & Seeds</h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Stock your shelves with our premium, sulfur-free dry fruits and nutrient-dense seeds like chia and flax. We provide consistent, reliable bulk supply of these high-demand items, perfectly suited for healthy snack brands, corporate gifting companies, and zero-waste bulk grocery stores.
+                  Stock your shelves with our premium, sulfur-free <Link to="/categories?category=DRY+FRUITS" className="text-green-700 hover:underline">dry fruits</Link> and nutrient-dense <Link to="/categories?category=SEEDS" className="text-green-700 hover:underline">seeds</Link> like chia and flax. We provide consistent, reliable bulk supply of these high-demand items, perfectly suited for healthy snack brands, corporate gifting companies, and zero-waste bulk grocery stores.
                 </p>
               </div>
               <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
@@ -292,7 +293,7 @@ const B2BMainPage = () => {
             </h2>
             <div className="space-y-6 text-gray-700 text-lg leading-relaxed max-w-4xl mx-auto">
               <p>
-                As a trusted organic products B2B manufacturer, Rajlakshmi Javiks caters to a diverse portfolio of business clients. Our robust pan-India logistics network and strict adherence to FSSAI quality standards make us the preferred partner for businesses that refuse to compromise on quality.
+                As a trusted organic products B2B manufacturer, Rajlakshmi Javiks caters to a diverse portfolio of business clients. Our robust pan-India logistics network and strict adherence to <Link to="/certifications" className="text-green-700 font-medium hover:underline">FSSAI quality standards</Link> make us the preferred partner for businesses that refuse to compromise on quality.
               </p>
               <ul className="list-disc pl-6 space-y-4">
                 <li><strong>Retailers & Supermarkets:</strong> We provide retail-ready packaged organic groceries that fly off the shelves, backed by our strong brand reputation and attractive wholesale margins.</li>

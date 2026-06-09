@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Seo from "@/components/Seo";
@@ -72,7 +73,7 @@ const Certifications = () => {
               validation process. Our extensive array of certifications is a
               testament to our unwavering dedication to providing you and your
               family with completely natural, chemical-free, and ethically
-              sourced food products.
+              sourced <Link to="/products" className="text-green-700 hover:underline">food products</Link>.
             </p>
             <p>
               From the very soil where our seeds are sown to the final packaging
@@ -83,7 +84,7 @@ const Certifications = () => {
               our crops. Furthermore, our state-of-the-art processing units
               comply with strict international hygiene standards, guaranteeing
               that the natural nutritional profile and authentic flavors of our
-              grains, spices, oils, and dry fruits are preserved. We invite you
+              <Link to="/categories" className="text-green-700 hover:underline"> grains, spices, oils, and dry fruits</Link> are preserved. We invite you
               to explore our certifications and lab reports below, offering you
               absolute peace of mind with every purchase.
             </p>
@@ -282,7 +283,7 @@ const Certifications = () => {
                   certification ensures that all our manufacturing, processing,
                   packaging, and distribution operations adhere to the strict,
                   legally mandated food safety and hygiene protocols set by the
-                  Government of India.
+                  Government of India. <Link to="/contact" className="text-green-700 hover:underline">Contact us</Link> if you need more info.
                 </p>
               </div>
               <div className="bg-white rounded-xl p-6 border border-[hsl(140,40%,80%)] shadow-sm hover:shadow-md transition-shadow">
@@ -305,7 +306,7 @@ const Certifications = () => {
                 </h3>
                 <p className="text-gray-600 leading-relaxed text-sm md:text-base">
                   Yes. Whether you are purchasing a single retail packet or a
-                  massive 500kg wholesale shipment, the organic integrity and
+                  massive 500kg <Link to="/b2b" className="text-green-700 hover:underline">wholesale shipment</Link>, the organic integrity and
                   quality certifications remain exactly the same. We provide our
                   wholesale partners with all necessary digital and physical
                   copies of our certifications and lab reports to help them
