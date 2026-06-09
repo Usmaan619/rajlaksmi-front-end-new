@@ -57,12 +57,37 @@ const Certifications = () => {
       <div className="min-h-screen bg-white ">
         {/* Header */}
         <section className="px-6 py-10 md:px-16 lg:px-24">
-          <h1 className="text-2xl md:text-3xl font-bold text-[#116931]">
+          <h1 className="text-2xl md:text-3xl font-bold text-[#116931] mb-4">
             Certifications & Quality Assurance
           </h1>
-          <p className="text-[hsl(140,40%,40%)] mt-1">
+          <p className="text-[hsl(140,40%,40%)] font-medium text-lg mb-6">
             Your Trust, Our Responsibility
           </p>
+          <div className="max-w-7xl space-y-4 text-gray-700 leading-relaxed text-sm md:text-base">
+            <p>
+              At Rajlakshmi Javiks, we believe that organic is not just a
+              label—it is a firm commitment to purity, sustainability, and
+              transparency. In an era where food safety is paramount, we ensure
+              that every single product bearing our name undergoes a rigorous
+              validation process. Our extensive array of certifications is a
+              testament to our unwavering dedication to providing you and your
+              family with completely natural, chemical-free, and ethically
+              sourced food products.
+            </p>
+            <p>
+              From the very soil where our seeds are sown to the final packaging
+              facility, every step of our supply chain is meticulously
+              monitored. We partner exclusively with certified organic farming
+              clusters across India, ensuring no synthetic pesticides, harmful
+              herbicides, or genetically modified organisms (GMOs) ever touch
+              our crops. Furthermore, our state-of-the-art processing units
+              comply with strict international hygiene standards, guaranteeing
+              that the natural nutritional profile and authentic flavors of our
+              grains, spices, oils, and dry fruits are preserved. We invite you
+              to explore our certifications and lab reports below, offering you
+              absolute peace of mind with every purchase.
+            </p>
+          </div>
         </section>
 
         {/* Certification Cards */}
@@ -170,38 +195,137 @@ const Certifications = () => {
         </section>
 
         {/* How We Maintain Quality */}
-        <section className="mx-6 md:mx-16 lg:mx-24 mb-20 rounded-3xl overflow-hidden bg-[hsl(140,30%,95%)] ">
+        <section className="mx-6 md:mx-16 lg:mx-24 mb-16 rounded-3xl overflow-hidden bg-[hsl(140,30%,95%)] shadow-md">
           <div className="grid md:grid-cols-2 gap-0">
             <div className="p-8 md:p-12 flex flex-col justify-center">
               <h2 className="text-xl md:text-2xl font-bold text-[#116931] mb-4">
-                How We Maintain Quality
+                How We Maintain Uncompromising Quality
               </h2>
-              <p className="text-sm text-foreground mb-4">
-                At Rajlakshmi Javiks, certifications are supported by our
-                internal quality control practices:
+              <p className="text-sm md:text-base text-gray-700 mb-6 leading-relaxed">
+                At Rajlakshmi Javiks, our prestigious certifications are deeply
+                supported by our rigorous internal quality control practices. We
+                don't just meet standards; we consistently strive to exceed
+                them.
               </p>
-              <ul className="text-sm text-foreground space-y-1.5 mb-6 list-disc list-inside">
-                <li>Careful sourcing from trusted farms</li>
-                <li>Multi-stage quality inspection</li>
-                <li>Hygienic processing and packaging</li>
-                <li>Batch-wise quality checks</li>
-                <li>Continuous monitoring and improvement</li>
+              <ul className="text-sm md:text-base text-gray-700 space-y-3 mb-8 list-none">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#116931] font-bold">✓</span>
+                  <strong>Careful Sourcing:</strong> Direct procurement from
+                  verified, traditional farming communities utilizing
+                  sustainable crop rotation.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#116931] font-bold">✓</span>
+                  <strong>Multi-stage Quality Inspection:</strong> Every batch
+                  is visually and scientifically inspected upon arrival at our
+                  facility.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#116931] font-bold">✓</span>
+                  <strong>Hygienic Processing:</strong> We utilize
+                  state-of-the-art cold-pressing and stone-grinding machinery to
+                  prevent heat degradation.
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#116931] font-bold">✓</span>
+                  <strong>Batch-wise Quality Checks:</strong> Strict third-party
+                  laboratory testing is conducted to screen for heavy metals,
+                  pesticides, and bacterial contamination.
+                </li>
               </ul>
               <div>
                 <button
                   aria-label="Read More About Our Quality Control"
-                  className="bg-[#116931] text-white text-sm px-5 py-2 rounded-md hover:bg-[hsl(140,60%,25%)] transition-colors"
+                  className="bg-[#116931] text-white text-sm md:text-base font-semibold px-6 py-3 rounded-lg hover:bg-[hsl(140,60%,25%)] transition-colors shadow-sm"
                 >
-                  Read more about our quality control
+                  Read our full quality manual
                 </button>
               </div>
             </div>
-            <div className="relative min-h-[250px] md:min-h-full">
+            <div className="relative min-h-[300px] md:min-h-full">
               <img
                 src={weMaintainImg}
                 alt="Fresh organic vegetables and produce"
                 className="w-full h-full object-cover"
               />
+            </div>
+          </div>
+        </section>
+
+        {/* AEO / SEO FAQ Section */}
+        <section className="px-6 md:px-16 lg:px-24 mb-20">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#116931] text-center mb-10">
+              Frequently Asked Questions (Certifications & Quality)
+            </h2>
+            <div className="space-y-6">
+              <div className="bg-white rounded-xl p-6 border border-[hsl(140,40%,80%)] shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">
+                  What does your Organic Certification mean?
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                  Our Organic Certification ensures that the food you consume is
+                  grown entirely without the use of synthetic fertilizers,
+                  chemical pesticides, or bioengineered genes (GMOs). It
+                  guarantees that the land has been managed sustainably,
+                  focusing on soil health and natural biodiversity, providing
+                  you with food that is authentically pure and safe.
+                </p>
+              </div>
+              <div className="bg-white rounded-xl p-6 border border-[hsl(140,40%,80%)] shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">
+                  Are your products FSSAI certified?
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                  Yes, absolutely. We hold valid FSSAI (Food Safety and
+                  Standards Authority of India) licenses. This statutory
+                  certification ensures that all our manufacturing, processing,
+                  packaging, and distribution operations adhere to the strict,
+                  legally mandated food safety and hygiene protocols set by the
+                  Government of India.
+                </p>
+              </div>
+              <div className="bg-white rounded-xl p-6 border border-[hsl(140,40%,80%)] shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">
+                  How can I verify the lab testing of your products?
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                  We believe in total transparency. Every product batch is sent
+                  to NABL-accredited, third-party laboratories to be tested for
+                  over 100+ parameters, including pesticide residues and heavy
+                  metals. You can access the specific batch's Lab Report by
+                  scanning the QR code on our packaging or by visiting the 'Lab
+                  Reports' section on our website.
+                </p>
+              </div>
+              <div className="bg-white rounded-xl p-6 border border-[hsl(140,40%,80%)] shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">
+                  Do your certifications apply to your B2B wholesale supplies as
+                  well?
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                  Yes. Whether you are purchasing a single retail packet or a
+                  massive 500kg wholesale shipment, the organic integrity and
+                  quality certifications remain exactly the same. We provide our
+                  wholesale partners with all necessary digital and physical
+                  copies of our certifications and lab reports to help them
+                  build trust with their own consumer base.
+                </p>
+              </div>
+              <div className="bg-white rounded-xl p-6 border border-[hsl(140,40%,80%)] shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-lg md:text-xl font-bold text-gray-800 mb-3">
+                  Are your products safe for babies and toddlers?
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                  Because our products are 100% certified organic and rigorously
+                  lab-tested to ensure the complete absence of harmful
+                  chemicals, heavy metals, and adulterants, they are generally
+                  considered exceptionally safe and highly beneficial for young
+                  children and toddlers. However, we always recommend consulting
+                  with your pediatrician regarding specific dietary
+                  introductions.
+                </p>
+              </div>
             </div>
           </div>
         </section>

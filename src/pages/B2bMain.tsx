@@ -20,6 +20,7 @@ import { B2BFormData, createB2BInquiryAPI } from "@/api/contact.service";
 import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { b2bInquirySchema } from "@/validations/contact.validation";
+import Seo from "@/components/Seo";
 
 const B2BMainPage = () => {
   const formRef = useRef(null);
@@ -65,6 +66,11 @@ const B2BMainPage = () => {
 
   return (
     <>
+      <Seo 
+        title="B2B & Wholesale Organic Products Supplier India | Rajlakshmi Javiks"
+        description="Partner with India's leading B2B supplier of bulk organic groceries, cold-pressed oils, and spices. Premium wholesale organic products with pan-India delivery."
+        url="/b2b"
+      />
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-green-50 to-white py-16 px-4">
@@ -224,6 +230,76 @@ const B2BMainPage = () => {
                   </p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Wholesale Product Categories Section - SEO Expansion */}
+        <section className="py-16 px-4 bg-white">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-green-800 text-center mb-8">
+              Our Premium Wholesale Organic Categories
+            </h2>
+            <p className="text-lg text-gray-700 text-center max-w-4xl mx-auto mb-12">
+              As a leading wholesale organic food supplier in India, Rajlakshmi Javiks offers a comprehensive range of 150+ certified products. Whether you are an organic food distributor, a premium supermarket chain, or a boutique wellness brand looking for bulk organic grocery supplies, our high-quality inventory is ready to meet your exact specifications.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-3">Bulk Organic Grains & Pulses</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Source the finest chemical-free organic rice, wheat, ancient millets, and unpolished pulses in bulk. Our grains are sourced directly from traditional organic farming clusters, ensuring high nutritional integrity, perfect moisture content, and long shelf life for retailers and food manufacturers.
+                </p>
+              </div>
+              <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-3">Wholesale Cold-Pressed Oils</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  We are a premier B2B supplier of Kacchi Ghani cold-pressed mustard oil, groundnut oil, and coconut oil. Extracted at room temperature to preserve vital nutrients and pure aroma, our oils are ideal for Ayurvedic products wholesale buyers, health-conscious restaurants, and premium grocery outlets.
+                </p>
+              </div>
+              <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-3">Organic Spices & Masalas</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Elevate your product line with our sun-dried, deeply aromatic organic spices. We supply high-curcumin turmeric, robust cumin, and authentic spice blends in bulk quantities. Perfect for white label organic products, export partners, and premium spice distributors seeking pure, unadulterated quality.
+                </p>
+              </div>
+              <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-3">A2 Bilona Ghee & Dairy</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Discover the authentic taste of tradition with our pure A2 Bilona Ghee, crafted from the milk of grass-fed indigenous cows. Our bulk ghee supply is highly sought after by luxury hotels, Ayurvedic practitioners, and holistic wellness brands requiring the highest standard of purity and nutritional value.
+                </p>
+              </div>
+              <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-3">Premium Dry Fruits & Seeds</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Stock your shelves with our premium, sulfur-free dry fruits and nutrient-dense seeds like chia and flax. We provide consistent, reliable bulk supply of these high-demand items, perfectly suited for healthy snack brands, corporate gifting companies, and zero-waste bulk grocery stores.
+                </p>
+              </div>
+              <div className="p-6 bg-green-50 rounded-xl shadow-sm border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-3">Custom & White Label Solutions</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Looking to build your own brand? We offer extensive private label organic products manufacturing. From custom packaging to unique product formulations, our state-of-the-art facility handles everything, allowing you to launch your organic food brand with zero manufacturing overhead.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Who We Serve Section */}
+        <section className="py-16 px-4 bg-gradient-to-br from-green-50 to-white">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-green-800 text-center mb-8">
+              Who Partners With Us?
+            </h2>
+            <div className="space-y-6 text-gray-700 text-lg leading-relaxed max-w-4xl mx-auto">
+              <p>
+                As a trusted organic products B2B manufacturer, Rajlakshmi Javiks caters to a diverse portfolio of business clients. Our robust pan-India logistics network and strict adherence to FSSAI quality standards make us the preferred partner for businesses that refuse to compromise on quality.
+              </p>
+              <ul className="list-disc pl-6 space-y-4">
+                <li><strong>Retailers & Supermarkets:</strong> We provide retail-ready packaged organic groceries that fly off the shelves, backed by our strong brand reputation and attractive wholesale margins.</li>
+                <li><strong>Hotels, Restaurants & Cafes (HoReCa):</strong> Top-tier culinary establishments rely on our bulk organic staples—from pristine grains to aromatic cold-pressed oils—to craft exceptional, health-conscious menus for their discerning guests.</li>
+                <li><strong>Ayurvedic & Wellness Centers:</strong> Our pure A2 ghee, raw honey, and organic spices are foundational ingredients for Ayurvedic practitioners and wellness retreats focused on holistic healing.</li>
+                <li><strong>Exporters & Distributors:</strong> We offer comprehensive support for organic food distributors looking to scale, providing consistent bulk supply, necessary certifications, and seamless B2B transaction processes.</li>
+              </ul>
             </div>
           </div>
         </section>
@@ -440,6 +516,47 @@ const B2BMainPage = () => {
                   {isSubmitting ? "Submitting..." : "Submit Inquiry"}
                 </button>
               </form>
+            </div>
+          </div>
+        </section>
+
+        {/* AEO / SEO FAQ Section */}
+        <section className="py-16 px-4 bg-white border-t border-green-100">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold text-green-800 text-center mb-12">
+              Frequently Asked Questions (B2B & Wholesale)
+            </h2>
+            <div className="space-y-6">
+              <div className="bg-green-50 rounded-xl p-6 border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-2">What is the Minimum Order Quantity (MOQ) for wholesale organic products?</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Our MOQ is highly flexible and depends on the specific product category. For most bulk organic groceries like grains and pulses, the MOQ starts at 50kg. For high-value items like organic spices and A2 Bilona Ghee, we offer lower thresholds to accommodate smaller retail partners and boutique brands. Contact us for a precise quotation based on your needs.
+                </p>
+              </div>
+              <div className="bg-green-50 rounded-xl p-6 border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-2">Do you provide lab testing reports and organic certifications?</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Absolutely. As a premier organic products B2B manufacturer, we maintain absolute transparency. Every batch of our products undergoes rigorous third-party lab testing. We provide comprehensive lab reports, FSSAI certificates, and relevant organic compliance documentation with all wholesale orders to ensure complete peace of mind for you and your customers.
+                </p>
+              </div>
+              <div className="bg-green-50 rounded-xl p-6 border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-2">Do you offer private label organic products (White Labeling)?</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Yes, we offer end-to-end private labeling and contract manufacturing services. If you want to launch your own brand of cold-pressed oils, organic spices, or dry fruits, we provide bulk manufacturing, custom packaging, and labeling solutions. This allows you to leverage our established manufacturing infrastructure to scale your brand rapidly.
+                </p>
+              </div>
+              <div className="bg-green-50 rounded-xl p-6 border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-2">How long does pan-India wholesale delivery take?</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  We boast a highly efficient pan-India logistics network. Depending on your location, standard bulk orders are typically dispatched within 48 hours of order confirmation. Delivery to major metro cities usually takes 3-5 business days, while tier-2 and tier-3 cities may take 5-7 business days. We partner with top-tier logistics providers to ensure your bulk organic supplies arrive safely and on time.
+                </p>
+              </div>
+              <div className="bg-green-50 rounded-xl p-6 border border-green-100">
+                <h3 className="text-xl font-bold text-green-800 mb-2">Can I request product samples before placing a large bulk order?</h3>
+                <p className="text-gray-700 leading-relaxed">
+                  Yes, we highly encourage prospective B2B partners to request samples. We understand that quality verification is crucial when buying organic groceries in bulk. You can purchase a sample kit covering your categories of interest at a nominal cost, which can be adjusted against your first official wholesale order.
+                </p>
+              </div>
             </div>
           </div>
         </section>
