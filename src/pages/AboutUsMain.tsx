@@ -53,7 +53,11 @@ const AboutUsPage = () => {
             About Rajlakshmi Javiks International
           </h1>
           <p className="text-gray-600 mt-3 text-base md:text-lg relative z-10 max-w-3xl mx-auto">
-            Established in 2019 in Indore, Madhya Pradesh — India's premier certified organic food retailer and wholesaler, bringing you pure A2 Gir Cow Bilona Ghee, cold-pressed oils, organic pulses, millets, dry fruits, and natural spices. Purity you can trust, quality you can verify.
+            Established in 2019 in Indore, Madhya Pradesh — India's premier
+            certified organic food retailer and wholesaler, bringing you pure A2
+            Gir Cow Bilona Ghee, cold-pressed oils, organic pulses, millets, dry
+            fruits, and natural spices. Purity you can trust, quality you can
+            verify.
           </p>
         </section>
 
@@ -72,27 +76,38 @@ const AboutUsPage = () => {
                   natural food products. We specialize in providing the highest
                   quality <strong>A2 Gir Cow Bilona Ghee</strong> made using the
                   ancient Vedic churning method, along with a diverse range of
-                  <strong> cold-pressed oils, organic dry fruits, whole grain millets,
-                  chemical-free pulses, natural spices, and artisanal homemade products</strong>.
-                  All sourced directly from certified organic farms across India.
+                  <strong>
+                    {" "}
+                    cold-pressed oils, organic dry fruits, whole grain millets,
+                    chemical-free pulses, natural spices, and artisanal homemade
+                    products
+                  </strong>
+                  . All sourced directly from certified organic farms across
+                  India.
                 </p>
                 <p className="text-gray-700 text-base leading-relaxed mb-5">
                   Our commitment to authentic, lab-tested quality has earned us
                   consistent 4+ star ratings and a loyal base of over 17,000
-                  health-conscious customers across India. We hold <strong>FSSAI certification</strong>,
+                  health-conscious customers across India. We hold{" "}
+                  <strong>FSSAI certification</strong>,
                   <strong> APEDA certification</strong>, and comply with the
-                  <strong> NPOP (National Programme for Organic Production)</strong> standards,
-                  giving every customer complete confidence in the purity and
-                  traceability of everything they purchase from us.
+                  <strong>
+                    {" "}
+                    NPOP (National Programme for Organic Production)
+                  </strong>{" "}
+                  standards, giving every customer complete confidence in the
+                  purity and traceability of everything they purchase from us.
                 </p>
                 <p className="text-gray-700 text-base leading-relaxed mb-8">
                   We take pride in sourcing directly from nature — working
                   alongside farming communities in Madhya Pradesh, Rajasthan,
                   and Karnataka to ensure that every product reaching your
                   doorstep is 100% pure, preservative-free, and full of natural
-                  nutritional goodness. From our <strong>PAN India delivery network</strong>
+                  nutritional goodness. From our{" "}
+                  <strong>PAN India delivery network</strong>
                   to our transparent lab report system, we make organic food
-                  accessible, affordable, and trustworthy for every Indian family.
+                  accessible, affordable, and trustworthy for every Indian
+                  family.
                 </p>
                 <Button
                   aria-label="Explore Our Products"
@@ -150,26 +165,29 @@ const AboutUsPage = () => {
               </h2>
               <p className="text-gray-700 text-base leading-relaxed mb-5">
                 Rajlakshmi Javiks International is more than just a brand — it
-                is a promise of health, wellness, and transparency. Headquartered
-                at 11, Manish Bag Colony Road, Navlakha, Indore, Madhya Pradesh,
-                we serve thousands of health-conscious consumers, families,
-                restaurants, and B2B wholesale partners across India with
-                authentically sourced, naturally processed organic food products.
+                is a promise of health, wellness, and transparency.
+                Headquartered at 11, Manish Bag Colony Road, Navlakha, Indore,
+                Madhya Pradesh, we serve thousands of health-conscious
+                consumers, families, restaurants, and B2B wholesale partners
+                across India with authentically sourced, naturally processed
+                organic food products.
               </p>
               <p className="text-gray-700 text-base leading-relaxed mb-5">
-                Whether it's our <strong>Organic Kashmiri Saffron (Kesar)</strong>,
-                our traditionally churned <strong>A2 Gir Cow Bilona Ghee</strong>,
-                our stone-cleaned <strong>organic toor dal and moong dal</strong>,
-                or our <strong>cold-pressed Kacchi Ghani mustard oil</strong>,
-                every product is processed under hygienic, controlled conditions
-                and quality-checked before dispatch for PAN India delivery.
+                Whether it's our{" "}
+                <strong>Organic Kashmiri Saffron (Kesar)</strong>, our
+                traditionally churned <strong>A2 Gir Cow Bilona Ghee</strong>,
+                our stone-cleaned{" "}
+                <strong>organic toor dal and moong dal</strong>, or our{" "}
+                <strong>cold-pressed Kacchi Ghani mustard oil</strong>, every
+                product is processed under hygienic, controlled conditions and
+                quality-checked before dispatch for PAN India delivery.
               </p>
               <p className="text-gray-700 text-base leading-relaxed">
                 We believe that the food you eat directly impacts your health,
                 energy, and longevity. That belief drives us to maintain the
-                highest standards of organic purity in every product category
-                — from daily staples like wheat and rice to specialty items
-                like Medjool dates, chia seeds, and organic raw honey.
+                highest standards of organic purity in every product category —
+                from daily staples like wheat and rice to specialty items like
+                Medjool dates, chia seeds, and organic raw honey.
               </p>
             </div>
           </div>
@@ -283,9 +301,9 @@ hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                   To make 100% pure, certified organic food products accessible
                   and affordable for every Indian family — from premium A2 Gir
                   Cow Bilona Ghee to organic pulses, millets, cold-pressed oils,
-                  and natural spices — while supporting ethical farming practices,
-                  maintaining transparent quality standards, and delivering food
-                  that nourishes both people and the planet.
+                  and natural spices — while supporting ethical farming
+                  practices, maintaining transparent quality standards, and
+                  delivering food that nourishes both people and the planet.
                 </p>
                 <p className="text-gray-700 text-sm leading-relaxed">
                   We are committed to growing with our farming communities,
@@ -319,8 +337,8 @@ hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 <p className="text-gray-700 text-sm leading-relaxed mb-3">
                   To become India's most trusted household name in certified
                   organic food — a brand that every health-conscious family
-                  across India recognizes for uncompromising purity,
-                  sustainable sourcing, and transparent quality practices.
+                  across India recognizes for uncompromising purity, sustainable
+                  sourcing, and transparent quality practices.
                 </p>
                 <p className="text-gray-700 text-sm leading-relaxed">
                   We envision a future where chemical-free, naturally grown food
@@ -361,8 +379,8 @@ hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               Our FSSAI license, APEDA certification, and NPOP compliance are
               not just certifications — they are the backbone of every
               commitment we make to our customers. We ensure freshness, purity,
-              and authenticity in every pack we deliver, from our A2 Bilona
-              Ghee to our organic spices and dry fruits.
+              and authenticity in every pack we deliver, from our A2 Bilona Ghee
+              to our organic spices and dry fruits.
             </p>
 
             <button

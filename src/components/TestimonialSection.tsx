@@ -102,8 +102,12 @@ const TestimonialSection = () => {
             What Our Customers Say About Rajlakshmi Javiks
           </h2>
           <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
-          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Hear from real customers who have experienced the purity and authenticity of our organic food products. From A2 Gir Cow Bilona Ghee to organic dry fruits and cold-pressed oils, our customers across India trust Rajlakshmi Javiks for lab-tested quality, honest pricing, and reliable PAN India delivery.
+          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-6xl mx-auto leading-relaxed">
+            Hear from real customers who have experienced the purity and
+            authenticity of our organic food products. From A2 Gir Cow Bilona
+            Ghee to organic dry fruits and cold-pressed oils, our customers
+            across India trust Rajlakshmi Javiks for lab-tested quality, honest
+            pricing, and reliable PAN India delivery.
           </p>
         </div>
 

@@ -459,8 +459,12 @@ const OurProductsSection = () => {
             Our Organic Product Videos & Reels
           </h2>
           <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
-          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Watch how we prepare our A2 Gir Cow Bilona Ghee using the traditional Vedic churning process, explore the purity of our cold-pressed oils, and discover what makes Rajlakshmi Javiks organic products the preferred choice for health-conscious Indian families. Real products, real processes, real purity.
+          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-6xl mx-auto leading-relaxed">
+            Watch how we prepare our A2 Gir Cow Bilona Ghee using the
+            traditional Vedic churning process, explore the purity of our
+            cold-pressed oils, and discover what makes Rajlakshmi Javiks organic
+            products the preferred choice for health-conscious Indian families.
+            Real products, real processes, real purity.
           </p>
         </div>
 

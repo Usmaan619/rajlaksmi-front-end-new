@@ -7,7 +7,11 @@ import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
 import { getHomeProducts } from "@/api/product.service";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getWeightMultiplier, parseProductWeights, getDisplayWeight } from "@/lib/utils";
+import {
+  getWeightMultiplier,
+  parseProductWeights,
+  getDisplayWeight,
+} from "@/lib/utils";
 
 const ProductCard = ({ product }: { product: any }) => {
   const navigate = useNavigate();
@@ -24,8 +28,8 @@ const ProductCard = ({ product }: { product: any }) => {
     (typeof selectedUnit === "object" && selectedUnit.price
       ? Number(selectedUnit.price)
       : Number(product.product_price)) * weightMultiplier;
-  
-  const currentDelPrice = 
+
+  const currentDelPrice =
     (typeof selectedUnit === "object" && selectedUnit.del_price
       ? Number(selectedUnit.del_price)
       : Number(product.product_del_price)) * weightMultiplier;
@@ -182,7 +186,9 @@ const ProductCard = ({ product }: { product: any }) => {
                     }}
                     className="block w-full px-3 py-2 text-xs text-left hover:bg-gray-100 first:rounded-t-md last:rounded-b-md"
                   >
-                    {getDisplayWeight(typeof unit === "object" ? unit.weight : unit)}
+                    {getDisplayWeight(
+                      typeof unit === "object" ? unit.weight : unit,
+                    )}
                   </button>
                 ))}
               </div>
@@ -248,8 +254,13 @@ const BestSellersSection = () => {
             Our Best-Selling Organic Products
           </h2>
           <div className="h-1 w-24 bg-[#116931]/20 mx-auto mt-6 rounded-full" />
-          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Discover the organic food products that thousands of health-conscious customers across India love and trust. From our signature A2 Gir Cow Bilona Ghee to premium organic pulses, cold-pressed oils, and natural dry fruits — these best sellers are chosen for their unmatched purity, exceptional taste, and verified quality certifications.
+          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-6xl mx-auto leading-relaxed">
+            Discover the organic food products that thousands of
+            health-conscious customers across India love and trust. From our
+            signature A2 Gir Cow Bilona Ghee to premium organic pulses,
+            cold-pressed oils, and natural dry fruits — these best sellers are
+            chosen for their unmatched purity, exceptional taste, and verified
+            quality certifications.
           </p>
         </div>
 

@@ -139,8 +139,13 @@ const CategoriesSection = () => {
             Shop Organic Products by Category
           </h2>
           <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
-          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Browse our complete collection of certified organic food products across all categories — from pure A2 Bilona Ghee and cold-pressed oils to organic millets, pulses, dry fruits, natural spices, seeds, khakhra, and artisanal homemade aachar. Every category is curated with products that are lab-tested, chemical-free, and sourced from trusted organic farms across India.
+          <p className="mt-5 text-gray-500 text-sm sm:text-base max-w-6xl mx-auto leading-relaxed">
+            Browse our complete collection of certified organic food products
+            across all categories — from pure A2 Bilona Ghee and cold-pressed
+            oils to organic millets, pulses, dry fruits, natural spices, seeds,
+            khakhra, and artisanal homemade aachar. Every category is curated
+            with products that are lab-tested, chemical-free, and sourced from
+            trusted organic farms across India.
           </p>
         </div>
 

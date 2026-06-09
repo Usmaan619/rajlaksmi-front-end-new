@@ -965,7 +965,9 @@ const ProductDetail = () => {
                         </p>
                         <p className="text-xs font-medium text-muted-foreground">
                           (₹
-                          {(selectedSizeInfo.price || product.price).toFixed(2)}{" "}
+                          {(selectedSizeInfo.price || product.price).toFixed(
+                            2,
+                          )}{" "}
                           / TIN — 1 TIN = 15kg)
                         </p>
                       </>
@@ -1539,7 +1541,7 @@ const ProductDetail = () => {
           category={apiProduct?.category_name}
           currentProductId={id}
         />
-        <BentoGrid />
+        {/* <BentoGrid /> */}
         <FAQSection />
       </div>
     </>
