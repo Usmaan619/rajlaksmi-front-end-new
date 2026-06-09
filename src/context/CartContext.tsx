@@ -38,7 +38,22 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
   });
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    try {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "QuotaExceededError") {
+        console.warn("Local storage quota exceeded. Saving cart without images.");
+        try {
+          // If images are large base64 strings, saving without them might work
+          const cartWithoutImages = cart.map(item => ({ ...item, image: "" }));
+          localStorage.setItem("cart", JSON.stringify(cartWithoutImages));
+        } catch (fallbackError) {
+          console.error("Failed to save cart even without images.", fallbackError);
+        }
+      } else {
+        console.error("Error saving cart to local storage:", error);
+      }
+    }
   }, [cart]);
 
   const addToCart = (item: CartItem) => {

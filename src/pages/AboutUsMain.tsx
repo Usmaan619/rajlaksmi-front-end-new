@@ -9,7 +9,6 @@ import farmerBgImg from "@/assets/aboutus/farmer-bell-left.png";
 import firstImg from "@/assets/aboutus/first.webp";
 import secImg from "@/assets/aboutus/sec.webp";
 import Seo from "@/components/Seo";
-import CompetitorComparisonSection from "@/components/CompetitorComparisonSection";
 import FAQSection from "@/components/FAQSection";
 
 const AboutUsPage = () => {
@@ -413,7 +412,6 @@ hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
         <TransparencySection />
 
         {/* Competitor Comparison */}
-        <CompetitorComparisonSection />
 
         {/* CTA Section */}
         <section className="py-20 px-4">
