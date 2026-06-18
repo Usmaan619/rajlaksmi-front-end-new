@@ -79,6 +79,7 @@ const LabReportsPage = lazy(() =>
 );
 
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const GalleryMain = lazy(() => import("@/pages/GalleryMain"));
 const OrdersPage = lazy(() => import("@/pages/OrdersPage"));
 const LoginPage = lazy(() => import("@/pages/Auth/LoginPage"));
 const SignupPage = lazy(() => import("@/pages/Auth/SignupPage"));
@@ -139,6 +140,7 @@ const MainRoutes = () => (
         <Route path="/shipping" element={<ShippingPolicy />} />
         <Route path="/returns" element={<RefundPolicy />} />
         <Route path="/faq" element={<FAQMainPage />} />
+        <Route path="/gallery" element={<GalleryMain />} />
         <Route path="/b2b" element={<B2BMainPage />} />
         <Route path="/lab-report" element={<LabReportsPage />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
