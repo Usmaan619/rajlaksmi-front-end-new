@@ -9,7 +9,6 @@ import {
   Menu,
   X,
   ChevronDown,
-  Package,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -150,6 +149,20 @@ const Header = () => {
       href: "https://panel.shipmozo.com/track-order/LBYfQgGFRljv1A249H87",
     },
     { name: "Contact Us", href: "/contact" },
+    {
+      name: "More",
+      href: "#",
+      submenu: [
+        { name: "About Us", href: "/about" },
+        { name: "Blogs", href: "/blog" },
+        { name: "FAQs", href: "/faq" },
+        { name: "Lab Report", href: "/lab-report" },
+        { name: "Privacy Policy", href: "/privacy" },
+        { name: "Terms & Conditions", href: "/terms" },
+        { name: "Shipping Policy", href: "/shipping" },
+        { name: "Return Policy", href: "/returns" },
+      ],
+    },
   ];
 
   const handleLogout = () => {

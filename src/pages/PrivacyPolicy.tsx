@@ -1,9 +1,15 @@
 
 import FAQSection from "@/components/FAQSection";
+import Seo from "@/components/Seo";
 
 const PrivacyPolicy = () => {
   return (
     <>
+      <Seo 
+        title="Privacy Policy | Rajlakshmi Javiks International"
+        description="Learn about how Rajlakshmi Javiks International collects, uses, and protects your personal information."
+        url="/privacy"
+      />
       <div className="min-h-screen px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-8 md:py-10  bg-white mb-10">
         {/* Header */}
 

@@ -1,10 +1,16 @@
 
 
 import FAQSection from "@/components/FAQSection";
+import Seo from "@/components/Seo";
 
 const RefundPolicy = () => {
   return (
     <>
+      <Seo 
+        title="Refund Policy | Rajlakshmi Javiks International"
+        description="Read our refund and return policy for Rajlakshmi Javiks International products."
+        url="/returns"
+      />
       <div className="min-h-screen px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-8 md:py-10 bg-white mb-10">
         {/* Header */}
 

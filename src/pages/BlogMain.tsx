@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Seo from "@/components/Seo";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -250,7 +251,13 @@ const BlogMain = () => {
   const totalPages = pagination?.totalPages || 1;
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <>
+      <Seo 
+        title="Blog | Rajlakshmi Javiks International"
+        description="Read our latest articles on organic farming, natural products, and healthy living."
+        url="/blog"
+      />
+      <div className="min-h-screen flex flex-col bg-white">
       <main className="flex-1 ">
         {/* Hero Section */}
         <section className="py-10 md:py-14 mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
@@ -573,7 +580,7 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
           ]}
         />
       </main>
-    </div>
+    </>
   );
 };
 

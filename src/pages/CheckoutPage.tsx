@@ -116,11 +116,11 @@ const CheckoutPage = () => {
   );
 
   const shippingGST = shippingInfo?.gst || 0;
+  const shippingBase = shippingInfo?.baseCharge || 0;
   const totalGST = itemsGstTotal + shippingGST;
 
   const hasGST = totalGST > 0;
-  const shippingCharge = shippingInfo?.charge || 0;
-  const grandTotal = cartTotal + itemsGstTotal + shippingCharge;
+  const grandTotal = cartTotal + itemsGstTotal + shippingBase + shippingGST;
 
   /* ─── Address Form ──────────────────────────────────────────── */
   const addressForm = useForm<AddressFormValues>({
@@ -470,7 +470,7 @@ const CheckoutPage = () => {
 
   /* ─── Main Render ───────────────────────────────────────────── */
   return (
-    <div className="min-h-screen bg-white py-8 px-4 md:px-8">
+    <div className="min-h-screen bg-white py-8 px-4 md:px-8 pb-32">
       <div className="max-w-6xl mx-auto">
         {/* Page Header */}
         <div className="mb-8">
@@ -515,7 +515,7 @@ const CheckoutPage = () => {
                     {/* Thumbnail */}
                     <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-white border border-slate-200">
                       <img
-                        src={item.image}
+                        src={item.image || "https://placehold.co/64x64?text=RLJ"}
                         alt={item.name}
                         className="w-full h-full object-cover"
                         onError={(e) =>
@@ -895,7 +895,7 @@ const CheckoutPage = () => {
             </Card>
 
             {/* Trust Badges */}
-            <div className="grid grid-cols-3 gap-3 mb-10 ">
+            <div className="grid grid-cols-3 gap-3 mb-6">
               {[
                 { icon: ShieldCheck, text: "Secure Payment" },
                 { icon: Truck, text: "Fast Delivery" },
@@ -937,23 +937,11 @@ const CheckoutPage = () => {
                     </span>
                   </div>
 
-                  {shippingInfo && shippingInfo.gst > 0 && (
-                    <div className="flex justify-between text-sm text-slate-600">
-                      <span className="flex items-center gap-1">
-                        <Tag className="h-3 w-3 text-emerald-500" />
-                        GST
-                      </span>
-                      <span className="font-semibold text-emerald-700">
-                        +₹{shippingInfo.gst.toFixed(2)}
-                      </span>
-                    </div>
-                  )}
-
                   {itemsGstTotal > 0 && (
                     <div className="flex justify-between text-sm text-slate-600">
                       <span className="flex items-center gap-1">
                         <Tag className="h-3 w-3 text-emerald-500" />
-                        Product Tax
+                        Product GST
                       </span>
                       <span className="font-semibold text-emerald-700">
                         +₹{itemsGstTotal.toFixed(2)}
@@ -976,7 +964,7 @@ const CheckoutPage = () => {
                       ) : shippingInfo ? (
                         <div className="text-right">
                           <span className="text-emerald-700 block">
-                            ₹{shippingInfo.charge.toFixed(2)}
+                            ₹{shippingInfo.baseCharge.toFixed(2)}
                           </span>
                         </div>
                       ) : (
@@ -1001,11 +989,6 @@ const CheckoutPage = () => {
                           <span>
                             Est. {shippingInfo.estimate || "7-14 business days"}
                           </span>
-                          {shippingInfo.gst > 0 && (
-                            <span className="text-emerald-600 font-medium">
-                              (Inc. ₹{shippingInfo.gst.toFixed(2)} GST)
-                            </span>
-                          )}
                         </div>
                       </div>
                     )}
@@ -1027,6 +1010,18 @@ const CheckoutPage = () => {
                       </div>
                     )}
                   </div>
+
+                  {shippingInfo && shippingInfo.gst > 0 && (
+                    <div className="flex justify-between text-sm text-slate-600">
+                      <span className="flex items-center gap-1">
+                        <Tag className="h-3 w-3 text-emerald-500" />
+                        Shipping GST (18%)
+                      </span>
+                      <span className="font-semibold text-emerald-700">
+                        +₹{shippingInfo.gst.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Divider */}
@@ -1095,7 +1090,7 @@ const CheckoutPage = () => {
             </Card>
 
             {/* Security note */}
-            <div className="flex items-center gap-2 justify-center text-xs text-slate-400">
+            <div className="flex items-center gap-2 justify-center text-xs text-slate-400 pb-10">
               <ShieldCheck className="h-4 w-4 text-emerald-400" />
               <span>256-bit SSL secured checkout</span>
             </div>

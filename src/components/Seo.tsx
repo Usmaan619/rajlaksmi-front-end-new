@@ -14,12 +14,22 @@ const Seo = ({
   image = "https://rajlakshmijaviks.com/logo.png",
 }: SeoProps) => {
   // Normalize URL to standardized domain for canonicals
-  const canonicalUrl = url.startsWith("http")
+  let canonicalUrl = url.startsWith("http")
     ? url.replace(
         /https?:\/\/(www\.)?(rajlakshmijaviksinternational\.com|rajlakshmijaviks\.com)/,
         "https://rajlakshmijaviks.com"
       )
     : `https://rajlakshmijaviks.com${url.startsWith("/") ? url : `/${url}`}`;
+
+  // Ensure consistent non-trailing slash URLs for inner pages
+  if (canonicalUrl !== "https://rajlakshmijaviks.com" && canonicalUrl !== "https://rajlakshmijaviks.com/" && canonicalUrl.endsWith("/")) {
+    canonicalUrl = canonicalUrl.slice(0, -1);
+  }
+
+  // Ensure root URL has trailing slash
+  if (canonicalUrl === "https://rajlakshmijaviks.com") {
+    canonicalUrl = "https://rajlakshmijaviks.com/";
+  }
 
   return (
     <Helmet>

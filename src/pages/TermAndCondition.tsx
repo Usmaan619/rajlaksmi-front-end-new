@@ -1,10 +1,15 @@
 
 import FAQSection from "@/components/FAQSection";
+import Seo from "@/components/Seo";
 
 const TermAndCondition = () => {
   return (
     <>
-
+      <Seo 
+        title="Terms & Conditions | Rajlakshmi Javiks International"
+        description="Terms and conditions for using the Rajlakshmi Javiks International website and services."
+        url="/terms"
+      />
       <div className="min-h-screen px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 py-8 md:py-10  bg-white mb-10">
         {/* Header */}
 

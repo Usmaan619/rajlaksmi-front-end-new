@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Seo from "@/components/Seo";
 import { useParams, Link } from "react-router-dom";
 import { ArrowRight, Clock, User, Share2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -90,7 +91,14 @@ const BlogDetail = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <>
+      <Seo 
+        title={`${blog?.title || "Blog"} | Rajlakshmi Javiks International`}
+        description={blog?.excerpt || "Read our latest article."}
+        url={`/blog/${id}`}
+        image={blog?.coverImage}
+      />
+      <div className="min-h-screen flex flex-col bg-white">
       <main className="flex-1">
         {/* Article Section */}
         <article className="w-full max-w-[1650px] mx-auto px-6 sm:px-8 lg:px-12 py-10 lg:py-14">
@@ -386,7 +394,7 @@ const BlogDetail = () => {
           </section>
         )}
       </main>
-    </div>
+    </>
   );
 };
 

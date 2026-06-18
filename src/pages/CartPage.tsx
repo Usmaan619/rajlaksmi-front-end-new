@@ -88,7 +88,7 @@ const CartPage = () => {
                 <div className="flex flex-row gap-3 sm:gap-4 items-stretch sm:items-center">
                   <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-lg overflow-hidden flex-shrink-0 bg-gray-50 border border-emerald-50">
                     <img
-                      src={item.image}
+                      src={item.image || "https://placehold.co/400x400?text=Rajlakshmi"}
                       alt={item.name}
                       className="w-full h-full object-cover"
                       onError={(e) =>
