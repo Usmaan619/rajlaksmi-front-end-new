@@ -21,7 +21,7 @@ import { createNewsletterAPI } from "@/api/contact.service";
 import { toast } from "@/hooks/use-toast";
 import FAQSection from "@/components/FAQSection";
 
-import blogImg from "@/assets/blog/blogheader.png";
+import blogImg from "@/assets/blog/blogheader.webp";
 
 interface SidebarContentProps {
   searchQuery: string;
@@ -580,6 +580,7 @@ transition-all duration-300 hover:scale-105 hover:shadow-xl"
           ]}
         />
       </main>
+      </div>
     </>
   );
 };

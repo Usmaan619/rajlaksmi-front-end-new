@@ -649,6 +649,9 @@ const ProductDetail = () => {
                     src={product.images[selectedIndex]}
                     alt={product.name}
                     className="w-full h-full object-cover"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                   />
                 )}
                 <button
@@ -1226,29 +1229,31 @@ const ProductDetail = () => {
                 >
                   <AccordionItem
                     value="item-1"
-                    className="border-b border-[hsl(120,20%,85%)]"
+                    className="border border-[hsl(120,20%,85%)] mb-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-fade-up opacity-0"
+                    style={{ animationDelay: `100ms` }}
                   >
-                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 px-6 hover:no-underline [&>svg]:hidden hover:bg-[hsl(120,20%,97%)] transition-colors duration-300">
                       <span className="flex-1">Description</span>
-                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-500 group-data-[state=open]:rotate-180 group-data-[state=open]:bg-[hsl(120,60%,30%)]">
                         <ChevronDown className="h-5 w-5" />
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
+                    <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 px-6 whitespace-pre-line leading-relaxed">
                       {product.description}
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem
                     value="item-2"
-                    className="border-b border-[hsl(120,20%,85%)]"
+                    className="border border-[hsl(120,20%,85%)] mb-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-fade-up opacity-0"
+                    style={{ animationDelay: `200ms` }}
                   >
-                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 px-6 hover:no-underline [&>svg]:hidden hover:bg-[hsl(120,20%,97%)] transition-colors duration-300">
                       <span className="flex-1">Health Benefits</span>
-                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-500 group-data-[state=open]:rotate-180 group-data-[state=open]:bg-[hsl(120,60%,30%)]">
                         <ChevronDown className="h-5 w-5" />
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">
+                    <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 px-6">
                       <ul className="space-y-2">
                         {product.healthBenefits.map((benefit: string) => (
                           <li key={benefit} className="flex items-start gap-2">
@@ -1261,32 +1266,34 @@ const ProductDetail = () => {
                   </AccordionItem>
                   <AccordionItem
                     value="item-3"
-                    className="border-b border-[hsl(120,20%,85%)]"
+                    className="border border-[hsl(120,20%,85%)] mb-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-fade-up opacity-0"
+                    style={{ animationDelay: `300ms` }}
                   >
-                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 px-6 hover:no-underline [&>svg]:hidden hover:bg-[hsl(120,20%,97%)] transition-colors duration-300">
                       <span className="flex-1">Ingredients</span>
-                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-500 group-data-[state=open]:rotate-180 group-data-[state=open]:bg-[hsl(120,60%,30%)]">
                         <ChevronDown className="h-5 w-5" />
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
+                    <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 px-6 whitespace-pre-line leading-relaxed">
                       {product.ingredients}
                     </AccordionContent>
                   </AccordionItem>
                   {product.whyChoose && product.whyChoose.length > 0 && (
                     <AccordionItem
                       value="item-3a"
-                      className="border-b border-[hsl(120,20%,85%)]"
+                      className="border border-[hsl(120,20%,85%)] mb-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-fade-up opacity-0"
+                      style={{ animationDelay: `400ms` }}
                     >
-                      <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                      <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 px-6 hover:no-underline [&>svg]:hidden hover:bg-[hsl(120,20%,97%)] transition-colors duration-300">
                         <span className="flex-1">
                           Why Choose Our {product.name}?
                         </span>
-                        <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                        <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-500 group-data-[state=open]:rotate-180 group-data-[state=open]:bg-[hsl(120,60%,30%)]">
                           <ChevronDown className="h-5 w-5" />
                         </div>
                       </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">
+                      <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 px-6">
                         <ul className="space-y-2">
                           {product.whyChoose.map((item: string, i: number) => (
                             <li key={i} className="flex items-start gap-2">
@@ -1301,15 +1308,16 @@ const ProductDetail = () => {
                   {product.storageInstructions && (
                     <AccordionItem
                       value="item-3b"
-                      className="border-b border-[hsl(120,20%,85%)]"
+                      className="border border-[hsl(120,20%,85%)] mb-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-fade-up opacity-0"
+                      style={{ animationDelay: `500ms` }}
                     >
-                      <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                      <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 px-6 hover:no-underline [&>svg]:hidden hover:bg-[hsl(120,20%,97%)] transition-colors duration-300">
                         <span className="flex-1">Storage Instructions</span>
-                        <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                        <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-500 group-data-[state=open]:rotate-180 group-data-[state=open]:bg-[hsl(120,60%,30%)]">
                           <ChevronDown className="h-5 w-5" />
                         </div>
                       </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 whitespace-pre-line leading-relaxed">
+                      <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 px-6 whitespace-pre-line leading-relaxed">
                         {product.storageInstructions}
                       </AccordionContent>
                     </AccordionItem>
@@ -1317,15 +1325,16 @@ const ProductDetail = () => {
                   {product.commonUses && product.commonUses.length > 0 && (
                     <AccordionItem
                       value="item-3c"
-                      className="border-b border-[hsl(120,20%,85%)]"
+                      className="border border-[hsl(120,20%,85%)] mb-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-fade-up opacity-0"
+                      style={{ animationDelay: `600ms` }}
                     >
-                      <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                      <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 px-6 hover:no-underline [&>svg]:hidden hover:bg-[hsl(120,20%,97%)] transition-colors duration-300">
                         <span className="flex-1">Common Uses</span>
-                        <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                        <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-500 group-data-[state=open]:rotate-180 group-data-[state=open]:bg-[hsl(120,60%,30%)]">
                           <ChevronDown className="h-5 w-5" />
                         </div>
                       </AccordionTrigger>
-                      <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">
+                      <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 px-6">
                         <ul className="space-y-2">
                           {product.commonUses.map((item: string, i: number) => (
                             <li key={i} className="flex items-start gap-2">
@@ -1337,14 +1346,18 @@ const ProductDetail = () => {
                       </AccordionContent>
                     </AccordionItem>
                   )}
-                  <AccordionItem value="item-4" className="border-none">
-                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+                  <AccordionItem 
+                    value="item-4" 
+                    className="border border-[hsl(120,20%,85%)] mb-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-fade-up opacity-0"
+                    style={{ animationDelay: `700ms` }}
+                  >
+                    <AccordionTrigger className="group text-left text-base md:text-lg font-medium py-5 px-6 hover:no-underline [&>svg]:hidden hover:bg-[hsl(120,20%,97%)] transition-colors duration-300">
                       <span className="flex-1">Additional Information</span>
-                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-200 group-data-[state=open]:rotate-180">
+                      <div className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white transition-transform duration-500 group-data-[state=open]:rotate-180 group-data-[state=open]:bg-[hsl(120,60%,30%)]">
                         <ChevronDown className="h-5 w-5" />
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground text-sm pb-5">
+                    <AccordionContent className="text-muted-foreground text-sm pb-5 px-6">
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <p className="font-semibold text-foreground">

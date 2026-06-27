@@ -105,10 +105,18 @@ const GheeShowcase = () => {
       
       <div className="gallery-showcase-container flex-1 pb-10">
         <div className="gallery-grid-container">
-          {images?.map((image) => (
+          {images?.map((image, index) => (
             <div key={image.id} className={`gallery-grid-item ${image.size}`}>
-              <div className="gallery-image-wrapper">
-                <img src={image.src} alt={image.alt} loading="lazy" />
+              <div className="gallery-image-wrapper bg-gray-100">
+                <img 
+                  src={image.src} 
+                  alt={image.alt} 
+                  loading={index < 4 ? "eager" : "lazy"}
+                  fetchPriority={index < 2 ? "high" : "auto"}
+                  decoding="async"
+                  width={image.size === "large" ? "1200" : "800"}
+                  height={image.size === "large" ? "1200" : "800"}
+                />
               </div>
             </div>
           ))}

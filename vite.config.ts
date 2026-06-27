@@ -2,11 +2,14 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import viteCompression from "vite-plugin-compression";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   server: {
     host: true,
     port: 8080,
+    allowedHosts: ["cisted-hylozoistic-latasha.ngrok-free.dev"],
     hmr: {
       overlay: false,
     },
@@ -14,6 +17,17 @@ export default defineConfig({
 
   plugins: [
     react(),
+    viteCompression({
+      algorithm: "brotliCompress",
+      ext: ".br",
+      threshold: 1024,
+    }),
+    viteCompression({
+      algorithm: "gzip",
+      ext: ".gz",
+      threshold: 1024,
+    }),
+    visualizer({ open: false, filename: "bundle-report.html" }),
     ViteImageOptimizer({
       test: /\.(jpe?g|png|gif|tiff|webp|svg|avif)$/i,
       exclude: undefined,
@@ -66,8 +80,15 @@ export default defineConfig({
   },
 
   build: {
+    sourcemap: true,
     target: "esnext",
-    minify: "esbuild",
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
     cssCodeSplit: true,
     rollupOptions: {
       output: {
@@ -82,6 +103,11 @@ export default defineConfig({
           ],
           utils: ["axios", "@tanstack/react-query", "zod", "react-hook-form"],
           charts: ["recharts"],
+          carousel: [
+            "embla-carousel-react",
+            "embla-carousel-autoplay",
+            "react-responsive-carousel",
+          ],
         },
       },
     },

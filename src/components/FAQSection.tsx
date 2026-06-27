@@ -60,15 +60,16 @@ const FAQSection = ({ faqs = defaultFaqs, title = "Frequently Asked Questions (F
           <AccordionItem
             key={index}
             value={`item-${index}`}
-            className="border-b border-[hsl(120,20%,85%)]"
+            className="border border-[hsl(120,20%,85%)] mb-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-fade-up opacity-0"
+            style={{ animationDelay: `${index * 100}ms` }}
           >
-            <AccordionTrigger className="text-left text-base md:text-lg font-medium py-5 hover:no-underline [&>svg]:hidden">
+            <AccordionTrigger className="text-left text-base md:text-lg font-medium py-5 px-6 hover:no-underline [&>svg]:hidden hover:bg-[hsl(120,20%,97%)] transition-colors duration-300">
               <span className="flex-1">{faq.question}</span>
-              <span className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white text-xl leading-none transition-transform duration-200 [[data-state=open]_&]:rotate-180">
+              <span className="ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(120,60%,35%)] text-white text-xl leading-none transition-transform duration-500 [[data-state=open]_&]:rotate-180 [[data-state=open]_&]:bg-[hsl(120,60%,30%)]">
                 <ChevronDown size={18} />
               </span>
             </AccordionTrigger>
-            <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5">
+            <AccordionContent className="text-muted-foreground text-sm md:text-base pb-5 px-6 leading-relaxed">
               {faq.answer}
             </AccordionContent>
           </AccordionItem>

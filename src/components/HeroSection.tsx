@@ -2,8 +2,11 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-import banner1Img from "@/assets/banner-main-page/banner2.png";
-import banner2Img from "@/assets/banner-main-page/banner1.png";
+import banner1Img from "@/assets/banner-main-page/banner2.webp";
+import banner2Img from "@/assets/banner-main-page/banner1.webp";
+import bannerNew from "@/assets/banner-main-page/newbanner-12.jpeg";
+import bannerNew1 from "@/assets/banner-main-page/2.jpeg";
+import bannerNew2 from "@/assets/banner-main-page/3.jpeg";
 
 import { getHomeBannerAPI } from "@/api/contact.service";
 import { Carousel } from "react-responsive-carousel";
@@ -11,7 +14,7 @@ import { Carousel } from "react-responsive-carousel";
 /* =========================
    FALLBACK
 ========================= */
-const FALLBACK_BANNERS = [banner1Img, banner2Img];
+const FALLBACK_BANNERS = [bannerNew, bannerNew1, bannerNew2];
 
 /* =========================
    CLOUDINARY OPTIMIZER
@@ -37,12 +40,7 @@ const HeroSection: React.FC = () => {
       const res = await getHomeBannerAPI();
       const rawData = res?.data || res;
 
-      const urls = [
-        rawData?.banner1,
-        rawData?.banner2,
-        rawData?.banner3,
-        rawData?.banner4,
-      ].filter(Boolean);
+      const urls = [bannerNew, bannerNew1, bannerNew2].filter(Boolean);
 
       setBannerUrls(urls.length ? urls : FALLBACK_BANNERS);
     } catch (error) {

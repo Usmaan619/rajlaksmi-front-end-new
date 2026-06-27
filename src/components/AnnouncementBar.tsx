@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { FiMail, FiPhoneCall } from "react-icons/fi";
-import { Facebook, Instagram, Youtube } from "lucide-react";
+import { Mail, Phone, Facebook, Instagram, Youtube } from "lucide-react";
 import { getAllOffersAPI, Offer } from "@/api/offer.service";
 import { Rating } from "react-simple-star-rating";
 
@@ -38,12 +37,12 @@ const AnnouncementBar = () => {
           {/* Contact Info */}
           <div className="flex items-center gap-2 sm:gap-4 text-[10px] sm:text-[11px] lg:text-xs font-semibold">
             <div className="flex items-center gap-1 sm:gap-1.5 hover:text-yellow-400 transition-colors cursor-pointer">
-              <FiPhoneCall className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-yellow-400" />
+              <Phone className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-yellow-400" />
               <a href="tel:+918769215905">+91-87692 15905</a>
             </div>
             <div className="h-3 w-[1px] bg-white/30" />
             <div className="flex items-center gap-1 sm:gap-1.5 hover:text-yellow-400 transition-colors cursor-pointer">
-              <FiMail className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-yellow-400" />
+              <Mail className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-yellow-400" />
               <a
                 href="mailto:contact@rajlakshmijaviks.com"
                 className="hidden sm:block"

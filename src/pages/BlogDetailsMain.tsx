@@ -394,6 +394,7 @@ const BlogDetail = () => {
           </section>
         )}
       </main>
+      </div>
     </>
   );
 };
