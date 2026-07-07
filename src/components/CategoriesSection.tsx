@@ -3,14 +3,22 @@ import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getCategories, Category } from "@/api/category.service";
 
-import grainsImg from "@/assets/category-grains.jpg";
-import floursImg from "@/assets/category-flours.jpg";
-import oilsImg from "@/assets/category-oils.jpg";
-import seedsImg from "@/assets/category-seeds.jpg";
-import dryfruitsImg from "@/assets/category-dryfruits.jpg";
-import spicesImg from "@/assets/category-spices.jpg";
+
+import pulsesImg from "@/assets/category/pulses.jpg";
+import milletsImg from "@/assets/category/millets.jpg";
+import ricewheatImg from "@/assets/category/ricewheat.jpg";
+import masalaImg from "@/assets/category/masala.jpg";
+import sweetsImg from "@/assets/category/sweet.jpg";
+import honeyImg from "@/assets/category/honey.jpg";
+import dryfruitsImg from "@/assets/category/dryfruits.jpg";
+import seedsImg from "@/assets/category/seeds.jpg";
+import otheritemsImg from "@/assets/category/otheritems.jpg";
+import homemadaacarImg from "@/assets/category/homemadaacar.jpg";
+
+import fruitsdrinksImg from "@/assets/category/fruitsdrinks.jpg";
+
+
 import gheeImg from "@/assets/category-ghee.jpg";
-import superfoodsImg from "@/assets/category-superfoods.jpg";
 import allCategoriesImg from "@/assets/category-grains.jpg"; // Using grains as default for all
 
 type CategoryItem = {
@@ -23,41 +31,33 @@ type CategoryItem = {
 const categoryOrder = [
   "PULSES",
   "MILLET",
-  "RICE  WHEAT",
+  "RICE & WHEAT",
   "MASALA",
   "SWEETS",
   "HONEY",
   "DRY FRUITS",
   "SEEDS",
   "OTHER ITEMS",
-  "OILS  GHEE",
+  "OILS & GHEE",
   "RLJ PRODUCTS",
   "HOME MADE AACHAR",
-  "KHAKHRA",
-  "KHAPLI WHEAT KHAKHRA (EMMER WHEAT)",
-  "MILLETS KHAKHRA",
-  "FASTING / UPVAS SPECIAL - GLUTEN FREE KHAKHRA",
-  "ROASTED MILLET DRY BHAKRI",
+  "FRUITS DRINKS / CHUTNEY",
 ];
 
 const categoryImages: Record<string, string> = {
-  PULSES: grainsImg,
-  MILLET: superfoodsImg,
-  "RICE  WHEAT": grainsImg,
-  MASALA: spicesImg,
-  SWEETS: superfoodsImg,
-  HONEY: superfoodsImg,
+  PULSES: pulsesImg,
+  MILLET: milletsImg,
+  "RICE & WHEAT": ricewheatImg,
+  MASALA: masalaImg,
+  SWEETS: sweetsImg,
+  HONEY: honeyImg,
   "DRY FRUITS": dryfruitsImg,
   SEEDS: seedsImg,
-  "OTHER ITEMS": superfoodsImg,
-  "OILS  GHEE": gheeImg,
-  "RLJ PRODUCTS": superfoodsImg,
-  "HOME MADE AACHAR": spicesImg,
-  KHAKHRA: floursImg,
-  "KHAPLI WHEAT KHAKHRA (EMMER WHEAT)": floursImg,
-  "MILLETS KHAKHRA": floursImg,
-  "FASTING / UPVAS SPECIAL - GLUTEN FREE KHAKHRA": floursImg,
-  "ROASTED MILLET DRY BHAKRI": floursImg,
+  "OTHER ITEMS": otheritemsImg,
+  "OILS & GHEE": gheeImg,
+  "RLJ PRODUCTS": allCategoriesImg,
+  "HOME MADE AACHAR": homemadaacarImg,
+  "FRUITS DRINKS / CHUTNEY": fruitsdrinksImg,
 };
 
 const pastelColors = [
@@ -84,7 +84,7 @@ const CategoriesSection = () => {
           const mapped: CategoryItem[] = res.data.map((cat: Category) => ({
             name: cat.category_name,
             href: `/categories?category=${encodeURIComponent(cat.category_name)}`,
-            image: categoryImages[cat.category_name] || grainsImg,
+            image: categoryImages[cat.category_name] || allCategoriesImg,
             bgColor: "", // will assign after sorting
           }));
 
@@ -153,51 +153,51 @@ const CategoriesSection = () => {
         <div className="flex overflow-x-auto gap-4 sm:gap-6 md:gap-8 pb-6 scrollbar-custom snap-x scroll-smooth">
           {isLoading
             ? Array.from({ length: 10 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col items-center gap-3 flex-shrink-0 w-32 sm:w-36 md:w-44"
-                >
-                  <Skeleton className="w-full aspect-square rounded-2xl" />
-                  <Skeleton className="h-4 w-20 rounded-full" />
-                </div>
-              ))
+              <div
+                key={i}
+                className="flex flex-col items-center gap-3 flex-shrink-0 w-32 sm:w-36 md:w-44"
+              >
+                <Skeleton className="w-full aspect-square rounded-2xl" />
+                <Skeleton className="h-4 w-20 rounded-full" />
+              </div>
+            ))
             : categories.map((category) => (
-                <Link
-                  key={category.name}
-                  to={category.href}
-                  className="group flex-shrink-0 w-32 sm:w-36 md:w-44 snap-start py-4"
+              <Link
+                key={category.name}
+                to={category.href}
+                className="group flex-shrink-0 w-32 sm:w-36 md:w-44 snap-start py-4"
+              >
+                <div
+                  className={`relative flex flex-col items-center justify-between h-full ${category.bgColor || "bg-gray-100"} rounded-2xl p-5 text-center shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-2 overflow-hidden border border-white/50`}
                 >
-                  <div
-                    className={`relative flex flex-col items-center justify-between h-full ${category.bgColor || "bg-gray-100"} rounded-2xl p-5 text-center shadow-lg transition-all duration-500 hover:shadow-xl hover:-translate-y-2 overflow-hidden border border-white/50`}
-                  >
-                    {/* Decorative subtle shine */}
-                    <div className="absolute -left-10 -top-10 h-32 w-32 bg-white/40 rounded-full blur-3xl transition-transform duration-700 group-hover:translate-x-full group-hover:translate-y-full" />
+                  {/* Decorative subtle shine */}
+                  <div className="absolute -left-10 -top-10 h-32 w-32 bg-white/40 rounded-full blur-3xl transition-transform duration-700 group-hover:translate-x-full group-hover:translate-y-full" />
 
-                    {/* Image Wrapper with White Border */}
-                    <div className="relative w-full aspect-square bg-white rounded-[2rem] overflow-hidden mb-4 shadow-sm border-[4px] border-white ring-1 ring-black/5 transition-transform duration-500 group-hover:scale-105">
-                      <img
-                        src={category.image}
-                        alt={category.name}
-                        width="150"
-                        height="150"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </div>
-
-                    {/* Text Area */}
-                    <div className="flex-1 flex flex-col justify-center mb-1">
-                      <p className="text-[#01722C] font-black text-[11px] md:text-xs tracking-[0.05em] uppercase leading-tight line-clamp-2 px-1">
-                        {category.name}
-                      </p>
-                    </div>
-
-                    {/* Bottom accent (same as text color) */}
-                    <div className="mt-auto h-1 w-8 bg-[#01722C]/20 rounded-full transition-all duration-500 group-hover:bg-[#01722C]/40 group-hover:w-14" />
+                  {/* Image Wrapper with White Border */}
+                  <div className="relative w-full aspect-square bg-white rounded-[2rem] overflow-hidden mb-4 shadow-sm border-[4px] border-white ring-1 ring-black/5 transition-transform duration-500 group-hover:scale-105">
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      width="150"
+                      height="150"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
-                </Link>
-              ))}
+
+                  {/* Text Area */}
+                  <div className="flex-1 flex flex-col justify-center mb-1">
+                    <p className="text-[#01722C] font-black text-[11px] md:text-xs tracking-[0.05em] uppercase leading-tight line-clamp-2 px-1">
+                      {category.name}
+                    </p>
+                  </div>
+
+                  {/* Bottom accent (same as text color) */}
+                  <div className="mt-auto h-1 w-8 bg-[#01722C]/20 rounded-full transition-all duration-500 group-hover:bg-[#01722C]/40 group-hover:w-14" />
+                </div>
+              </Link>
+            ))}
         </div>
       </div>
     </section>
