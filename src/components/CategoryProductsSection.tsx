@@ -50,7 +50,7 @@ const ProductCard = ({ product }: { product: any }) => {
       id: `product-${product.id}`,
       name: product.product_name,
       price: currentPrice,
-      image: product.product_images[0],
+      image: product.product_thumbnail || product.product_images?.[0],
       quantity: 1,
       weight: selectedUnitWeight,
     });
@@ -63,7 +63,7 @@ const ProductCard = ({ product }: { product: any }) => {
       id: `product-${product.id}`,
       name: product.product_name,
       price: currentPrice,
-      image: product.product_images[0],
+      image: product.product_thumbnail || product.product_images?.[0],
       quantity: 1,
       weight: selectedUnitWeight,
     });
@@ -78,7 +78,7 @@ const ProductCard = ({ product }: { product: any }) => {
       <div className="relative">
         <div className="aspect-square rounded-xl overflow-hidden bg-muted">
           <img
-            src={product.product_images[0]}
+            src={product.product_thumbnail || product.product_images?.[0]}
             alt={product.product_name}
             width="300"
             height="300"
@@ -95,7 +95,7 @@ const ProductCard = ({ product }: { product: any }) => {
               id: `${product.id}`,
               name: product.product_name,
               price: currentPrice,
-              image: product.product_images[0],
+              image: product.product_thumbnail || product.product_images?.[0],
               originalPrice: currentDelPrice,
               discount: currentDiscount,
               weightOptions: weights.map((w: any) => w.weight),

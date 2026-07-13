@@ -3,8 +3,8 @@ import { ENV } from "@/config/env";
 import { getToken, clearToken } from "@/utils/token";
 
 const api = axios.create({
-  baseURL: ENV.API_BASE_URL,
-  timeout: 15000,
+  baseURL: "https://api.rajlakshmijaviks.com",
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
     "ngrok-skip-browser-warning": "true",

@@ -37,9 +37,11 @@ import ContactSection from "@/components/ContactSection";
 import TestimonialSection from "@/components/TestimonialSection";
 import CertificationsBottomSection from "@/components/CertificationsBottomSection";
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 8;
 
-const getFirstImage = (images: any) => {
+const getFirstImage = (images: any, thumbnail?: string) => {
+  // Prefer the pre-extracted thumbnail from lite API response
+  if (thumbnail) return thumbnail;
   if (!images) return "";
   if (Array.isArray(images)) return images.length > 0 ? images[0] : "";
   if (typeof images !== "string") return "";
@@ -78,7 +80,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isFavorite = isInWishlist(`product-all-${product.id}`);
 
-  const productImage = getFirstImage(product.product_images);
+  const productImage = getFirstImage(product.product_images, (product as any).product_thumbnail);
   const weights = parseProductWeights(product.weight_options);
   const [selectedWeightIdx, setSelectedWeightIdx] = useState(0);
 
@@ -567,14 +569,7 @@ const AllProducts = () => {
               : p.weight_options,
         }));
 
-        setProducts(prev => {
-          if (isAppending) {
-            const existingIds = new Set(prev.map(p => p.id));
-            const newProducts = mappedProducts.filter((p: any) => !existingIds.has(p.id));
-            return [...prev, ...newProducts];
-          }
-          return mappedProducts;
-        });
+        setProducts(mappedProducts);
         if (res.pagination) {
           setTotalPages(res.pagination.totalPages || 1);
         } else {
@@ -591,26 +586,7 @@ const AllProducts = () => {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !loading && !isFetchingMore && currentPage < totalPages) {
-          const params = new URLSearchParams(searchParams);
-          params.set("page", (currentPage + 1).toString());
-          setSearchParams(params);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [loading, isFetchingMore, currentPage, totalPages, searchParams, setSearchParams]);
+  // Infinite scroll removed in favor of pagination
 
   useEffect(() => {
     fetchAllProducts();
@@ -771,19 +747,38 @@ const AllProducts = () => {
                   </div>
                 )}
 
-                {/* Infinite Scroll Loader */}
-                {!loading && !error && (
-                  <div ref={observerRef} className="w-full flex justify-center py-8 mt-4">
-                    {isFetchingMore ? (
-                      <div className="flex items-center gap-2 text-primary">
-                        <Loader2 className="h-6 w-6 animate-spin" />
-                        <span className="font-medium">Loading more products...</span>
-                      </div>
-                    ) : currentPage < totalPages ? (
-                      <span className="text-muted-foreground text-sm">Scroll for more</span>
-                    ) : products.length > 0 ? (
-                      <span className="text-muted-foreground text-sm">You've reached the end</span>
-                    ) : null}
+                {/* Pagination */}
+                {!loading && !error && totalPages > 1 && (
+                  <div className="w-full flex justify-center items-center gap-4 py-8 mt-4">
+                    <Button
+                      variant="outline"
+                      disabled={currentPage <= 1}
+                      onClick={() => {
+                        const params = new URLSearchParams(searchParams);
+                        params.set("page", (currentPage - 1).toString());
+                        setSearchParams(params);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                    >
+                      <ChevronLeft className="h-4 w-4 mr-1" />
+                      Previous
+                    </Button>
+                    <span className="text-sm font-medium">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      disabled={currentPage >= totalPages}
+                      onClick={() => {
+                        const params = new URLSearchParams(searchParams);
+                        params.set("page", (currentPage + 1).toString());
+                        setSearchParams(params);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }}
+                    >
+                      Next
+                      <ChevronRight className="h-4 w-4 ml-1" />
+                    </Button>
                   </div>
                 )}
               </div>

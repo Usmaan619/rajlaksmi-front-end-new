@@ -31,7 +31,8 @@ import {
   getDisplayWeight,
 } from "@/lib/utils";
 
-const getFirstImage = (images: any) => {
+const getFirstImage = (images: any, thumbnail?: string) => {
+  if (thumbnail) return thumbnail;
   if (!images) return "";
   if (Array.isArray(images)) return images.length > 0 ? images[0] : "";
   if (typeof images !== "string") return "";
@@ -64,7 +65,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const pDiscount = product.discount || 0;
   const pRating = product.rating || "4.5";
 
-  const productImage = getFirstImage(product.product_images);
+  const productImage = getFirstImage(product.product_images, (product as any).product_thumbnail);
   const weights = parseProductWeights(
     product.weight_options || product.product_weight,
   );

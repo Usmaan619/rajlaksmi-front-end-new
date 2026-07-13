@@ -6,18 +6,25 @@ export interface Product {
   discount: number;
   rating: number;
   product_images: string | string[];
+  product_thumbnail?: string;
   weight_options: string | string[];
   product_weight?: string | string[];
   product_price?: number;
   product_del_price?: number;
+  product_purchase_price?: number;
   category_id: number;
   category_name?: string;
   short_description?: string;
   full_description?: string;
   health_benefits?: string;
   ingredients?: string;
-  STATUS: string;
-  created_at: string;
+  product_subtitle?: string;
+  is_featured?: number;
+  is_active?: number;
+  product_stock?: number;
+  gst_percent?: number;
+  STATUS?: string;
+  created_at?: string;
 }
 
 export interface GetAllProductsResponse {

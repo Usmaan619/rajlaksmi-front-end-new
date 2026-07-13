@@ -28,9 +28,11 @@ import {
 } from "@/lib/utils";
 import Seo from "@/components/Seo";
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 8;
 
-const getFirstImage = (images: any) => {
+const getFirstImage = (images: any, thumbnail?: string) => {
+  // Prefer the pre-extracted thumbnail from lite API response
+  if (thumbnail) return thumbnail;
   if (!images) return "";
   if (Array.isArray(images)) return images.length > 0 ? images[0] : "";
   if (typeof images !== "string") return "";
@@ -134,7 +136,7 @@ const ProductCard = ({ product }: { product: Product }) => {
   const pDiscount = product.discount || 0;
   const pRating = product.rating || "4.5";
 
-  const productImage = getFirstImage(product.product_images);
+  const productImage = getFirstImage(product.product_images, (product as any).product_thumbnail);
   const weights = parseProductWeights(
     product.weight_options || product.product_weight,
   );
@@ -426,28 +428,11 @@ const CategoryMain = () => {
 
   const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
   const visibleProducts = products.slice(
-    0,
+    (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE,
   );
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && currentPage < totalPages) {
-          setCurrentPage((prev) => prev + 1);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [currentPage, totalPages]);
+  // Infinite scroll removed in favor of pagination
 
   return (
     <>
@@ -574,17 +559,34 @@ const CategoryMain = () => {
             </div>
           )}
 
-          {/* Infinite Scroll Loader */}
-          {!loading && !error && (
-            <div ref={observerRef} className="w-full flex justify-center py-8">
-              {currentPage < totalPages ? (
-                <div className="flex items-center gap-2 text-primary">
-                  <Loader2 className="h-6 w-6 animate-spin" />
-                  <span className="font-medium">Loading more products...</span>
-                </div>
-              ) : visibleProducts.length > 0 ? (
-                <span className="text-muted-foreground text-sm">You've reached the end</span>
-              ) : null}
+          {/* Pagination */}
+          {!loading && !error && totalPages > 1 && (
+            <div className="w-full flex justify-center items-center gap-4 py-8">
+              <button
+                disabled={currentPage <= 1}
+                onClick={() => {
+                  setCurrentPage(prev => prev - 1);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="flex items-center gap-1 px-4 py-2 border rounded-md disabled:opacity-50 hover:bg-gray-50 transition-colors"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </button>
+              <span className="text-sm font-medium">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                disabled={currentPage >= totalPages}
+                onClick={() => {
+                  setCurrentPage(prev => prev + 1);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="flex items-center gap-1 px-4 py-2 border rounded-md disabled:opacity-50 hover:bg-gray-50 transition-colors"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </button>
             </div>
           )}
         </section>
