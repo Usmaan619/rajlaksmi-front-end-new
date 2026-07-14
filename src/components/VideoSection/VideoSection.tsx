@@ -7,10 +7,10 @@ const VideoSection: React.FC = () => {
 
   return (
     <>
-      <p className="sr-only">
-        Watch how Gauswarn India prepares pure A2 Gir Cow Ghee using the
-        traditional Bilona method in our Gaushala.
-      </p>
+      <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+        Watch how Rajlakshmi Javiks International prepares pure products using the
+        traditional Bilona method, ensuring the highest quality and
+        authenticity.</p>
 
       <section className={styles.hero}>
         <video

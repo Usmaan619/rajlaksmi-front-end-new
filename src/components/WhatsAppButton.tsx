@@ -25,7 +25,7 @@ const WhatsAppButton: React.FC = () => {
 
   const handleClick = () => {
     const phoneNumber = "918769215905";
-    const message = encodeURIComponent("Hello, I visited gauswarn.com and need more information.");
+    const message = encodeURIComponent("Hello Rajlakshmi Javiks International,\nI visited your website and would like to get more information about your products.");
     
     // Check if user is on a mobile device
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);

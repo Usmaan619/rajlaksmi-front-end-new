@@ -106,7 +106,7 @@ const PageLoader = () => (
 
 const MainRoutes = () => (
   <AppWrapper>
-    <Suspense fallback={null}>
+    <Suspense fallback={<PageLoader />}>
       <Routes>
         <Route path="/" element={<Index />} />
 

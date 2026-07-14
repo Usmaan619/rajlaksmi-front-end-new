@@ -5,12 +5,13 @@ import IndiaOrganicLogo from "@/assets/certified/100_ Naturals.webp";
 import Usda from "@/assets/certified/GUARANTED ORIGINAL.webp";
 import Apeda from "@/assets/certified/APEDA.webp";
 import impandexpot from "@/assets/certified/ICE.webp";
+import Iso from "@/assets/certified/ISO.webp";
 
 const logos = [
-  { src: FssaiLogo, alt: "FSSAI certified A2 Gir cow ghee by Gauswarn India" },
-  { src: IndiaOrganicLogo, alt: "India Organic certified A2 Gir cow ghee" },
-  { src: Usda, alt: "USDA Organic certified bilona made A2 ghee" },
-  { src: Apeda, alt: "APEDA certified Indian ghee exporter Gauswarn India" },
+  { src: FssaiLogo, alt: "FSSAI certified by Rajlakshmi Javiks International" },
+  { src: IndiaOrganicLogo, alt: "India Organic certified" },
+  { src: Usda, alt: "USDA Organic certified" },
+  { src: Apeda, alt: "APEDA certified exporter Rajlakshmi Javiks International" },
   { src: impandexpot, alt: "Import and export certified" },
 ];
 

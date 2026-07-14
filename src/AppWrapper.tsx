@@ -18,13 +18,15 @@ const AppWrapper = ({ children }) => {
   const isAuthRoute = authRoutes.includes(location.pathname);
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       {!isAuthRoute && <AnnouncementBar />}
       {!isAuthRoute && <Header />}
-      {children}
+      <main className="flex-grow flex flex-col">
+        {children}
+      </main>
       {!isAuthRoute && <Footer />}
       <WhatsAppButton />
-    </>
+    </div>
   );
 };
 
