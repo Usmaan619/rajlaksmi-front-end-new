@@ -51,20 +51,7 @@ const deals = [
     image: img4,
     discount: 40,
   },
-  {
-    id: 5,
-    category: "OIL",
-    name: "Olive Oil",
-    image: dealOil,
-    discount: 40,
-  },
-  {
-    id: 6,
-    category: "GHEE",
-    name: "A2 Ghee",
-    image: dealGhee2,
-    discount: 40,
-  },
+
 ];
 
 const DealCard = ({ deal }: { deal: (typeof deals)[0] }) => {
