@@ -18,7 +18,7 @@ import homemadaacarImg from "@/assets/category/homemadaacar.jpg";
 import fruitsdrinksImg from "@/assets/category/fruitsdrinks.jpg";
 
 
-import gheeImg from "@/assets/category-ghee.jpg";
+import gheeImg from "@/assets/category/gheeoils.jpeg";
 import allCategoriesImg from "@/assets/category-grains.jpg"; // Using grains as default for all
 
 type CategoryItem = {

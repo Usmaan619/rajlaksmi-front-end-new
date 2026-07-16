@@ -13,34 +13,42 @@ import dealGhee from "@/assets/deal-ghee.jpg";
 import dealOil from "@/assets/deal-oil.jpg";
 import dealGhee2 from "@/assets/deal-ghee2.jpg";
 
+
+import img1 from "@/assets/explore-our-premium-organic-collection/1-slide.jpeg";
+import img2 from "@/assets/explore-our-premium-organic-collection/2-slide.jpeg";
+import img3 from "@/assets/explore-our-premium-organic-collection/3-slide.jpeg";
+import img4 from "@/assets/explore-our-premium-organic-collection/4-slide.jpeg";
+
+
+
 const deals = [
   {
     id: 1,
-    category: "GHEE",
-    name: "A2 Ghee",
-    image: dealGhee,
+    category: "SIGNATURE COLLECTION",
+    name: "A2 Gir Cow Ghee",
+    image: img1,
     discount: 40,
   },
   {
     id: 2,
-    category: "OIL",
-    name: "Olive Oil",
-    image: dealOil,
+    category: "NATURAL ESSENTIALS",
+    name: "Cold Pressed Oil",
+    image: img2,
     discount: 40,
   },
   {
     id: 3,
-    category: "GHEE",
-    name: "A2 Ghee",
-    image: dealGhee2,
+    category: "HOMEMADE SUPERFOODS",
+    name: "Achaar",
+    image: img3,
     discount: 40,
   },
 
   {
     id: 4,
-    category: "GHEE",
-    name: "A2 Ghee",
-    image: dealGhee,
+    category: "Pulses",
+    name: "Dals & Pulses",
+    image: img4,
     discount: 40,
   },
   {
@@ -74,11 +82,11 @@ const DealCard = ({ deal }: { deal: (typeof deals)[0] }) => {
 
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-      <div className="absolute top-0 right-0">
+      {/* <div className="absolute top-0 right-0">
         <div className="w-[74px] h-[55px] bg-[#01722C] text-white text-sm font-semibold flex items-center justify-center rounded-bl-[10px] rounded-br-[0px]">
           -{deal.discount}%
         </div>
-      </div>
+      </div> */}
 
       <div className="absolute bottom-4 left-4 text-white">
         <span className="text-[10px] sm:text-xs uppercase tracking-wider opacity-80">
@@ -108,14 +116,16 @@ const ExclusiveDealsSection = () => {
         {/* Heading */}
         <div className="mb-12 text-center">
           <p className="text-[#01722C] font-semibold text-[10px] sm:text-xs uppercase tracking-[0.3em] mb-3">
-            Pure Savings, Pure Organic Life
+            Pure & Natural Organic Foods
+
           </p>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#01722C] tracking-tight">
-            Exclusive Organic Food Deals & Offers
+            Explore Our Premium Organic Collection
+
           </h2>
           <div className="h-1 w-24 bg-[#01722C]/20 mx-auto mt-6 rounded-full" />
           <p className="mt-5 text-gray-600 text-sm sm:text-base md:text-lg font-medium max-w-2xl mx-auto leading-relaxed">
-            Save on hand-picked organic essentials with exclusive discounts on pure A2 Gir Cow Bilona Ghee, cold-pressed cooking oils, and premium natural food products. Limited-time organic food offers — buy pure, save more.
+            Discover our carefully selected range of pure A2 Gir Cow Bilona Ghee, cold-pressed oils, and natural food products made with quality and authenticity in mind.
           </p>
         </div>
 
