@@ -95,7 +95,7 @@ const BlogDetail = () => {
       <Seo 
         title={`${blog?.title || "Blog"} | Rajlakshmi Javiks International`}
         description={blog?.excerpt || "Read our latest article."}
-        url={`/blog/${id}`}
+        url={`/blog/${slug}`}
         image={blog?.coverImage}
       />
       <div className="min-h-screen flex flex-col bg-white">
