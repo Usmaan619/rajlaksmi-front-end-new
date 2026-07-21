@@ -79,10 +79,10 @@ const AnnouncementBar = () => {
 
         {/* Center Section - Dynamic Offer Slider */}
         <div className="w-full sm:flex-1 min-w-0 sm:min-w-[250px] flex items-center justify-center overflow-hidden border-t border-white/10 sm:border-none pt-1 sm:pt-0">
-          <div className="relative w-full max-w-[420px] overflow-hidden group">
-            <div className="flex items-center gap-8 sm:gap-10 whitespace-nowrap animate-offerTicker transition-all duration-300">
+          <div className="relative w-full max-w-[420px] overflow-hidden group flex">
+            <div className="flex items-center whitespace-nowrap animate-offerTicker transition-all duration-300 w-max">
               {/* First Track */}
-              <div className="flex items-center gap-8 sm:gap-10">
+              <div className="flex items-center gap-8 sm:gap-10 pr-8 sm:pr-10">
                 {items.map((text, i) => (
                   <span
                     key={`orig-${i}`}
@@ -93,7 +93,7 @@ const AnnouncementBar = () => {
                 ))}
               </div>
               {/* Duplicate Track for Seamless Loop */}
-              <div className="flex items-center gap-8 sm:gap-10">
+              <div className="flex items-center gap-8 sm:gap-10 pr-8 sm:pr-10">
                 {items.map((text, i) => (
                   <span
                     key={`dup-${i}`}
@@ -165,7 +165,7 @@ const AnnouncementBar = () => {
           100% { transform: translate3d(-50%, 0, 0); }
         }
         .animate-offerTicker {
-          animation: offerTicker 6s linear infinite;
+          animation: offerTicker 20s linear infinite;
         }
         .group:hover .animate-offerTicker {
           animation-play-state: paused;

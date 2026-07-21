@@ -271,11 +271,19 @@ const Footer = () => {
           </div>
 
           {/* Copyright */}
-          <div className="mt-4 pt-4 border-t border-white/10 text-center text-xs text-white/60">
+          <div className="mt-4 pt-4 border-t border-white/10 text-center text-xs text-white/60 space-y-2">
             <p>Copyright 2026 © Rajlakshmi Javiks International</p>
-            {/* <p>
-              Web Design by <span className="text-white">11_Future_Tech</span>
-            </p> */}
+            <p>
+              Designed & Developed by{" "}
+              <a
+                href="https://wa.me/917000015122"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-green-400 transition-colors"
+              >
+                Eleven Future Tech
+              </a>
+            </p>
           </div>
         </div>
       </div>
