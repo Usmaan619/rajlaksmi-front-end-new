@@ -29,6 +29,19 @@
     <!-- Theme -->
     <meta name="theme-color" content="#ffffff" />
 
+    <!-- Prevent white flash / blinking on load -->
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #f9f6f0;
+      }
+      #root {
+        min-height: 100vh;
+        background: #f9f6f0;
+      }
+    </style>
+
     <!-- Open Graph -->
     <meta property="og:title" content="Rajlakshmi Javiks International" />
     <meta
@@ -62,7 +75,7 @@
     <link
       rel="preload"
       as="image"
-      href="/assets/banner2.webp"
+      href="/src/assets/banner-main-page/newbanner-12.jpeg"
       fetchpriority="high"
     />
 

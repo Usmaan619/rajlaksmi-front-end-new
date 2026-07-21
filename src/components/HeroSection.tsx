@@ -83,7 +83,17 @@ const HeroSection: React.FC = () => {
   ========================= */
   if (loading) {
     return (
-      <section className="w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[1905/550] bg-gray-100 animate-pulse" />
+      <section
+        className="w-full aspect-[4/3] sm:aspect-[16/9] md:aspect-[1905/550]"
+        style={{ background: 'linear-gradient(90deg, #edf7f0 25%, #d9f0e3 50%, #edf7f0 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.5s infinite linear' }}
+      >
+        <style>{`
+          @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+          }
+        `}</style>
+      </section>
     );
   }
 

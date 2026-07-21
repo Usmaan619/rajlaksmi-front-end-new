@@ -1,7 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import AppWrapper from "@/AppWrapper";
-import { Loader2 } from "lucide-react";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
@@ -94,13 +93,61 @@ const PaymentFailed = lazy(() => import("@/pages/PaymentFailed"));
 const OrderDetailsPage = lazy(() => import("@/pages/OrderDetailsPage"));
 
 const PageLoader = () => (
-  <div className="h-screen w-full flex items-center justify-center bg-white/80 backdrop-blur-md fixed inset-0 z-[9999]">
-    <div className="flex flex-col items-center gap-4">
-      <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      <p className="text-sm font-medium text-primary/60 animate-pulse">
-        Loading amazing products...
-      </p>
+  <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center" style={{ background: '#f9f6f0' }}>
+    {/* Logo */}
+    <div style={{ animation: 'logoFadeIn 0.5s ease forwards' }}>
+      <img
+        src="/src/assets/logo/RAJLAXMI-JAVIK-png.png"
+        alt="Rajlakshmi Javiks"
+        width="180"
+        height="72"
+        style={{ width: '160px', height: 'auto' }}
+      />
     </div>
+
+    {/* Tagline */}
+    <p style={{
+      marginTop: '16px',
+      fontSize: '13px',
+      color: '#01722C',
+      fontWeight: 600,
+      letterSpacing: '0.05em',
+      opacity: 0,
+      animation: 'logoFadeIn 0.5s ease 0.3s forwards'
+    }}>
+      Pure • Natural • Organic
+    </p>
+
+    {/* Progress Bar */}
+    <div style={{
+      marginTop: '32px',
+      width: '180px',
+      height: '3px',
+      background: '#d9f0e3',
+      borderRadius: '99px',
+      overflow: 'hidden',
+      opacity: 0,
+      animation: 'logoFadeIn 0.3s ease 0.4s forwards'
+    }}>
+      <div style={{
+        height: '100%',
+        background: '#01722C',
+        borderRadius: '99px',
+        animation: 'progressBar 1.2s ease-in-out infinite'
+      }} />
+    </div>
+
+    <style>{`
+      @keyframes logoFadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes progressBar {
+        0%   { width: 0%;   margin-left: 0; }
+        50%  { width: 70%;  margin-left: 15%; }
+        100% { width: 0%;   margin-left: 100%; }
+      }
+    `}</style>
   </div>
 );
 
