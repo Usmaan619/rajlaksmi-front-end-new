@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- SEO -->
-    <title>Rajlakshmi Javiks International | Organic & Natural Products</title>
+    <title>Rajlakshmi Javiks International | Organic &amp; Natural Products</title>
 
     <meta
       name="description"
@@ -29,8 +29,9 @@
     <!-- Theme -->
     <meta name="theme-color" content="#ffffff" />
 
-    <!-- Prevent white flash / blinking on load -->
+    <!-- Splash Screen + Anti-flash styles -->
     <style>
+      *, *::before, *::after { box-sizing: border-box; }
       html, body {
         margin: 0;
         padding: 0;
@@ -39,6 +40,59 @@
       #root {
         min-height: 100vh;
         background: #f9f6f0;
+      }
+
+      /* ── Splash Screen ── */
+      #app-splash {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #f9f6f0;
+      }
+      #app-splash img {
+        width: 160px;
+        height: auto;
+        animation: splashFade 0.5s ease forwards;
+      }
+      #app-splash .splash-tagline {
+        margin-top: 14px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: #01722C;
+        font-family: sans-serif;
+        opacity: 0;
+        animation: splashFade 0.5s ease 0.3s forwards;
+      }
+      #app-splash .splash-bar-wrap {
+        margin-top: 28px;
+        width: 180px;
+        height: 3px;
+        border-radius: 99px;
+        background: #d9f0e3;
+        overflow: hidden;
+        opacity: 0;
+        animation: splashFade 0.3s ease 0.4s forwards;
+      }
+      #app-splash .splash-bar {
+        height: 100%;
+        border-radius: 99px;
+        background: #01722C;
+        animation: splashProgress 1.3s ease-in-out infinite;
+      }
+
+      @keyframes splashFade {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes splashProgress {
+        0%   { width: 0%;  margin-left: 0;    }
+        50%  { width: 65%; margin-left: 18%;  }
+        100% { width: 0%;  margin-left: 100%; }
       }
     </style>
 
@@ -70,6 +124,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://ik.imagekit.io" crossorigin />
+
+    <!-- Preload logo for splash screen -->
+    <link
+      rel="preload"
+      as="image"
+      href="/RAJLAXMI-JAVIK-png.png"
+    />
 
     <!-- Preload hero image (LCP improvement) -->
     <link
@@ -119,8 +180,37 @@
   </head>
 
   <body>
+    <!-- Branded Splash Screen (shows instantly, React hides it automatically) -->
+    <div id="app-splash">
+      <img
+        src="/RAJLAXMI-JAVIK-png.png"
+        alt="Rajlakshmi Javiks International"
+        width="160"
+        height="64"
+      />
+      <p class="splash-tagline">Pure &bull; Natural &bull; Organic</p>
+      <div class="splash-bar-wrap">
+        <div class="splash-bar"></div>
+      </div>
+    </div>
+
     <!-- React Root -->
     <div id="root"></div>
+
+    <!-- Hide splash once React mounts -->
+    <script type="module">
+      // After React renders, fade out the splash screen
+      const splash = document.getElementById('app-splash');
+      const observer = new MutationObserver(() => {
+        if (document.getElementById('root').children.length > 0) {
+          splash.style.transition = 'opacity 0.4s ease';
+          splash.style.opacity = '0';
+          setTimeout(() => splash.remove(), 420);
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.getElementById('root'), { childList: true });
+    </script>
 
     <!-- React Entry -->
     <script type="module" src="/src/main.tsx"></script>

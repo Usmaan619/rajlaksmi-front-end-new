@@ -97,7 +97,7 @@ const PageLoader = () => (
     {/* Logo */}
     <div style={{ animation: 'logoFadeIn 0.5s ease forwards' }}>
       <img
-        src="/src/assets/logo/RAJLAXMI-JAVIK-png.png"
+        src="/RAJLAXMI-JAVIK-png.png"
         alt="Rajlakshmi Javiks"
         width="180"
         height="72"
