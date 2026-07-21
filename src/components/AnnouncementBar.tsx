@@ -11,8 +11,13 @@ const AnnouncementBar = () => {
     const fetchOffers = async () => {
       try {
         const res = await getAllOffersAPI();
-        if (res?.success && res?.data) {
-          const activeOffers = res.data.filter((o: Offer) => o.isActive);
+        if (res?.success && Array.isArray(res?.data)) {
+          const activeOffers = res.data.map((item: any) => {
+            if (typeof item === "string") {
+              return { offer: item, isActive: true } as Offer;
+            }
+            return item as Offer;
+          }).filter((o: Offer) => o.isActive);
           setOffers(activeOffers);
         }
       } catch (err) {
