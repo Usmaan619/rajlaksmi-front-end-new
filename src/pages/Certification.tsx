@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Seo from "@/components/Seo";
 
@@ -8,6 +6,13 @@ import fassaiImg from "@/assets/bottomCertified/fssaiLogo.png";
 import labtestedImg from "@/assets/bottomCertified/labtested.png";
 import organicLogoImg from "@/assets/bottomCertified/organicLogo.png";
 import premiumLogoImg from "@/assets/bottomCertified/premiumLogo.png";
+
+import IndiaOrganicLogo from "@/assets/certified/100_ Naturals.webp";
+import Usda from "@/assets/certified/GUARANTED ORIGINAL.webp";
+import Apeda from "@/assets/certified/APEDA.webp";
+import impandexpot from "@/assets/certified/ICE.webp";
+import NPOP from "@/assets/certified/npop.webp";
+
 import weMaintainImg from "@/assets/labreport/WeMaintain.webp";
 
 const certifications = [
@@ -35,19 +40,39 @@ const certifications = [
     description:
       "Our processing and packaging follow strict quality control procedures.",
   },
+  {
+    image: IndiaOrganicLogo,
+    title: "100% Natural & Organic",
+    description:
+      "This certification confirms that our products are grown using purely natural and sustainable farming practices.",
+  },
+  {
+    image: Usda,
+    title: "Guaranteed Original",
+    description:
+      "A mark of authenticity guaranteeing that our products are 100% original and naturally sourced.",
+  },
+  {
+    image: Apeda,
+    title: "APEDA Certified",
+    description:
+      "Certified by APEDA, ensuring our products meet stringent export-quality standards for the global market.",
+  },
+  {
+    image: impandexpot,
+    title: "Import & Export Certified",
+    description:
+      "Our Import-Export certification reflects our compliance with international trade regulations.",
+  },
+  {
+    image: NPOP,
+    title: "NPOP Certification",
+    description:
+      "Certified under the National Programme for Organic Production (NPOP) by the Government of India.",
+  },
 ];
 
-const ITEMS_PER_PAGE = 6;
-
 const Certifications = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(certifications.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const visibleCerts = certifications.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE,
-  );
-
   return (
     <>
       <Seo
@@ -94,16 +119,16 @@ const Certifications = () => {
         {/* Certification Cards */}
         <section className="px-6 md:px-16 lg:px-24 pb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {visibleCerts.map((cert, index) => (
+            {certifications.map((cert, index) => (
               <div
                 key={index}
                 className="border border-[hsl(140,40%,80%)] rounded-2xl p-6 hover:shadow-lg transition-shadow bg-white"
               >
-                <div className="w-16 h-16 rounded-full bg-[hsl(140,40%,92%)] flex items-center justify-center mb-4 overflow-hidden">
+                <div className="w-16 h-16 rounded-2xl bg-[hsl(140,40%,92%)] flex items-center justify-center mb-4 overflow-hidden p-2">
                   <img
                     src={cert.image}
                     alt={cert.title}
-                    className="w-10 h-10 object-contain"
+                    className="max-w-full max-h-full object-contain"
                   />
                 </div>
 
@@ -113,86 +138,10 @@ const Certifications = () => {
                 <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
                   {cert.description}
                 </p>
-                <button
-                  aria-label="View Certificate"
-                  className="border border-[#116931] text-[#116931] text-sm px-4 py-1.5 rounded-md hover:bg-[#116931] hover:text-white transition-colors"
-                >
-                  View Certificate
-                </button>
+
               </div>
             ))}
           </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-12 py-2">
-              <Button
-                aria-label="Previous Page"
-                variant="outline"
-                size="icon"
-                className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                disabled={currentPage === 1}
-                onClick={() => {
-                  setCurrentPage((p) => Math.max(1, p - 1));
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-
-              {Array.from({ length: totalPages }, (_, i) => {
-                const pageNum = i + 1;
-                if (
-                  pageNum === 1 ||
-                  pageNum === totalPages ||
-                  (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-                ) {
-                  return (
-                    <Button
-                      aria-label={`Page ${pageNum}`}
-                      key={pageNum}
-                      variant={currentPage === pageNum ? "default" : "ghost"}
-                      className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
-                        currentPage === pageNum
-                          ? "bg-primary text-white shadow-md scale-110"
-                          : "hover:text-primary hover:bg-primary/5"
-                      }`}
-                      onClick={() => {
-                        setCurrentPage(pageNum);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                } else if (
-                  (pageNum === 2 && currentPage > 3) ||
-                  (pageNum === totalPages - 1 && currentPage < totalPages - 2)
-                ) {
-                  return (
-                    <span key={pageNum} className="px-1 text-muted-foreground">
-                      ...
-                    </span>
-                  );
-                }
-                return null;
-              })}
-
-              <Button
-                aria-label="Next Page"
-                variant="outline"
-                size="icon"
-                className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                disabled={currentPage === totalPages}
-                onClick={() => {
-                  setCurrentPage((p) => Math.min(totalPages, p + 1));
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
-          )}
         </section>
 
         {/* How We Maintain Quality */}
