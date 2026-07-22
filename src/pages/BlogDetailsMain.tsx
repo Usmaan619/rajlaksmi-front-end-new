@@ -300,7 +300,7 @@ const BlogDetail = () => {
                       possible.
                     </p>
                     <div className="space-y-2">
-                      <p className="text-sm font-semibold">☎ +91 745 0532 522</p>
+                      <p className="text-sm font-semibold">☎ +91 8769115905</p>
                       <p className="text-sm font-semibold">
                         ✉ contact@rajlakshmiijaviks.com
                       </p>
