@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getAllBlogs } from "@/api/blog.service";
 import { useNavigate } from "react-router-dom";
 
-import blogImg from "@/assets/blog/blog-header-img.jpeg";
+import blogImg from "@/assets/blog/blog-card-img.jpeg";
 
 const CARD_WIDTH = 220; // matches min-w-[220px]
 const CARD_GAP = 12; // matches gap-3
@@ -131,67 +131,67 @@ const BlogsSection = () => {
         >
           {isLoading
             ? Array.from({ length: 5 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="flex-shrink-0 min-w-[220px] bg-card rounded-[20px] border p-3 space-y-3"
-                >
-                  <Skeleton className="h-[160px] w-full rounded-xl" />
-                  <Skeleton className="h-6 w-3/4" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
-              ))
+              <div
+                key={i}
+                className="flex-shrink-0 min-w-[220px] bg-card rounded-[20px] border p-3 space-y-3"
+              >
+                <Skeleton className="h-[160px] w-full rounded-xl" />
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            ))
             : blogs.map((blog, idx) => (
-                <article
-                  key={blog.id}
-                  onClick={() => navigate(`/blog/${blog.slug}`)}
-                  className="flex-shrink-0 min-w-[220px] max-w-[220px] md:min-w-0 md:max-w-full snap-start bg-card rounded-[20px] border p-3 flex flex-col shadow-soft hover:shadow-card transition-all duration-300 cursor-pointer group"
-                >
-                  {/* Image */}
-                  <div className="relative overflow-hidden rounded-xl">
-                    <img
-                      src={blog.image || blogImg}
-                      alt={blog.title}
-                      width="220"
-                      height="220"
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-[220px] object-cover rounded-md group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <Badge
-                      className={`absolute top-2 left-2 bg-forest text-white text-xs font-medium px-3 py-1 rounded-full`}
-                    >
-                      {blog.category || "Organic"}
-                    </Badge>
-                  </div>
+              <article
+                key={blog.id}
+                onClick={() => navigate(`/blog/${blog.slug}`)}
+                className="flex-shrink-0 min-w-[220px] max-w-[220px] md:min-w-0 md:max-w-full snap-start bg-card rounded-[20px] border p-3 flex flex-col shadow-soft hover:shadow-card transition-all duration-300 cursor-pointer group"
+              >
+                {/* Image */}
+                <div className="relative overflow-hidden rounded-xl">
+                  <img
+                    src={blog.image || blogImg}
+                    alt={blog.title}
+                    width="220"
+                    height="220"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-[220px] object-cover rounded-md group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <Badge
+                    className={`absolute top-2 left-2 bg-forest text-white text-xs font-medium px-3 py-1 rounded-full`}
+                  >
+                    {blog.category || "Organic"}
+                  </Badge>
+                </div>
 
-                  {/* Content */}
-                  <div className="flex flex-col flex-1 mt-2.5">
-                    <h3 className="font-heading font-bold text-base text-foreground mb-1 line-clamp-1">
-                      {blog.title}
-                    </h3>
+                {/* Content */}
+                <div className="flex flex-col flex-1 mt-2.5">
+                  <h3 className="font-heading font-bold text-base text-foreground mb-1 line-clamp-1">
+                    {blog.title}
+                  </h3>
 
-                    <p className="text-muted-foreground text-[13px] mb-2 line-clamp-2">
-                      {blog.description || "Explore healthy living tips..."}
-                    </p>
+                  <p className="text-muted-foreground text-[13px] mb-2 line-clamp-2">
+                    {blog.description || "Explore healthy living tips..."}
+                  </p>
 
-                    <p className="text-xs text-muted-foreground mb-3">
-                      By {blog.author || "Admin"} |{" "}
-                      {blog.created_at
-                        ? new Date(blog.created_at).toLocaleDateString()
-                        : "Aug 12, 2026"}
-                    </p>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    By {blog.author || "Admin"} |{" "}
+                    {blog.created_at
+                      ? new Date(blog.created_at).toLocaleDateString()
+                      : "Aug 12, 2026"}
+                  </p>
 
-                    <button
-                      aria-label="Read more about this story"
-                      className="mt-auto text-[#01722C] font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all duration-200"
-                    >
-                      Read more about this story
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </article>
-              ))}
+                  <button
+                    aria-label="Read more about this story"
+                    className="mt-auto text-[#01722C] font-medium text-sm flex items-center gap-1 hover:gap-2 transition-all duration-200"
+                  >
+                    Read more about this story
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </article>
+            ))}
         </div>
 
         {/* Dot Indicators - Mobile only */}
@@ -209,11 +209,10 @@ const BlogsSection = () => {
                 className="p-2 -m-2 group transition-all"
               >
                 <div
-                  className={`transition-all duration-300 rounded-full ${
-                    i === currentIndex
-                      ? "w-6 h-2 bg-[#01722C]"
-                      : "w-2 h-2 bg-[#01722C]/20 group-hover:bg-[#01722C]/40"
-                  }`}
+                  className={`transition-all duration-300 rounded-full ${i === currentIndex
+                    ? "w-6 h-2 bg-[#01722C]"
+                    : "w-2 h-2 bg-[#01722C]/20 group-hover:bg-[#01722C]/40"
+                    }`}
                 />
               </button>
             ))}
