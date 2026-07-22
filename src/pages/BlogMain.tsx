@@ -22,6 +22,7 @@ import { toast } from "@/hooks/use-toast";
 import FAQSection from "@/components/FAQSection";
 
 import blogImg from "@/assets/blog/blogheader.webp";
+import blogCardImg from "@/assets/blog/blog-card-img.jpeg";
 
 interface SidebarContentProps {
   searchQuery: string;
@@ -83,11 +84,10 @@ const SidebarContent = ({
         {categories.map((cat) => (
           <Badge
             key={cat}
-            className={`cursor-pointer rounded-full px-3 py-1 text-xs transition-colors ${
-              selectedCategory === cat
-                ? "bg-primary text-primary-foreground"
-                : "bg-muted text-muted-foreground hover:bg-primary/10"
-            }`}
+            className={`cursor-pointer rounded-full px-3 py-1 text-xs transition-colors ${selectedCategory === cat
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:bg-primary/10"
+              }`}
             onClick={() => {
               setSelectedCategory(cat);
               setCurrentPage(1);
@@ -104,15 +104,15 @@ const SidebarContent = ({
         {isLoading
           ? [1, 2, 3].map((i) => <Skeleton key={i} className="h-4 w-full" />)
           : blogs.slice(0, 3).map((blog) => (
-              <Link
-                to={`/blog/${blog.slug}`}
-                key={blog.id}
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                <span className="line-clamp-1">{blog.title}</span>
-              </Link>
-            ))}
+            <Link
+              to={`/blog/${blog.slug}`}
+              key={blog.id}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+              <span className="line-clamp-1">{blog.title}</span>
+            </Link>
+          ))}
       </div>
       <Button
         aria-label="Apply Filters"
@@ -252,334 +252,333 @@ const BlogMain = () => {
 
   return (
     <>
-      <Seo 
+      <Seo
         title="Blog | Rajlakshmi Javiks International"
         description="Read our latest articles on organic farming, natural products, and healthy living."
         url="/blog"
       />
       <div className="min-h-screen flex flex-col bg-white">
-      <main className="flex-1 ">
-        {/* Hero Section */}
-        <section className="py-10 md:py-14 mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            {/* Left Content */}
-            <div>
-              <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-3">
-                Our Blog
-              </h1>
-              <p className="text-muted-foreground max-w-xl mb-6">
-                Stay informed with expert tips, organic food guides, health
-                benefits, and updates from the world of natural living. Our blog
-                is designed to help you make better food choices for you and
-                your family.
-              </p>
+        <main className="flex-1 ">
+          {/* Hero Section */}
+          <section className="py-10 md:py-14 mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              {/* Left Content */}
+              <div>
+                <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-3">
+                  Our Blog
+                </h1>
+                <p className="text-muted-foreground max-w-xl mb-6">
+                  Stay informed with expert tips, organic food guides, health
+                  benefits, and updates from the world of natural living. Our blog
+                  is designed to help you make better food choices for you and
+                  your family.
+                </p>
 
-              <Link to="/products">
-                <Button
-                  aria-label="Explore all Articles"
-                  variant="outline"
-                  className=" bg-white rounded-md border-foreground text-foreground hover:bg-foreground hover:text-background"
-                >
-                  Explore all Articles
-                </Button>
-              </Link>
+                <Link to="/products">
+                  <Button
+                    aria-label="Explore all Articles"
+                    variant="outline"
+                    className=" bg-white rounded-md border-foreground text-foreground hover:bg-foreground hover:text-background"
+                  >
+                    Explore all Articles
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Right Image */}
+              <div className="w-full">
+                <img
+                  src={blogImg}
+                  alt="Blog header"
+                  className="w-full h-[220px] md:h-[300px] lg:h-[360px] object-cover rounded-2xl"
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Content */}
+          <section className="px-4 sm:px-6 md:px-8 lg:px-12 mx-auto pb-16">
+            {/* Mobile Filter Button */}
+            <div className="lg:hidden mb-6">
+              <Button
+                aria-label="Open Filters"
+                variant="outline"
+                className="w-full justify-center gap-2"
+                onClick={() => setIsFilterOpen(true)}
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                Filters
+              </Button>
             </div>
 
-            {/* Right Image */}
-            <div className="w-full">
-              <img
-                src={blogImg}
-                alt="Blog header"
-                className="w-full h-[220px] md:h-[300px] lg:h-[360px] object-cover rounded-2xl"
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* Content */}
-        <section className="px-4 sm:px-6 md:px-8 lg:px-12 mx-auto pb-16">
-          {/* Mobile Filter Button */}
-          <div className="lg:hidden mb-6">
-            <Button
-              aria-label="Open Filters"
-              variant="outline"
-              className="w-full justify-center gap-2"
-              onClick={() => setIsFilterOpen(true)}
-            >
-              <SlidersHorizontal className="w-4 h-4" />
-              Filters
-            </Button>
-          </div>
-
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Blog Grid */}
-            <div className="flex-1">
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
-                {isLoading ? (
-                  Array.from({ length: 10 }).map((_, i) => (
-                    <div key={i} className="space-y-3">
-                      <Skeleton className="h-40 w-full rounded-xl" />
-                      <Skeleton className="h-6 w-3/4" />
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-1/2" />
-                    </div>
-                  ))
-                ) : blogs.length > 0 ? (
-                  blogs.map((blog) => (
-                    <Link to={`/blog/${blog.slug}`} key={blog.id}>
-                      <article className="bg-card rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-shadow duration-300 h-full">
-                        <div className="relative p-3 pb-0">
-                          <div className="relative overflow-hidden rounded-xl">
-                            {blog.image_url ? (
-                              <img
-                                src={blog.image_url}
-                                alt={blog.title}
-                                className="w-full h-40 object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-40 bg-muted flex items-center justify-center">
-                                <span className="text-muted-foreground text-xs text-center px-2">
-                                  {blog.title}
-                                </span>
-                              </div>
-                            )}
-                            <Badge className="absolute top-2 left-2 bg-forest text-white text-xs font-medium px-3 py-1 rounded-full">
-                              {blog.category}
-                            </Badge>
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Blog Grid */}
+              <div className="flex-1">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+                  {isLoading ? (
+                    Array.from({ length: 10 }).map((_, i) => (
+                      <div key={i} className="space-y-3">
+                        <Skeleton className="h-40 w-full rounded-xl" />
+                        <Skeleton className="h-6 w-3/4" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-1/2" />
+                      </div>
+                    ))
+                  ) : blogs.length > 0 ? (
+                    blogs.map((blog) => (
+                      <Link to={`/blog/${blog.slug}`} key={blog.id}>
+                        <article className="bg-card rounded-xl overflow-hidden shadow-soft hover:shadow-card transition-shadow duration-300 h-full">
+                          <div className="relative p-3 pb-0">
+                            <div className="relative overflow-hidden rounded-xl">
+                              {blog.image_url ? (
+                                <img
+                                  src={blog.image_url}
+                                  alt={blog.title}
+                                  className="w-full h-40 object-cover"
+                                />
+                              ) : (
+                                <img
+                                  src={blogCardImg}
+                                  alt={blog.title}
+                                  className="w-full h-40 object-cover"
+                                />
+                              )}
+                              <Badge className="absolute top-2 left-2 bg-forest text-white text-xs font-medium px-3 py-1 rounded-full">
+                                {blog.category}
+                              </Badge>
+                            </div>
                           </div>
-                        </div>
-                        <div className="p-4">
-                          <h3 className="font-heading font-bold text-base text-foreground mb-2 line-clamp-2">
-                            {blog.title}
-                          </h3>
-                          <p className="text-muted-foreground text-xs mb-3 line-clamp-2">
-                            {blog.description}
-                          </p>
-                          <p className="text-[10px] text-muted-foreground mb-3">
-                            By {blog.author} |{" "}
-                            {new Date(blog.created_at).toLocaleDateString()}
-                          </p>
-                          <span className="text-forest font-medium text-xs flex items-center gap-1">
-                            Read more <ArrowRight className="w-4 h-4" />
+                          <div className="p-4">
+                            <h3 className="font-heading font-bold text-base text-foreground mb-2 line-clamp-2">
+                              {blog.title}
+                            </h3>
+                            <p className="text-muted-foreground text-xs mb-3 line-clamp-2">
+                              {blog.description}
+                            </p>
+                            <p className="text-[10px] text-muted-foreground mb-3">
+                              By {blog.author} |{" "}
+                              {new Date(blog.created_at).toLocaleDateString()}
+                            </p>
+                            <span className="text-forest font-medium text-xs flex items-center gap-1">
+                              Read more <ArrowRight className="w-4 h-4" />
+                            </span>
+                          </div>
+                        </article>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="col-span-full py-20 text-center">
+                      <p className="text-muted-foreground italic">
+                        No articles found matching your criteria.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-2 mt-12 py-2">
+                    <Button
+                      aria-label="Previous Page"
+                      variant="outline"
+                      size="icon"
+                      className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                      disabled={currentPage === 1}
+                      onClick={() => {
+                        setCurrentPage((p) => Math.max(1, p - 1));
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </Button>
+
+                    {Array.from({ length: totalPages }, (_, i) => {
+                      const pageNum = i + 1;
+                      if (
+                        pageNum === 1 ||
+                        pageNum === totalPages ||
+                        (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                      ) {
+                        return (
+                          <Button
+                            aria-label={`Page ${pageNum}`}
+                            key={pageNum}
+                            variant={currentPage === pageNum ? "default" : "ghost"}
+                            className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${currentPage === pageNum
+                              ? "bg-primary text-white shadow-md scale-110"
+                              : "hover:text-primary hover:bg-primary/5"
+                              }`}
+                            onClick={() => {
+                              setCurrentPage(pageNum);
+                              window.scrollTo({ top: 0, behavior: "smooth" });
+                            }}
+                          >
+                            {pageNum}
+                          </Button>
+                        );
+                      } else if (
+                        (pageNum === 2 && currentPage > 3) ||
+                        (pageNum === totalPages - 1 &&
+                          currentPage < totalPages - 2)
+                      ) {
+                        return (
+                          <span
+                            key={pageNum}
+                            className="px-1 text-muted-foreground"
+                          >
+                            ...
                           </span>
-                        </div>
-                      </article>
-                    </Link>
-                  ))
-                ) : (
-                  <div className="col-span-full py-20 text-center">
-                    <p className="text-muted-foreground italic">
-                      No articles found matching your criteria.
-                    </p>
+                        );
+                      }
+                      return null;
+                    })}
+
+                    <Button
+                      aria-label="Next Page"
+                      variant="outline"
+                      size="icon"
+                      className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
+                      disabled={currentPage === totalPages}
+                      onClick={() => {
+                        setCurrentPage((p) => Math.min(totalPages, p + 1));
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </Button>
                   </div>
                 )}
               </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-12 py-2">
-                  <Button
-                    aria-label="Previous Page"
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                    disabled={currentPage === 1}
-                    onClick={() => {
-                      setCurrentPage((p) => Math.max(1, p - 1));
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </Button>
+              {/* Desktop Sidebar */}
+              <aside className="hidden lg:block w-72 shrink-0 space-y-6">
+                <SidebarContent
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  newsletterEmail={newsletterEmail}
+                  setNewsletterEmail={setNewsletterEmail}
+                  isLoading={isLoading}
+                  blogs={blogs}
+                  setCurrentPage={setCurrentPage}
+                  setIsFilterOpen={setIsFilterOpen}
+                  onNewsletterSubmit={handleNewsletterSubmit}
+                  newsletterLoading={newsletterLoading}
+                />
+              </aside>
+            </div>
+          </section>
 
-                  {Array.from({ length: totalPages }, (_, i) => {
-                    const pageNum = i + 1;
-                    if (
-                      pageNum === 1 ||
-                      pageNum === totalPages ||
-                      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
-                    ) {
-                      return (
-                        <Button
-                          aria-label={`Page ${pageNum}`}
-                          key={pageNum}
-                          variant={currentPage === pageNum ? "default" : "ghost"}
-                          className={`h-10 w-10 rounded-full text-sm font-medium transition-all ${
-                            currentPage === pageNum
-                              ? "bg-primary text-white shadow-md scale-110"
-                              : "hover:text-primary hover:bg-primary/5"
-                          }`}
-                          onClick={() => {
-                            setCurrentPage(pageNum);
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
-                        >
-                          {pageNum}
-                        </Button>
-                      );
-                    } else if (
-                      (pageNum === 2 && currentPage > 3) ||
-                      (pageNum === totalPages - 1 &&
-                        currentPage < totalPages - 2)
-                    ) {
-                      return (
-                        <span
-                          key={pageNum}
-                          className="px-1 text-muted-foreground"
-                        >
-                          ...
-                        </span>
-                      );
-                    }
-                    return null;
-                  })}
-
+          {/* Mobile Filter Sidebar */}
+          {isFilterOpen && (
+            <div
+              className="lg:hidden fixed inset-0 z-50 bg-black/50"
+              onClick={() => setIsFilterOpen(false)}
+            >
+              <div
+                className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-background overflow-y-auto p-6 space-y-6"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-heading font-bold">Filters</h3>
                   <Button
-                    aria-label="Next Page"
-                    variant="outline"
+                    aria-label="Close Filters"
+                    variant="ghost"
                     size="icon"
-                    className="h-10 w-10 rounded-full border-border hover:border-primary transition-colors"
-                    disabled={currentPage === totalPages}
-                    onClick={() => {
-                      setCurrentPage((p) => Math.min(totalPages, p + 1));
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
+                    onClick={() => setIsFilterOpen(false)}
                   >
-                    <ChevronRight className="h-5 w-5" />
+                    <X className="w-5 h-5" />
                   </Button>
                 </div>
-              )}
-            </div>
-
-            {/* Desktop Sidebar */}
-            <aside className="hidden lg:block w-72 shrink-0 space-y-6">
-              <SidebarContent
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                categories={categories}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                newsletterEmail={newsletterEmail}
-                setNewsletterEmail={setNewsletterEmail}
-                isLoading={isLoading}
-                blogs={blogs}
-                setCurrentPage={setCurrentPage}
-                setIsFilterOpen={setIsFilterOpen}
-                onNewsletterSubmit={handleNewsletterSubmit}
-                newsletterLoading={newsletterLoading}
-              />
-            </aside>
-          </div>
-        </section>
-
-        {/* Mobile Filter Sidebar */}
-        {isFilterOpen && (
-          <div
-            className="lg:hidden fixed inset-0 z-50 bg-black/50"
-            onClick={() => setIsFilterOpen(false)}
-          >
-            <div
-              className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-background overflow-y-auto p-6 space-y-6"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-heading font-bold">Filters</h3>
-                <Button
-                  aria-label="Close Filters"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsFilterOpen(false)}
-                >
-                  <X className="w-5 h-5" />
-                </Button>
+                <SidebarContent
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  newsletterEmail={newsletterEmail}
+                  setNewsletterEmail={setNewsletterEmail}
+                  isLoading={isLoading}
+                  blogs={blogs}
+                  setCurrentPage={setCurrentPage}
+                  setIsFilterOpen={setIsFilterOpen}
+                  onNewsletterSubmit={handleNewsletterSubmit}
+                  newsletterLoading={newsletterLoading}
+                />
               </div>
-              <SidebarContent
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                categories={categories}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                newsletterEmail={newsletterEmail}
-                setNewsletterEmail={setNewsletterEmail}
-                isLoading={isLoading}
-                blogs={blogs}
-                setCurrentPage={setCurrentPage}
-                setIsFilterOpen={setIsFilterOpen}
-                onNewsletterSubmit={handleNewsletterSubmit}
-                newsletterLoading={newsletterLoading}
-              />
             </div>
-          </div>
-        )}
+          )}
 
-        {/* CTA Section */}
-        <section className="py-20 px-4">
-          <div className="max-w-5xl mx-auto">
-            <div
-              className="bg-white rounded-2xl shadow-md border border-gray-200 py-14 px-6 md:px-12 text-center 
+          {/* CTA Section */}
+          <section className="py-20 px-4">
+            <div className="max-w-5xl mx-auto">
+              <div
+                className="bg-white rounded-2xl shadow-md border border-gray-200 py-14 px-6 md:px-12 text-center 
 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-green-800 mb-5">
-                Explore Our Organic Products
-              </h2>
+              >
+                <h2 className="text-3xl md:text-4xl font-bold text-green-800 mb-5">
+                  Explore Our Organic Products
+                </h2>
 
-              <p className="text-gray-600 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
-                Reading is just the beginning — experience purity in every
-                product.
-              </p>
+                <p className="text-gray-600 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
+                  Reading is just the beginning — experience purity in every
+                  product.
+                </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  aria-label="Shop Now"
-                  className="bg-green-700 hover:bg-green-800 text-white rounded-md px-8 py-5 text-lg 
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button
+                    aria-label="Shop Now"
+                    className="bg-green-700 hover:bg-green-800 text-white rounded-md px-8 py-5 text-lg 
 transition-all duration-300 hover:scale-105 hover:shadow-xl"
-                >
-                  <Link to="/products">Shop Now</Link>
-                </Button>
+                  >
+                    <Link to="/products">Shop Now</Link>
+                  </Button>
 
-                <Button
-                  aria-label="Explore Categories"
-                  variant="ghost"
-                  className="border border-green-700 text-green-700 hover:bg-green-50 rounded-md px-8 py-5 text-lg 
+                  <Button
+                    aria-label="Explore Categories"
+                    variant="ghost"
+                    className="border border-green-700 text-green-700 hover:bg-green-50 rounded-md px-8 py-5 text-lg 
   transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                >
-                  <Link to="/products">Explore Categories</Link>
-                </Button>
+                  >
+                    <Link to="/products">Explore Categories</Link>
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <FAQSection
-          title="Blog – Frequently Asked Questions"
-          faqs={[
-            {
-              question: "How often does Rajlakshmi Javiks publish new blog posts?",
-              answer: "We regularly publish new articles, guides, and health tips about organic food, natural living, and healthy recipes. Subscribe to our newsletter to stay updated with the latest posts.",
-            },
-            {
-              question: "Can I suggest a topic for the Rajlakshmi Javiks blog?",
-              answer: "Absolutely! We welcome topic suggestions from our readers. Please reach out to us at rajlaxmiorganicfoods@gmail.com with your ideas and we will do our best to cover them.",
-            },
-            {
-              question: "Are the health tips on your blog backed by research?",
-              answer: "Yes, our blog articles are written by knowledgeable contributors and are based on established nutritional science, Ayurvedic wisdom, and practical health expertise. However, always consult a healthcare professional for medical advice.",
-            },
-            {
-              question: "Can I share blog articles from Rajlakshmi Javiks?",
-              answer: "Yes, we encourage you to share our articles with friends and family! You can share blog links directly on social media or via WhatsApp to spread awareness about organic and healthy living.",
-            },
-            {
-              question: "Do you have blogs about recipes using your products?",
-              answer: "Yes, we regularly share authentic Indian recipes using our organic products like A2 Bilona Ghee, cold-pressed oils, organic pulses, millets, and spices. Check our recipe category for delicious and healthy cooking ideas.",
-            },
-            {
-              question: "How can I subscribe to the Rajlakshmi Javiks newsletter?",
-              answer: "You can subscribe to our newsletter using the email subscription form in the blog sidebar. We send weekly organic food tips, exclusive offers, and new article updates directly to your inbox.",
-            },
-          ]}
-        />
-      </main>
+          <FAQSection
+            title="Blog – Frequently Asked Questions"
+            faqs={[
+              {
+                question: "How often does Rajlakshmi Javiks publish new blog posts?",
+                answer: "We regularly publish new articles, guides, and health tips about organic food, natural living, and healthy recipes. Subscribe to our newsletter to stay updated with the latest posts.",
+              },
+              {
+                question: "Can I suggest a topic for the Rajlakshmi Javiks blog?",
+                answer: "Absolutely! We welcome topic suggestions from our readers. Please reach out to us at rajlaxmiorganicfoods@gmail.com with your ideas and we will do our best to cover them.",
+              },
+              {
+                question: "Are the health tips on your blog backed by research?",
+                answer: "Yes, our blog articles are written by knowledgeable contributors and are based on established nutritional science, Ayurvedic wisdom, and practical health expertise. However, always consult a healthcare professional for medical advice.",
+              },
+              {
+                question: "Can I share blog articles from Rajlakshmi Javiks?",
+                answer: "Yes, we encourage you to share our articles with friends and family! You can share blog links directly on social media or via WhatsApp to spread awareness about organic and healthy living.",
+              },
+              {
+                question: "Do you have blogs about recipes using your products?",
+                answer: "Yes, we regularly share authentic Indian recipes using our organic products like A2 Bilona Ghee, cold-pressed oils, organic pulses, millets, and spices. Check our recipe category for delicious and healthy cooking ideas.",
+              },
+              {
+                question: "How can I subscribe to the Rajlakshmi Javiks newsletter?",
+                answer: "You can subscribe to our newsletter using the email subscription form in the blog sidebar. We send weekly organic food tips, exclusive offers, and new article updates directly to your inbox.",
+              },
+            ]}
+          />
+        </main>
       </div>
     </>
   );

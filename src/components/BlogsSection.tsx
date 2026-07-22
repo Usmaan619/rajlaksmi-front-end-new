@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getAllBlogs } from "@/api/blog.service";
 import { useNavigate } from "react-router-dom";
 
-import productRice from "@/assets/product-rice.jpg";
+import blogImg from "@/assets/blog/blog-header-img.jpeg";
 
 const CARD_WIDTH = 220; // matches min-w-[220px]
 const CARD_GAP = 12; // matches gap-3
@@ -150,7 +150,7 @@ const BlogsSection = () => {
                   {/* Image */}
                   <div className="relative overflow-hidden rounded-xl">
                     <img
-                      src={blog.image || productRice}
+                      src={blog.image || blogImg}
                       alt={blog.title}
                       width="220"
                       height="220"
