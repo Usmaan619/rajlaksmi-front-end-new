@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import LogoImg from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
 import { getBlogBySlug } from "@/api/blog.service";
 
-import blogHeaderImg from "@/assets/blog/blogheader.webp";
+
 import blogCardImg from "@/assets/blog/blog-header-img.jpeg";
 
 
@@ -132,22 +132,6 @@ const BlogDetail = () => {
                   </div>
                 </header>
 
-                {/* Featured Image */}
-                <figure className="mb-6">
-                  {blogCardImg ? (
-                    <img
-                      src={blogCardImg}
-                      alt={blog.title}
-                      className="w-full h-64 lg:h-80 object-cover rounded-lg"
-                    />
-                  ) : (
-                    <img
-                      src={blogHeaderImg}
-                      alt={blog.title}
-                      className="w-full h-64 lg:h-80 object-cover rounded-lg"
-                    />
-                  )}
-                </figure>
 
                 {/* Article Body */}
                 <div className="prose prose-lg max-w-none">
