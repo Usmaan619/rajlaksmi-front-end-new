@@ -122,7 +122,7 @@ const VideoProductCard = ({
       if (isPlaying) {
         // Reset to start on new play command to ensure a full 10s loop portion
         videoRef.current.currentTime = 0;
-        videoRef.current.play().catch(() => {});
+        videoRef.current.play().catch(() => { });
       } else {
         videoRef.current.pause();
       }
@@ -144,11 +144,10 @@ const VideoProductCard = ({
   return (
     <div
       onClick={() => onOpenModal(product)}
-      className={`relative w-[260px] lg:w-[300px] h-[440px] lg:h-[490px] rounded-2xl overflow-hidden shadow-md group cursor-pointer transition-all duration-700 bg-white mx-auto ${
-        isActive
-          ? "scale-100 shadow-2xl border border-green-600/20 z-20"
-          : "scale-[0.85] opacity-30 blur-[0.5px] grayscale-[0.8]"
-      } hover:scale-[1.05] hover:opacity-100 hover:blur-none hover:grayscale-0 hover:z-30 will-change-transform`}
+      className={`relative w-[260px] lg:w-[300px] h-[440px] lg:h-[490px] rounded-2xl overflow-hidden shadow-md group cursor-pointer transition-all duration-700 bg-white mx-auto ${isActive
+        ? "scale-100 shadow-2xl border border-green-600/20 z-20"
+        : "scale-[0.85] opacity-30 blur-[0.5px] grayscale-[0.8]"
+        } hover:scale-[1.05] hover:opacity-100 hover:blur-none hover:grayscale-0 hover:z-30 will-change-transform`}
     >
       {/* Background Video */}
       <div
@@ -187,14 +186,13 @@ const VideoProductCard = ({
             loop
             playsInline
             preload="none"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-              isPlaying ? "opacity-100" : "opacity-0"
-            }`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isPlaying ? "opacity-100" : "opacity-0"
+              }`}
           />
         )}
 
         {/* Top-right icon */}
-        <button
+        {/* <button
           aria-label="View product"
           onClick={(e) => {
             e.stopPropagation();
@@ -203,10 +201,10 @@ const VideoProductCard = ({
           className="absolute top-4 right-4 w-9 h-9 rounded-full bg-green-600 text-white flex items-center justify-center shadow-md transition-transform hover:scale-110 active:scale-95"
         >
           <ExternalLink className="h-4 w-4" />
-        </button>
+        </button> */}
 
         {/* Wishlist icon */}
-        <button
+        {/* <button
           aria-label="Add to wishlist"
           onClick={(e) => {
             e.stopPropagation();
@@ -225,11 +223,11 @@ const VideoProductCard = ({
           <Heart
             className={`h-4 w-4 ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"}`}
           />
-        </button>
+        </button> */}
       </div>
 
       {/* Floating Info Box */}
-      <div
+      {/* <div
         className="absolute bottom-2 left-2 right-2 bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-3 border border-white/20"
         onClick={(e) => {
           e.stopPropagation();
@@ -281,7 +279,7 @@ const VideoProductCard = ({
             VIEW PRODUCT
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -352,10 +350,10 @@ const OurProductsSection = () => {
                 thumbnail: youtubeId
                   ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
                   : productInfo.image ||
-                    productInfo.thumbnail ||
-                    item.thumbnail ||
-                    item.image ||
-                    heroGhee,
+                  productInfo.thumbnail ||
+                  item.thumbnail ||
+                  item.image ||
+                  heroGhee,
                 price,
                 videoUrl,
               };
@@ -525,11 +523,10 @@ const OurProductsSection = () => {
               className="w-12 h-12 flex items-center justify-center group transition-all"
             >
               <div
-                className={`transition-all duration-500 rounded-full ${
-                  i === activeIndex
-                    ? "w-8 h-2.5 bg-[#01722C]"
-                    : "w-3 h-3 bg-[#01722C]/20 group-hover:bg-[#01722C]/40"
-                }`}
+                className={`transition-all duration-500 rounded-full ${i === activeIndex
+                  ? "w-8 h-2.5 bg-[#01722C]"
+                  : "w-3 h-3 bg-[#01722C]/20 group-hover:bg-[#01722C]/40"
+                  }`}
               />
             </button>
           ))}
@@ -565,7 +562,7 @@ const OurProductsSection = () => {
                 </div>
 
                 {/* Product Info in Modal */}
-                <div className="mt-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 flex items-center justify-between gap-4">
+                {/* <div className="mt-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
                     <img
                       src={selectedProduct.thumbnail}
@@ -620,7 +617,7 @@ const OurProductsSection = () => {
                       VIEW PRODUCT
                     </Button>
                   </div>
-                </div>
+                </div> */}
               </>
             )}
           </div>
