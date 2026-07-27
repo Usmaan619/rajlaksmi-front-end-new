@@ -149,11 +149,10 @@ const HeroSection: React.FC = () => {
               >
                 <span
                   className={`rounded-full transition-all duration-500 block
-        ${
-          isSelected
-            ? "bg-[#01722C] w-6 md:w-8 h-2 md:h-2.5"
-            : "bg-black/20 group-hover:bg-black/30 w-2 md:w-3 h-2"
-        }`}
+        ${isSelected
+                      ? "bg-[#01722C] w-6 md:w-8 h-2 md:h-2.5"
+                      : "bg-black/20 group-hover:bg-black/30 w-2 md:w-3 h-2"
+                    }`}
                 />
               </button>
             </li>
@@ -185,7 +184,7 @@ const HeroSection: React.FC = () => {
         </Carousel>
 
         {/* bottom gradient decoration */}
-        <div className="absolute inset-x-0 bottom-0 h-10 md:h-24 bg-gradient-to-t from-white/60 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-10 md:h-24" />
       </div>
     </section>
   );

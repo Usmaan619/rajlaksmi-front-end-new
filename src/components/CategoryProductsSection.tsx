@@ -308,7 +308,7 @@ const CategoryRow = ({
                 className="w-full h-full object-cover transition-all duration-700"
                 alt=""
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#fdfdfd]/80 via-[#F9FBF9]/5   to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t " />
             </div>
 
             <div className="relative z-10 p-3 sm:p-5 -mt-4 sm:-mt-6 transition-all duration-500 group-hover:mt-0">
