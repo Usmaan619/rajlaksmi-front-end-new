@@ -12,7 +12,7 @@ import Apeda from "@/assets/certified/APEDA.webp";
 import impandexpot from "@/assets/certified/ICE.webp";
 import NPOP from "@/assets/certified/npop.webp";
 
-import weMaintainImg from "@/assets/labreport/WeMaintain.webp";
+import weMaintainImg from "@/assets/labreport/WeMaintain.jpeg";
 
 const certifications = [
   {
