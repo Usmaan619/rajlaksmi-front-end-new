@@ -107,9 +107,8 @@ const ProductCard = ({ product }: { product: any }) => {
           className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center hover:scale-110 transition-transform"
         >
           <Heart
-            className={`h-4 w-4 ${
-              isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
-            }`}
+            className={`h-4 w-4 ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
+              }`}
           />
         </button>
       </div>
@@ -198,7 +197,7 @@ import seedsImg from "@/assets/category-seeds.jpg";
 import dryfruitsImg from "@/assets/category-dryfruits.jpg";
 import spicesImg from "@/assets/category-spices.jpg";
 import gheeImg from "@/assets/category-ghee.jpg";
-import superfoodsImg from "@/assets/category-superfoods.jpg";
+import superfoodsImg from "@/assets/category/d-c.png";
 
 const categoryDecorations: Record<string, string> = {
   "RICE & WHEAT": grainsImg,
@@ -343,19 +342,19 @@ const CategoryRow = ({
           >
             {isLoading
               ? Array.from({ length: 5 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="snap-start min-w-[calc(50%-2px)] sm:min-w-[calc(33.33%-4px)] lg:min-w-0 animate-pulse bg-gray-50 h-[380px] sm:h-[448px] rounded-2xl border border-gray-100"
-                  />
-                ))
+                <div
+                  key={i}
+                  className="snap-start min-w-[calc(50%-2px)] sm:min-w-[calc(33.33%-4px)] lg:min-w-0 animate-pulse bg-gray-50 h-[380px] sm:h-[448px] rounded-2xl border border-gray-100"
+                />
+              ))
               : products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="snap-start min-w-[calc(60%-2px)] sm:min-w-[calc(50%-4px)] md:min-w-0 w-full"
-                  >
-                    <ProductCard product={product} />
-                  </div>
-                ))}
+                <div
+                  key={product.id}
+                  className="snap-start min-w-[calc(60%-2px)] sm:min-w-[calc(50%-4px)] md:min-w-0 w-full"
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
           </div>
         </div>
       </div>

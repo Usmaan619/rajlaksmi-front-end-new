@@ -13,9 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import Header from "@/components/Header";
-import AnnouncementBar from "@/components/AnnouncementBar";
-import Footer from "@/components/Footer";
 import { getAllBlogs, getBlogCategories } from "@/api/blog.service";
 import { createNewsletterAPI } from "@/api/contact.service";
 import { toast } from "@/hooks/use-toast";
@@ -286,11 +283,11 @@ const BlogMain = () => {
               </div>
 
               {/* Right Image */}
-              <div className="w-full">
+              <div className="w-full flex justify-center items-center min-w-0 overflow-hidden">
                 <img
                   src={blogImg}
                   alt="Blog header"
-                  className="w-full h-[220px] md:h-[300px] lg:h-[360px] object-cover rounded-2xl"
+                  className="w-full h-auto max-h-[250px] sm:max-h-[350px] lg:max-h-[450px] object-contain rounded-2xl"
                 />
               </div>
             </div>
@@ -313,8 +310,8 @@ const BlogMain = () => {
 
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Blog Grid */}
-              <div className="flex-1">
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
+              <div className="flex-1 min-w-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                   {isLoading ? (
                     Array.from({ length: 10 }).map((_, i) => (
                       <div key={i} className="space-y-3">
@@ -377,7 +374,7 @@ const BlogMain = () => {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 mt-12 py-2">
+                  <div className="flex flex-wrap items-center justify-center gap-2 mt-12 py-2">
                     <Button
                       aria-label="Previous Page"
                       variant="outline"

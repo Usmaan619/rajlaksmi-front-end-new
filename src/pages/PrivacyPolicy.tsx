@@ -21,9 +21,7 @@ const PrivacyPolicy = () => {
                   Privacy Policy
                 </h1>
               </div>
-              <p className="text-sm text-gray-500">
-                Last Updated: [DD/MM/YYYY]
-              </p>
+
             </div>
             <div className="max-w-5xl mx-auto mt-3">
               <p className="text-gray-600 text-sm md:text-base">
@@ -189,9 +187,9 @@ const PrivacyPolicy = () => {
                     If you have any questions, please contact us:
                   </p>
                   <ul className="text-gray-600 text-sm space-y-2">
-                    <li>Email: support@rajlakshmijaviks.com</li>
-                    <li>Address: Indore, Madhya Pradesh, India</li>
-                    <li>Phone: +91 12345678</li>
+                    <li>Email: contact@rajlakshmijaviks.com</li>
+                    <li>Address: 11, Manish Bag Colony Rd, Durga Nagar, Agarwal Nagar, Old Agarwal Nagar, Indore, Madhya Pradesh 452001</li>
+                    <li>Phone: +91 8769215905</li>
                   </ul>
                 </div>
 
@@ -233,7 +231,7 @@ const PrivacyPolicy = () => {
           },
           {
             question: "Can I request deletion of my account and data?",
-            answer: "Yes, you have the right to request deletion of your account and personal data at any time. Simply contact us at support@rajlakshmijaviks.com and we will process your request.",
+            answer: "Yes, you have the right to request deletion of your account and personal data at any time. Simply contact us at contact@rajlakshmijaviks.com and we will process your request.",
           },
           {
             question: "Does Rajlakshmi Javiks use cookies?",

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import farmerImage from "@/assets/WhyChooseRajlakshmiSection/1.webp";
-import teamImage from "@/assets/WhyChooseRajlakshmiSection/2.webp";
+import farmerImage from "@/assets/WhyChooseRajlakshmiSection/why-choose.png";
+// import teamImage from "@/assets/WhyChooseRajlakshmiSection/2.webp";
 import farmerBgImg from "@/assets/aboutus/aboutusbgfarmerImg.png";
 import { useNavigate } from "react-router-dom";
 
@@ -33,33 +33,15 @@ const WhyChooseRajlakshmiSection = () => {
 
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
-          {/* Left - Overlapping Images */}
-          <div className="relative w-full max-w-md md:max-w-full lg:max-w-xl mx-auto h-[280px] sm:h-[350px] lg:h-[420px]">
-            {/* Team image - back */}
-            <div className="absolute top-0 right-0 w-[67%] aspect-[4/3] overflow-hidden rounded-2xl">
-              <img
-                src={teamImage}
-                alt="Rajlakshmi Javiks International team processing organic food products in Indore"
-                width="400"
-                height="300"
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-cover shadow-lg"
-              />
-            </div>
-
-            {/* Farmer image - front */}
-            <div className="absolute bottom-0 left-0 w-[40%] z-10 aspect-[3/4] overflow-hidden rounded-2xl">
-              <img
-                src={farmerImage}
-                alt="Indian organic farmer supplying natural produce to Rajlakshmi Javiks"
-                width="240"
-                height="320"
-                loading="lazy"
-                decoding="async"
-                className="w-full h-full object-cover shadow-xl"
-              />
-            </div>
+          {/* Left - Image */}
+          <div className="relative w-full max-w-md mx-auto md:max-w-full h-[320px] sm:h-[400px] md:h-[450px] lg:h-[500px] rounded-2xl overflow-hidden ">
+            <img
+              src={farmerImage}
+              alt="Indian organic farmer supplying natural produce to Rajlakshmi Javiks"
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Right - Content */}

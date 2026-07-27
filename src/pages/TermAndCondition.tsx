@@ -21,9 +21,7 @@ const TermAndCondition = () => {
                   Terms & Conditions
                 </h1>
               </div>
-              <p className="text-sm text-gray-500">
-                Last Updated: [DD/MM/YYYY]
-              </p>
+
             </div>
             <div className="max-w-5xl mx-auto mt-3">
               <p className="text-gray-600 text-sm md:text-base">
@@ -166,15 +164,15 @@ const TermAndCondition = () => {
                   <ul className="text-gray-600 text-sm space-y-2">
                     <li className="flex items-start gap-2">
                       <span className="text-green-600 mt-0.5">•</span>
-                      <span>Email: support@rajlakshmijaviks.com</span>
+                      <span>Email: contact@rajlakshmijaviks.com</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-green-600 mt-0.5">•</span>
-                      <span>Address: Indore, Madhya Pradesh, India</span>
+                      <span>Address: 11, Manish Bag Colony Rd, Durga Nagar, Agarwal Nagar, Old Agarwal Nagar, Indore, Madhya Pradesh 452001</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-green-600 mt-0.5">•</span>
-                      <span>Phone: +91 12345678</span>
+                      <span>Phone: +91 8769215905</span>
                     </li>
                   </ul>
                 </div>
@@ -197,7 +195,7 @@ const TermAndCondition = () => {
           },
           {
             question: "Which courts have jurisdiction over disputes?",
-            answer: "All disputes arising from these Terms & Conditions shall be subject to the exclusive jurisdiction of the courts in Indore, Madhya Pradesh, India.",
+            answer: "All disputes arising from these Terms & Conditions shall be subject to the exclusive jurisdiction of the courts in Indore, Madhya Pradesh 452001.",
           },
           {
             question: "Can I use content from Rajlakshmi Javiks website?",
