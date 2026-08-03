@@ -4,6 +4,8 @@ import { getToken, clearToken } from "@/utils/token";
 
 const api = axios.create({
   baseURL: "https://api.rajlakshmijaviks.com",
+  // baseURL: "http://localhost:5001",
+
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",

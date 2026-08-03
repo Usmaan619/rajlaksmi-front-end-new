@@ -190,28 +190,32 @@ const ProductCard = ({ product }: { product: any }) => {
   );
 };
 
-import grainsImg from "@/assets/category-grains.jpg";
-import floursImg from "@/assets/category-flours.jpg";
-import oilsImg from "@/assets/category-oils.jpg";
-import seedsImg from "@/assets/category-seeds.jpg";
-import dryfruitsImg from "@/assets/category-dryfruits.jpg";
-import spicesImg from "@/assets/category-spices.jpg";
-import gheeImg from "@/assets/category-ghee.jpg";
-import superfoodsImg from "@/assets/category/d-c.png";
+import pulsesImg from "@/assets/category/pulses.jpg";
+import milletsImg from "@/assets/category/millets.jpg";
+import ricewheatImg from "@/assets/category/ricewheat.jpg";
+import masalaImg from "@/assets/category/masala.jpg";
+import sweetsImg from "@/assets/category/sweet.jpg";
+import honeyImg from "@/assets/category/honey.jpg";
+import dryfruitsImg from "@/assets/category/dryfruits.jpg";
+import seedsImg from "@/assets/category/seeds.jpg";
+import homemadaacarImg from "@/assets/category/homemadaacar.jpg";
+import fruitsdrinksImg from "@/assets/category/fruitsdrinks.jpg";
+import gheeOilsImg from "@/assets/category/gheeoils.jpeg";
+import allCategoriesImg from "@/assets/category-grains.jpg";
 
 const categoryDecorations: Record<string, string> = {
-  "RICE & WHEAT": grainsImg,
-  "MILLET": superfoodsImg,
-  "OILS & GHEE": oilsImg,
+  "RICE & WHEAT": ricewheatImg,
+  "MILLET": milletsImg,
+  "OILS & GHEE": gheeOilsImg,
   "SEEDS": seedsImg,
   "DRY FRUITS": dryfruitsImg,
-  "MASALA": spicesImg,
-  "PULSES": grainsImg,
-  "SWEETS": superfoodsImg,
-  "HONEY": gheeImg,
-  "HOME MADE AACHAR": spicesImg,
-  "FRUITS DRINKS / CHUTNEY": superfoodsImg,
-  "KHAKHRA": grainsImg,
+  "MASALA": masalaImg,
+  "PULSES": pulsesImg,
+  "SWEETS": sweetsImg,
+  "HONEY": honeyImg,
+  "HOME MADE AACHAR": homemadaacarImg,
+  "FRUITS DRINKS / CHUTNEY": fruitsdrinksImg,
+  "KHAKHRA": allCategoriesImg,
 };
 
 const categoryDescriptions: Record<string, string> = {
