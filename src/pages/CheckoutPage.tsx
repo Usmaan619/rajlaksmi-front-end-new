@@ -340,7 +340,8 @@ const CheckoutPage = () => {
       }
 
       const options = {
-        key: "rzp_test_qcl3EzwXvpMnwS",
+        // key: "rzp_test_qcl3EzwXvpMnwS",
+        key: "rzp_live_woFUpWK35AZbcn",
         amount: order.amount,
         currency: order.currency,
         name: "Rajlakshmi Javiks International",
@@ -519,8 +520,8 @@ const CheckoutPage = () => {
                         alt={item.name}
                         className="w-full h-full object-cover"
                         onError={(e) =>
-                          (e.currentTarget.src =
-                            "https://placehold.co/64x64?text=RLJ")
+                        (e.currentTarget.src =
+                          "https://placehold.co/64x64?text=RLJ")
                         }
                       />
                     </div>
@@ -613,11 +614,10 @@ const CheckoutPage = () => {
                           <div
                             key={addr.id}
                             onClick={() => setSelectedAddressId(addr.id)}
-                            className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                              selectedAddressId === addr.id
-                                ? "border-emerald-500 bg-emerald-50/40 shadow-sm"
-                                : "border-slate-200 hover:border-emerald-300 bg-white"
-                            }`}
+                            className={`relative p-4 rounded-xl border-2 transition-all cursor-pointer ${selectedAddressId === addr.id
+                              ? "border-emerald-500 bg-emerald-50/40 shadow-sm"
+                              : "border-slate-200 hover:border-emerald-300 bg-white"
+                              }`}
                           >
                             {/* Selected indicator */}
                             {selectedAddressId === addr.id && (
