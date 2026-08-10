@@ -100,6 +100,7 @@ const CheckoutPage = () => {
     estimate: string;
     totalWeight: number;
     gst: number;
+    platformFee: number;
   } | null>(null);
   const [isShippingLoading, setIsShippingLoading] = useState(false);
   const [shippingError, setShippingError] = useState<string | null>(null);
@@ -117,10 +118,11 @@ const CheckoutPage = () => {
 
   const shippingGST = shippingInfo?.gst || 0;
   const shippingBase = shippingInfo?.baseCharge || 0;
+  const platformFee = shippingInfo?.platformFee || 0;
   const totalGST = itemsGstTotal + shippingGST;
 
   const hasGST = totalGST > 0;
-  const grandTotal = cartTotal + itemsGstTotal + shippingBase + shippingGST;
+  const grandTotal = cartTotal + itemsGstTotal + shippingBase + shippingGST + platformFee;
 
   /* ─── Address Form ──────────────────────────────────────────── */
   const addressForm = useForm<AddressFormValues>({
@@ -213,6 +215,7 @@ const CheckoutPage = () => {
           totalWeight,
           slabInfo,
           shippingGST,
+          platformFee,
         } = response.data;
         setShippingInfo({
           charge: shippingCharge,
@@ -221,6 +224,7 @@ const CheckoutPage = () => {
           estimate: estimatedDelivery,
           totalWeight: totalWeight,
           gst: shippingGST || 0,
+          platformFee: platformFee || 0,
         });
       } else {
         setShippingError(
@@ -1019,6 +1023,18 @@ const CheckoutPage = () => {
                       </span>
                       <span className="font-semibold text-emerald-700">
                         +₹{shippingInfo.gst.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+
+                  {shippingInfo && shippingInfo.platformFee > 0 && (
+                    <div className="flex justify-between text-sm text-slate-600">
+                      <span className="flex items-center gap-1">
+                        <ShieldCheck className="h-3 w-3 text-emerald-500" />
+                        Platform Fee (2%)
+                      </span>
+                      <span className="font-semibold text-slate-700">
+                        +₹{shippingInfo.platformFee.toFixed(2)}
                       </span>
                     </div>
                   )}
