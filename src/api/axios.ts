@@ -44,17 +44,22 @@ api.interceptors.response.use(
 
     const { status, data } = error.response;
 
-    // 🔐 Unauthorized → Auto logout
-    if (status === 401) {
+    const message =
+      data?.message || data?.error || "Something went wrong. Please try again.";
+
+    // 🔐 Unauthorized or Invalid Token → Auto logout
+    if (
+      status === 401 ||
+      message.toLowerCase().includes("invalid token") ||
+      message.toLowerCase().includes("token expire")
+    ) {
       clearToken();
-      window.location.href = "/admin";
+      localStorage.removeItem("user_data");
+      window.location.href = "/login";
       return Promise.reject(new Error("Session expired. Please login again."));
     }
 
     // ⚠️ Other backend errors
-    const message =
-      data?.message || data?.error || "Something went wrong. Please try again.";
-
     return Promise.reject(new Error(message));
   },
 );
