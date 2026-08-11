@@ -19,6 +19,7 @@ const FALLBACK_BANNERS = [bannerNew, bannerNew1, bannerNew2];
 ========================= */
 const optimizeImage = (url: string, width = 1905) => {
   if (!url) return "";
+  if (url.startsWith("data:image")) return url; // Skip base64 optimization
   if (url.includes("res.cloudinary.com")) {
     // Ensuring we use the requested width for optimization
     return url.replace("/upload/", `/upload/f_auto,q_auto,w_${width}/`);
@@ -38,7 +39,18 @@ const HeroSection: React.FC = () => {
       const res = await getHomeBannerAPI();
       const rawData = res?.data || res;
 
-      const urls = [bannerNew, bannerNew1, bannerNew2].filter(Boolean);
+      // Extract dynamic banners from DB response
+      const dynamicUrls = [
+        rawData?.banner1,
+        rawData?.banner2,
+        rawData?.banner3,
+        rawData?.banner4,
+      ].filter(Boolean);
+
+      // Fallback to static banners if dynamic ones are empty
+      const urls = dynamicUrls.length > 0
+        ? dynamicUrls
+        : [bannerNew, bannerNew1, bannerNew2].filter(Boolean);
 
       setBannerUrls(urls.length ? urls : FALLBACK_BANNERS);
     } catch (error) {
