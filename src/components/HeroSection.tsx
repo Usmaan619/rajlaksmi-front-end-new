@@ -2,8 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-import banner1Img from "@/assets/banner-main-page/banner2.webp";
-import banner2Img from "@/assets/banner-main-page/banner1.webp";
 import bannerNew from "@/assets/banner-main-page/newbanner-12.jpeg";
 import bannerNew1 from "@/assets/banner-main-page/2.jpeg";
 import bannerNew2 from "@/assets/banner-main-page/3.jpeg";
