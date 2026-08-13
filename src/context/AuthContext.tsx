@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { getToken, clearToken, setToken } from "@/utils/token";
+import api from "@/api/axios";
 
 interface User {
   id: string;
@@ -42,13 +43,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("user_data", JSON.stringify(userData));
     setUser(userData);
     setIsAuthenticated(true);
+    
+    // Sync guest cart/wishlist to DB
+    syncData(userData.id, token);
+  };
+
+  const syncData = async (userId: string, token: string) => {
+    try {
+      const cartStr = localStorage.getItem("cart");
+      const wishStr = localStorage.getItem("wishlist");
+      
+      if (cartStr) {
+        const cartItems = JSON.parse(cartStr);
+        if (cartItems.length > 0) {
+          await api.post("/users/cart/sync", { items: cartItems });
+        }
+      }
+      
+      if (wishStr) {
+        const wishItems = JSON.parse(wishStr);
+        if (wishItems.length > 0) {
+          await api.post("/users/wishlist/sync", { items: wishItems });
+        }
+      }
+      
+      localStorage.removeItem("cart");
+      localStorage.removeItem("wishlist");
+      window.dispatchEvent(new Event("auth_login_success"));
+    } catch (err) {
+      console.error("Failed to sync local data", err);
+      // Even if sync fails, let's trigger refresh so it loads whatever is in DB
+      window.dispatchEvent(new Event("auth_login_success"));
+    }
   };
 
   const logout = () => {
     clearToken();
     localStorage.removeItem("user_data");
+    localStorage.removeItem("cart");
+    localStorage.removeItem("wishlist");
     setUser(null);
     setIsAuthenticated(false);
+    window.dispatchEvent(new Event("auth_logout"));
   };
 
   const updateUser = (userData: Partial<User>) => {

@@ -44,6 +44,8 @@ export const loginAPI = async (payload: LoginPayload) => {
 export const logout = () => {
   clearToken();
   localStorage.removeItem("user_data");
+  localStorage.removeItem("cart");
+  localStorage.removeItem("wishlist");
 };
 
 /* GOOGLE LOGIN */

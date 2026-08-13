@@ -55,6 +55,8 @@ api.interceptors.response.use(
     ) {
       clearToken();
       localStorage.removeItem("user_data");
+      localStorage.removeItem("cart");
+      localStorage.removeItem("wishlist");
       window.location.href = "/login";
       return Promise.reject(new Error("Session expired. Please login again."));
     }

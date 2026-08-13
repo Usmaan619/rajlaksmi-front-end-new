@@ -344,8 +344,8 @@ const CheckoutPage = () => {
       }
 
       const options = {
-        // key: "rzp_test_qcl3EzwXvpMnwS",
-        key: "rzp_live_woFUpWK35AZbcn",
+        key: "rzp_test_qcl3EzwXvpMnwS",
+        // key: "rzp_live_woFUpWK35AZbcn",
         amount: order.amount,
         currency: order.currency,
         name: "Rajlakshmi Javiks International",
