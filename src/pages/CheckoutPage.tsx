@@ -366,39 +366,31 @@ const CheckoutPage = () => {
         handler: async function (rzpResponse: any) {
           try {
             setIsLoading(true);
-            const validateRes = await api.post("/users/status", {
-              rzpResponse,
-              ...order,
-            });
-            const result = validateRes.data;
-
-            if (result.success) {
-              // Meta Pixel Purchase Event
-              try {
-                if (window.fbq && cart.length > 0) {
-                  window.fbq("track", "Purchase", {
-                    content_ids: cart.map((item) => item.id),
-                    content_type: "product",
-                    value: subtotal,
-                    currency: "INR",
-                  });
-                }
-              } catch (err) {
-                console.error("Meta pixel error:", err);
+            
+            // Note: Since we are relying on Webhooks to update the DB status, 
+            // we skip the /users/status client-side call and assume success locally.
+            // Meta Pixel Purchase Event
+            try {
+              if (window.fbq && cart.length > 0) {
+                window.fbq("track", "Purchase", {
+                  content_ids: cart.map((item) => item.id),
+                  content_type: "product",
+                  value: subtotal,
+                  currency: "INR",
+                });
               }
-
-              clearCart();
-              sessionStorage.removeItem("cart");
-              navigate("/payment-success");
-            } else {
-              navigate("/payment-failed");
+            } catch (err) {
+              console.error("Meta pixel error:", err);
             }
+
+            clearCart();
+            sessionStorage.removeItem("cart");
+            navigate("/payment-success");
+
           } catch (err: any) {
             console.error("Payment status check error:", err);
-            // If the instant client-side verification fails due to a network issue,
-            // the backend webhook will still catch the 'payment.captured' event.
-            toast.error("We couldn't instantly verify your payment, but if money was deducted, it will be automatically confirmed shortly.");
-            navigate("/orders"); // Or somewhere they can check their order status later
+            toast.error("An error occurred after payment.");
+            navigate("/orders");
           } finally {
             setIsLoading(false);
           }
