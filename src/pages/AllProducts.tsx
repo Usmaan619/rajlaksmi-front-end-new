@@ -67,7 +67,7 @@ const ProductSkeleton = () => (
       <Skeleton className="h-6 w-1/3" />
       <Skeleton className="h-4 w-8" />
     </div>
-    <div className="flex gap-2 mt-auto">
+    <div className="flex flex-col xl:flex-row gap-2 mt-auto">
       <Skeleton className="h-8 flex-1" />
       <Skeleton className="h-8 flex-1" />
     </div>
@@ -231,7 +231,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           </span>
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-1">
           <div className="relative">
             <button
               aria-label="Select Weight"
@@ -268,7 +268,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           </div>
         </div>
 
-        <div className="flex gap-2 mt-auto pt-2">
+        <div className="flex flex-col xl:flex-row gap-2 mt-auto pt-2">
           <Button
             aria-label="Add to cart"
             variant="outline"

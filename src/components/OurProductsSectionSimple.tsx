@@ -210,7 +210,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
         </div>
 
         {/* Unit + Rating */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-1">
           <button
             aria-label="Select unit"
             onClick={(e) => e.stopPropagation()}
@@ -226,7 +226,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
         </div>
 
         {/* Buttons (always one line) */}
-        <div className="flex gap-2 mt-auto">
+        <div className="flex flex-col xl:flex-row gap-2 mt-auto">
           <Button
             aria-label="Add to cart"
             size="sm"

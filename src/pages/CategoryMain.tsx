@@ -58,7 +58,7 @@ const ProductSkeleton = () => (
       <Skeleton className="h-6 w-1/3" />
       <Skeleton className="h-4 w-8" />
     </div>
-    <div className="flex gap-2 mt-auto">
+    <div className="flex flex-col xl:flex-row gap-2 mt-auto">
       <Skeleton className="h-9 flex-1" />
       <Skeleton className="h-9 flex-1" />
     </div>
@@ -261,13 +261,13 @@ const ProductCard = ({ product }: { product: Product }) => {
             </span>
           )}
         </div>
-        <span className="text-[10px] text-primary/70 font-semibold block">
+        <span className="text-[10px] text-primary/70 font-semibold block break-words whitespace-normal leading-tight">
           Rate: ₹{ratePerUnit.toFixed(2)} / {/kg|g|gm|ml|ltr|l/i.test(selectedWeightObj.weight) ? "kg" : unitInfo.unit}
         </span>
       </div>
 
       {/* Weight + Rating */}
-      <div className="flex items-center justify-between mt-2">
+      <div className="flex flex-wrap items-center justify-between gap-1 mt-2">
         <div className="relative">
           <button
             aria-label="Select Weight"
@@ -305,7 +305,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-2 mt-auto pt-2">
+      <div className="flex flex-col xl:flex-row gap-2 mt-auto pt-2">
         <Button
           aria-label="Add to Cart"
           variant="outline"

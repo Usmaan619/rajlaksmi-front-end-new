@@ -192,7 +192,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           )}
         </div>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-1">
           <div className="relative">
             <button
               aria-label="Select unit"
@@ -229,7 +229,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           </div>
         </div>
 
-        <div className="flex gap-2 pt-1 mt-auto">
+        <div className="flex flex-col xl:flex-row gap-2 pt-1 mt-auto">
           <Button
             aria-label="Add to cart"
             size="sm"

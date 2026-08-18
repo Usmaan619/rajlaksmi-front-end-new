@@ -132,7 +132,7 @@ const ProductCard = ({ product }: { product: any }) => {
             </span>
           )}
         </div>
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex flex-wrap items-center justify-between gap-1 mt-2">
           <div className="relative">
             <button
               aria-label="Select unit"
@@ -164,13 +164,13 @@ const ProductCard = ({ product }: { product: any }) => {
               </div>
             )}
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex flex-wrap items-center gap-1">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs sm:text-sm font-medium">4.5</span>
+            <span className="text-[10px] text-primary/70 font-semibold block break-words whitespace-normal leading-tight">4.5</span>
           </div>
         </div>
       </div>
-      <div className="flex gap-2 mt-auto">
+      <div className="flex flex-col xl:flex-row gap-2 mt-auto">
         <button
           aria-label="Add to cart"
           onClick={handleAddToCart}
