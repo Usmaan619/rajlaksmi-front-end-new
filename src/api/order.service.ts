@@ -18,6 +18,10 @@ export interface Order {
   created_at: string;
   items: OrderItem[];
   shipping_address?: any;
+  full_name?: string;
+  shipping_charge?: number;
+  gst_amount?: number;
+  platform_fee?: number;
 }
 
 /* GET ALL ORDERS FOR USER */

@@ -9,6 +9,7 @@ import {
   Menu,
   X,
   ChevronDown,
+  Package,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -410,6 +411,19 @@ const Header = () => {
                           >
                             <User className="h-4 w-4 mr-2" />
                             Profile
+                          </Button>
+                        </Link>
+                        <Link
+                          to="/orders"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <Button
+                            variant="outline"
+                            aria-label="My Orders"
+                            className="w-full justify-start rounded-xl h-11"
+                          >
+                            <Package className="h-4 w-4 mr-2" />
+                            My Orders
                           </Button>
                         </Link>
                         <Button

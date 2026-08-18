@@ -186,6 +186,9 @@ const OrdersPage = () => {
                         <p className="text-sm font-bold text-slate-900">
                           {format(new Date(order.created_at), "MMMM dd, yyyy")}
                         </p>
+                        <p className="text-xs font-semibold text-slate-500 mt-0.5">
+                          {order.full_name || "Customer"}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
@@ -231,7 +234,7 @@ const OrdersPage = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-slate-900 truncate">
-                            {item.name}
+                            {item.name || item.product_name}
                           </h4>
                           <p className="text-xs text-slate-500 font-medium">
                             Qty: {item.quantity}{" "}
@@ -245,6 +248,50 @@ const OrdersPage = () => {
                         </div>
                       </div>
                     ))}
+
+                    {/* Order Breakdown */}
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 mt-4 space-y-2">
+                      <div className="flex justify-between text-xs text-slate-500">
+                        <span>Items Subtotal</span>
+                        <span className="font-medium text-slate-700">
+                          ₹
+                          {order.items?.reduce(
+                            (acc, item) => acc + item.price * item.quantity,
+                            0
+                          )}
+                        </span>
+                      </div>
+                      {Number(order.shipping_charge) > 0 && (
+                        <div className="flex justify-between text-xs text-slate-500">
+                          <span>Delivery Charges</span>
+                          <span className="font-medium text-emerald-700">
+                            +₹{order.shipping_charge}
+                          </span>
+                        </div>
+                      )}
+                      {Number(order.gst_amount) > 0 && (
+                        <div className="flex justify-between text-xs text-slate-500">
+                          <span>GST (Items + Shipping)</span>
+                          <span className="font-medium text-emerald-700">
+                            +₹{order.gst_amount}
+                          </span>
+                        </div>
+                      )}
+                      {Number(order.platform_fee) > 0 && (
+                        <div className="flex justify-between text-xs text-slate-500">
+                          <span>Platform Fee</span>
+                          <span className="font-medium text-slate-700">
+                            +₹{order.platform_fee}
+                          </span>
+                        </div>
+                      )}
+                      <div className="flex justify-between text-sm font-bold pt-2 border-t border-slate-200 mt-2">
+                        <span className="text-slate-800">Grand Total</span>
+                        <span className="text-primary">
+                          ₹{order.total_amount}
+                        </span>
+                      </div>
+                    </div>
 
                     {/* Tracking Info Section */}
                     {trackingInfo[order.id] && (

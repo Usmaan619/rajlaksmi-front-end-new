@@ -325,6 +325,9 @@ const CheckoutPage = () => {
         user_country: selectedAddress.country,
         user_house_number: selectedAddress.address_line1,
         user_landmark: selectedAddress.address_line2 || "",
+        shipping_charge: shippingInfo?.baseCharge || 0,
+        gst_amount: totalGST || 0,
+        platform_fee: platformFee || 0,
       };
 
       const res = await api.post("/users/create-order", payload);
