@@ -390,8 +390,12 @@ const CheckoutPage = () => {
             } else {
               navigate("/payment-failed");
             }
-          } catch {
-            toast.error("Payment verification failed. Please contact support.");
+          } catch (err: any) {
+            console.error("Payment status check error:", err);
+            // If the instant client-side verification fails due to a network issue,
+            // the backend webhook will still catch the 'payment.captured' event.
+            toast.error("We couldn't instantly verify your payment, but if money was deducted, it will be automatically confirmed shortly.");
+            navigate("/orders"); // Or somewhere they can check their order status later
           } finally {
             setIsLoading(false);
           }
