@@ -48,6 +48,7 @@ import {
 } from "@/api/user.service";
 import api from "@/api/axios";
 import RLJLOGOJAVIK from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
+import CouponBox from "./CouponBox";
 
 /* ─── Zod Schema ─────────────────────────────────────────────── */
 const addressSchema = z.object({
@@ -105,6 +106,10 @@ const CheckoutPage = () => {
   const [isShippingLoading, setIsShippingLoading] = useState(false);
   const [shippingError, setShippingError] = useState<string | null>(null);
 
+  /* ─── Coupon State ───────────────────────────────────────────── */
+  const [couponCode, setCouponCode] = useState<string | null>(null);
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+
   /* ─── Computed values ───────────────────────────────────────── */
   const itemsGstTotal = useMemo(
     () =>
@@ -122,7 +127,23 @@ const CheckoutPage = () => {
   const totalGST = itemsGstTotal + shippingGST;
 
   const hasGST = totalGST > 0;
-  const grandTotal = cartTotal + itemsGstTotal + shippingBase + shippingGST + platformFee;
+  // Subtotal of items
+  const subtotal = cartTotal;
+  // Grand total before discount
+  const totalBeforeDiscount = subtotal + itemsGstTotal + shippingBase + shippingGST + platformFee;
+  // Final total
+  const grandTotal = Math.max(0, totalBeforeDiscount - discountAmount);
+
+  /* ─── Coupon Handlers ───────────────────────────────────────── */
+  const handleApplyCoupon = (discount: number, finalPrice: number, code: string) => {
+    setCouponCode(code);
+    setDiscountAmount(discount);
+  };
+
+  const handleRemoveCoupon = () => {
+    setCouponCode(null);
+    setDiscountAmount(0);
+  };
 
   /* ─── Address Form ──────────────────────────────────────────── */
   const addressForm = useForm<AddressFormValues>({
@@ -303,7 +324,7 @@ const CheckoutPage = () => {
     try {
       setIsLoading(true);
 
-      const subtotal = cart.reduce(
+      const itemsSubtotal = cart.reduce(
         (acc, item) => acc + item.price * item.quantity,
         0,
       );
@@ -328,6 +349,8 @@ const CheckoutPage = () => {
         shipping_charge: shippingInfo?.baseCharge || 0,
         gst_amount: totalGST || 0,
         platform_fee: platformFee || 0,
+        coupon_code: couponCode,
+        discount_amount: discountAmount,
       };
 
       const res = await api.post("/users/create-order", payload);
@@ -347,8 +370,8 @@ const CheckoutPage = () => {
       }
 
       const options = {
-        key: "rzp_test_qcl3EzwXvpMnwS",
-        // key: "rzp_live_woFUpWK35AZbcn",
+        // key: "rzp_test_qcl3EzwXvpMnwS",
+        key: "rzp_live_woFUpWK35AZbcn",
         amount: order.amount,
         currency: order.currency,
         name: "Rajlakshmi Javiks International",
@@ -366,7 +389,7 @@ const CheckoutPage = () => {
         handler: async function (rzpResponse: any) {
           try {
             setIsLoading(true);
-            
+
             // Note: Since we are relying on Webhooks to update the DB status, 
             // we skip the /users/status client-side call and assume success locally.
             // Meta Pixel Purchase Event
@@ -375,7 +398,7 @@ const CheckoutPage = () => {
                 window.fbq("track", "Purchase", {
                   content_ids: cart.map((item) => item.id),
                   content_type: "product",
-                  value: subtotal,
+                  value: itemsSubtotal,
                   currency: "INR",
                 });
               }
@@ -1038,6 +1061,14 @@ const CheckoutPage = () => {
                     </div>
                   )}
                 </div>
+
+                {/* Coupon Box */}
+                <CouponBox 
+                  cartTotal={cartTotal} 
+                  onApply={handleApplyCoupon} 
+                  onRemove={handleRemoveCoupon} 
+                  liveDiscount={discountAmount}
+                />
 
                 {/* Divider */}
                 <div className="border-t border-slate-100" />
