@@ -48,7 +48,7 @@ import {
 } from "@/api/user.service";
 import api from "@/api/axios";
 import RLJLOGOJAVIK from "@/assets/logo/RAJLAXMI-JAVIK-png.png";
-import CouponBox from "./CouponBox";
+import CouponBox from "@/components/CouponBox";
 
 /* ─── Zod Schema ─────────────────────────────────────────────── */
 const addressSchema = z.object({
@@ -1064,7 +1064,7 @@ const CheckoutPage = () => {
 
                 {/* Coupon Box */}
                 <CouponBox 
-                  cartTotal={cartTotal} 
+                  cartTotal={totalBeforeDiscount} 
                   onApply={handleApplyCoupon} 
                   onRemove={handleRemoveCoupon} 
                   liveDiscount={discountAmount}
