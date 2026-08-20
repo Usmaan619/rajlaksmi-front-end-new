@@ -140,6 +140,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
   const clearCart = () => {
     setCart([]);
+    if (isAuthenticated) {
+      api.delete("/users/cart/clear").catch(console.error);
+    }
   };
 
   useEffect(() => {
