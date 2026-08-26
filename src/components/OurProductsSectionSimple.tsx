@@ -214,14 +214,14 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
           <button
             aria-label="Select unit"
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1 px-2 py-1 rounded-md border text-xs"
+            className="flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-md border text-[10px] sm:text-xs font-medium bg-white"
           >
             {product.unit}
             <ChevronDown className="h-3 w-3" />
           </button>
           <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-golden text-golden" />
-            <span className="text-xs">{product.rating}</span>
+            <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-golden text-golden" />
+            <span className="text-xs sm:text-sm">{product.rating}</span>
           </div>
         </div>
 
@@ -230,7 +230,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
           <Button
             aria-label="Add to cart"
             size="sm"
-            className="flex-1 text-xs h-8"
+            className="flex-1 shrink-0 text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 font-bold"
             onClick={handleAddToCart}
           >
             Add to Cart
@@ -239,7 +239,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
             aria-label="Buy now"
             size="sm"
             variant="outline"
-            className="flex-1 text-xs h-8"
+            className="flex-1 shrink-0 text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 font-bold"
             onClick={handleBuyNow}
           >
             Buy Now

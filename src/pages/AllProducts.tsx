@@ -239,7 +239,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                 e.stopPropagation();
                 if (weights.length > 1) setShowWeights(!showWeights);
               }}
-              className="flex items-center gap-1 px-2 py-1 rounded-md border text-xs bg-white"
+              className="flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-md border text-[10px] sm:text-xs font-medium bg-white"
             >
               {getDisplayWeight(selectedWeightObj.weight)}
               {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
@@ -263,8 +263,8 @@ const ProductCard = ({ product }: { product: Product }) => {
             )}
           </div>
           <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs">{product.rating || "4.5"}</span>
+            <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-yellow-400 text-yellow-400" />
+            <span className="text-xs sm:text-sm">{product.rating || "4.5"}</span>
           </div>
         </div>
 
@@ -273,14 +273,14 @@ const ProductCard = ({ product }: { product: Product }) => {
             aria-label="Add to cart"
             variant="outline"
             onClick={handleAddToCart}
-            className="flex-1 border-primary text-primary text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-primary hover:text-white transition-colors font-bold px-1"
+            className="flex-1 shrink-0 border-primary text-primary text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 rounded-md hover:bg-primary hover:text-white transition-colors font-bold px-1"
           >
             ADD TO CART
           </Button>
           <Button
             aria-label="Buy now"
             onClick={handleBuyNow}
-            className="flex-1 bg-primary text-white text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow px-1"
+            className="flex-1 shrink-0 bg-primary text-white text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow px-1"
           >
             BUY NOW
           </Button>

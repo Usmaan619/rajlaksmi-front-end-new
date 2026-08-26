@@ -200,7 +200,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                 e.stopPropagation();
                 if (weights.length > 1) setShowWeights(!showWeights);
               }}
-              className="flex items-center gap-1 px-2 py-1 rounded-md border text-xs bg-white"
+              className="flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-md border text-[10px] sm:text-xs font-medium bg-white"
             >
               {getDisplayWeight(selectedWeightObj.weight)}
               {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
@@ -224,8 +224,8 @@ const ProductCard = ({ product }: { product: Product }) => {
             )}
           </div>
           <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-golden text-golden" />
-            <span className="text-xs">{pRating}</span>
+            <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-golden text-golden" />
+            <span className="text-xs sm:text-sm">{pRating}</span>
           </div>
         </div>
 
@@ -233,7 +233,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           <Button
             aria-label="Add to cart"
             size="sm"
-            className="flex-1 text-[10px] sm:text-[11px] h-8 sm:h-9 font-bold bg-primary text-white hover:bg-primary/90 transition-colors shadow-sm animate-glow"
+            className="flex-1 shrink-0 text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 font-bold bg-primary text-white hover:bg-primary/90 transition-colors shadow-sm animate-glow"
             onClick={handleAddToCart}
           >
             ADD TO CART
@@ -242,7 +242,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             aria-label="Buy now"
             size="sm"
             variant="outline"
-            className="flex-1 text-[10px] sm:text-[11px] h-8 sm:h-9 bg-white font-bold border-primary text-primary hover:bg-primary hover:text-white"
+            className="flex-1 shrink-0 text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 bg-white font-bold border-primary text-primary hover:bg-primary hover:text-white"
             onClick={handleBuyNow}
           >
             BUY NOW

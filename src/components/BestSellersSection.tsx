@@ -167,7 +167,7 @@ const ProductCard = ({ product }: { product: any }) => {
                 e.stopPropagation();
                 if (weights.length > 1) setShowUnits(!showUnits);
               }}
-              className="flex items-center gap-1 border rounded px-2 py-1 text-[11px] sm:text-xs"
+              className="flex items-center gap-0.5 sm:gap-1 border rounded px-1.5 sm:px-2 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium bg-white"
             >
               {getDisplayWeight(selectedUnitWeight)}
               {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
@@ -196,8 +196,8 @@ const ProductCard = ({ product }: { product: any }) => {
           </div>
 
           <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-[10px] text-primary/70 font-semibold block break-words whitespace-normal leading-tight">4.5</span>
+            <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-yellow-400 text-yellow-400" />
+            <span className="text-xs sm:text-sm text-primary/70 font-semibold block break-words whitespace-normal leading-tight">4.5</span>
           </div>
         </div>
       </div>
@@ -206,14 +206,14 @@ const ProductCard = ({ product }: { product: any }) => {
         <button
           aria-label="Add to cart"
           onClick={handleAddToCart}
-          className="flex-1 border border-primary text-primary text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary hover:text-white transition-colors font-bold"
+          className="flex-1 shrink-0 border border-primary text-primary text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 rounded-md hover:bg-primary hover:text-white transition-colors font-bold"
         >
           ADD TO CART
         </button>
         <button
           aria-label="Buy now"
           onClick={handleBuyNow}
-          className="flex-1 bg-primary text-white text-[10px] sm:text-[11px] md:text-xs h-8 sm:h-9 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow"
+          className="flex-1 shrink-0 bg-primary text-white text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 rounded-md hover:bg-primary/90 transition-colors font-bold shadow-sm animate-glow"
         >
           BUY NOW
         </button>

@@ -238,9 +238,8 @@ const ProductCard = ({ product }: { product: Product }) => {
           className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center hover:scale-110 transition-transform z-10"
         >
           <Heart
-            className={`h-4 w-4 ${
-              isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
-            }`}
+            className={`h-4 w-4 ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
+              }`}
           />
         </button>
       </div>
@@ -275,7 +274,7 @@ const ProductCard = ({ product }: { product: Product }) => {
               e.stopPropagation();
               if (weights.length > 1) setShowWeights(!showWeights);
             }}
-            className="flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] bg-white"
+            className="flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-1 sm:py-1.5 rounded-md border text-[10px] sm:text-xs font-medium bg-white"
           >
             {getDisplayWeight(selectedWeightObj.weight)}
             {weights.length > 1 && <ChevronDown className="h-3 w-3" />}
@@ -298,9 +297,9 @@ const ProductCard = ({ product }: { product: Product }) => {
             </div>
           )}
         </div>
-        <div className="flex items-center gap-0.5">
-          <Star size={12} className="fill-yellow-400 text-yellow-400" />
-          <span className="text-xs text-muted-foreground">{pRating}</span>
+        <div className="flex items-center gap-1">
+          <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-yellow-400 text-yellow-400" />
+          <span className="text-xs sm:text-sm text-muted-foreground">{pRating}</span>
         </div>
       </div>
 
@@ -310,14 +309,14 @@ const ProductCard = ({ product }: { product: Product }) => {
           aria-label="Add to Cart"
           variant="outline"
           onClick={handleAddToCart}
-          className="flex-1 border-[#116931] text-[#116931] text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-[#116931] hover:text-white transition-colors font-bold px-1"
+          className="flex-1 shrink-0 border-[#116931] text-[#116931] text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 rounded-md hover:bg-[#116931] hover:text-white transition-colors font-bold px-1"
         >
           ADD TO CART
         </Button>
         <Button
           aria-label="Buy Now"
           onClick={handleBuyNow}
-          className="flex-1 bg-[#116931] text-white text-[10px] sm:text-[11px] h-8 sm:h-9 rounded-md hover:bg-[#0d5427] transition-colors font-bold animate-glow shadow-sm px-1"
+          className="flex-1 shrink-0 bg-[#116931] text-white text-xs sm:text-sm min-h-[40px] sm:min-h-[44px] py-2 rounded-md hover:bg-[#0d5427] transition-colors font-bold animate-glow shadow-sm px-1"
         >
           BUY NOW
         </Button>
@@ -353,14 +352,14 @@ const CategoryMain = () => {
 
       if (res.success) {
         let fetched = res.products || res.data || [];
-        
+
         // Normalize properties
         fetched = fetched.map((p: any) => ({
           ...p,
           price: p.product_price !== undefined ? p.product_price : p.price,
           mrp: p.product_del_price !== undefined ? p.product_del_price : p.mrp,
         }));
-        
+
         setAllProducts(fetched);
       } else {
         setError("Failed to fetch products");
@@ -378,7 +377,7 @@ const CategoryMain = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-    
+
     let filtered = [...allProducts];
 
     // 1. Filter by Availability
