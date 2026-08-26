@@ -183,10 +183,18 @@ const OrderDetailsPage = () => {
                     <div className="flex justify-between text-sm font-medium text-slate-600">
                       <span className="flex items-center gap-1.5">
                         <Truck size={14} className="text-emerald-600" />
-                        Shipping
+                        Shipping Charge
                       </span>
-                      <span className="text-emerald-700 font-bold">
-                        Included
+                      <span className="text-slate-900 font-bold">
+                        ₹{order.shipping_charge || 0}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-sm font-medium text-slate-600">
+                      <span className="flex items-center gap-1.5">
+                        GST Amount
+                      </span>
+                      <span className="text-slate-900 font-bold">
+                        ₹{order.gst_amount || 0}
                       </span>
                     </div>
                     <div className="pt-4 border-t border-slate-100 flex justify-between items-center bg-slate-50/80 -mx-6 px-6 py-4 mt-4">
