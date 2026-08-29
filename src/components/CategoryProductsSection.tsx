@@ -53,6 +53,7 @@ const ProductCard = ({ product }: { product: any }) => {
       image: product.product_thumbnail || product.product_images?.[0],
       quantity: 1,
       weight: selectedUnitWeight,
+      gst_percent: product.gst_percent || 0,
     });
     toast.success(`${product.product_name} added to cart!`);
   };
@@ -66,6 +67,7 @@ const ProductCard = ({ product }: { product: any }) => {
       image: product.product_thumbnail || product.product_images?.[0],
       quantity: 1,
       weight: selectedUnitWeight,
+      gst_percent: product.gst_percent || 0,
     });
     navigate("/cart");
   };

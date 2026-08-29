@@ -28,6 +28,13 @@ const CartPage = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  // Per-product GST: only items with gst_percent > 0 contribute
+  const itemsGstTotal = cart.reduce(
+    (acc, item) =>
+      acc + ((item.price * (item.gst_percent || 0)) / 100) * item.quantity,
+    0,
+  );
+
   const handleCheckout = (e: React.MouseEvent) => {
     if (!isAuthenticated) {
       e.preventDefault();
@@ -165,19 +172,54 @@ const CartPage = () => {
                   ₹{cartTotal.toFixed(2)}
                 </span>
               </div>
+
+              {/* Per-product GST breakdown */}
+              {cart.some((item) => (item.gst_percent || 0) > 0) && (
+                <div className="space-y-1 bg-emerald-50/70 rounded-lg p-2 border border-emerald-100">
+                  {cart
+                    .filter((item) => (item.gst_percent || 0) > 0)
+                    .map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex justify-between text-xs text-emerald-700"
+                      >
+                        <span className="truncate max-w-[65%]">
+                          GST ({item.gst_percent}%) on{" "}
+                          <span className="font-medium">{item.name}</span>
+                        </span>
+                        <span className="font-semibold font-mono">
+                          +₹{
+                            (
+                              (item.price * (item.gst_percent || 0) / 100) *
+                              item.quantity
+                            ).toFixed(2)
+                          }
+                        </span>
+                      </div>
+                    ))}
+                  <div className="flex justify-between text-sm font-bold text-emerald-800 border-t border-emerald-200 pt-1 mt-1">
+                    <span>Product GST Total</span>
+                    <span className="font-mono">+₹{itemsGstTotal.toFixed(2)}</span>
+                  </div>
+                </div>
+              )}
+
               <div className="flex justify-between text-emerald-700">
                 <span>Shipping</span>
                 <span className="text-emerald-600">Calculated at checkout</span>
               </div>
-              <div className="flex justify-between text-emerald-700">
-                <span>Estimated Tax</span>
-                <span className="text-emerald-600">₹0.00</span>
-              </div>
               <Separator className="bg-emerald-200" />
               <div className="flex justify-between text-lg font-bold text-emerald-950">
                 <span>Total Amount</span>
-                <span className="font-mono">₹{cartTotal.toFixed(2)}</span>
+                <span className="font-mono">
+                  ₹{(cartTotal + itemsGstTotal).toFixed(2)}
+                </span>
               </div>
+              {itemsGstTotal > 0 && (
+                <p className="text-[11px] text-emerald-600 text-center -mt-2">
+                  Includes ₹{itemsGstTotal.toFixed(2)} GST · Shipping charged at checkout
+                </p>
+              )}
 
               <div className="pt-4 space-y-3">
                 <div className="bg-emerald-100/50 rounded-lg p-3 text-xs text-emerald-800 border border-emerald-200">

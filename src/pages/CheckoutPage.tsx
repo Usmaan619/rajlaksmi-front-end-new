@@ -963,15 +963,37 @@ const CheckoutPage = () => {
                     </span>
                   </div>
 
-                  {itemsGstTotal > 0 && (
-                    <div className="flex justify-between text-sm text-slate-600">
-                      <span className="flex items-center gap-1">
-                        <Tag className="h-3 w-3 text-emerald-500" />
-                        Product GST
-                      </span>
-                      <span className="font-semibold text-emerald-700">
-                        +₹{itemsGstTotal.toFixed(2)}
-                      </span>
+                  {/* Per-product GST breakdown — only GST-applicable items */}
+                  {cart.some((item) => (item.gst_percent || 0) > 0) && (
+                    <div className="rounded-lg border border-emerald-100 bg-emerald-50/50 p-3 space-y-2">
+                      <p className="flex items-center gap-1 text-xs font-bold text-emerald-800 uppercase tracking-wide">
+                        <Tag className="h-3 w-3" />
+                        Product GST Breakdown
+                      </p>
+                      {cart
+                        .filter((item) => (item.gst_percent || 0) > 0)
+                        .map((item) => (
+                          <div
+                            key={item.id}
+                            className="flex justify-between text-xs text-slate-600"
+                          >
+                            <span className="truncate max-w-[65%]">
+                              {item.name}{" "}
+                              <span className="text-emerald-600 font-medium">
+                                ({item.gst_percent}% GST)
+                              </span>
+                            </span>
+                            <span className="font-semibold text-emerald-700 font-mono">
+                              +₹{((item.price * (item.gst_percent || 0) / 100) * item.quantity).toFixed(2)}
+                            </span>
+                          </div>
+                        ))}
+                      <div className="flex justify-between text-sm font-bold text-emerald-800 border-t border-emerald-200 pt-2 mt-1">
+                        <span>Total Product GST</span>
+                        <span className="font-mono text-emerald-700">
+                          +₹{itemsGstTotal.toFixed(2)}
+                        </span>
+                      </div>
                     </div>
                   )}
 

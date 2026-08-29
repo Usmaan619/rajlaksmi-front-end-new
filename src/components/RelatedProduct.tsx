@@ -101,6 +101,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       image: productImage,
       quantity: 1,
       weight: selectedWeightObj.weight,
+      gst_percent: product.gst_percent || 0,
     });
     toast.success(`${pName} added to cart!`);
   };
@@ -114,6 +115,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       image: productImage,
       quantity: 1,
       weight: selectedWeightObj.weight,
+      gst_percent: product.gst_percent || 0,
     });
     navigate("/cart");
   };
