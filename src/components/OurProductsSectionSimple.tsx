@@ -132,7 +132,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
         w-full
         lg:w-[290px]
         h-auto
-        lg:h-[448px]
+        lg:h-full min-h-[448px]
         cursor-pointer
         bg-popover
         border

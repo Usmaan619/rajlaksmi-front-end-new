@@ -1,10 +1,46 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { CheckCircle, ArrowRight, ShoppingBag } from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { CheckCircle, ArrowRight, ShoppingBag, Download, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import api from "@/api/axios";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const orderId = searchParams.get("order_id");
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadInvoice = async () => {
+    if (!orderId) {
+      toast.error("Order ID is missing, cannot download invoice.");
+      return;
+    }
+    
+    setIsDownloading(true);
+    try {
+      // Use the new invoice endpoint
+      const response = await api.get(`/checkout/order/${orderId}/invoice`, {
+        responseType: "blob",
+      });
+
+      // Create a URL for the blob and trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Invoice_${orderId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast.success("Invoice downloaded successfully!");
+    } catch (error) {
+      console.error("Invoice download failed:", error);
+      toast.error("Failed to download invoice. Please try again later.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-4 bg-white">
@@ -33,6 +69,21 @@ const PaymentSuccess = () => {
             Track Order
             <ArrowRight className="ml-2 w-4 h-4" />
           </Button> */}
+          {orderId && (
+            <Button
+              onClick={handleDownloadInvoice}
+              disabled={isDownloading}
+              className="w-full bg-[#116931] hover:bg-[#0c9c43] text-white"
+            >
+              {isDownloading ? (
+                <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+              ) : (
+                <Download className="mr-2 w-4 h-4" />
+              )}
+              {isDownloading ? "Downloading..." : "Download Invoice"}
+            </Button>
+          )}
+
           <Button
             aria-label="Continue shopping"
             variant="outline"

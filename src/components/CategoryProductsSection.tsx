@@ -350,13 +350,13 @@ const CategoryRow = ({
               ? Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
-                  className="snap-start min-w-[calc(50%-2px)] sm:min-w-[calc(33.33%-4px)] lg:min-w-0 animate-pulse bg-gray-50 h-[380px] sm:h-[448px] rounded-2xl border border-gray-100"
+                  className="snap-start min-w-[calc(50%-2px)] sm:min-w-[calc(33.33%-4px)] lg:min-w-0 animate-pulse bg-gray-50 h-[380px] sm:h-full min-h-[448px] rounded-2xl border border-gray-100"
                 />
               ))
               : products.map((product) => (
                 <div
                   key={product.id}
-                  className="snap-start min-w-[calc(60%-2px)] sm:min-w-[calc(50%-4px)] md:min-w-0 w-full"
+                  className="snap-start min-w-[calc(60%-2px)] sm:min-w-[calc(50%-4px)] md:min-w-0 w-full h-full"
                 >
                   <ProductCard product={product} />
                 </div>

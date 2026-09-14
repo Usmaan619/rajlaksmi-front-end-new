@@ -365,7 +365,7 @@ const CheckoutPage = () => {
       if (!order) {
         toast.success("Order placed successfully!");
         clearCart();
-        navigate("/payment-success");
+        navigate(`/payment-success?order_id=${res.data.order_id || ""}`);
         return;
       }
 
@@ -408,7 +408,7 @@ const CheckoutPage = () => {
 
             clearCart();
             sessionStorage.removeItem("cart");
-            navigate("/payment-success");
+            navigate(`/payment-success?order_id=${res.data.order_id || ""}`);
 
           } catch (err: any) {
             console.error("Payment status check error:", err);
@@ -1085,10 +1085,10 @@ const CheckoutPage = () => {
                 </div>
 
                 {/* Coupon Box */}
-                <CouponBox 
-                  cartTotal={totalBeforeDiscount} 
-                  onApply={handleApplyCoupon} 
-                  onRemove={handleRemoveCoupon} 
+                <CouponBox
+                  cartTotal={totalBeforeDiscount}
+                  onApply={handleApplyCoupon}
+                  onRemove={handleRemoveCoupon}
                   liveDiscount={discountAmount}
                 />
 

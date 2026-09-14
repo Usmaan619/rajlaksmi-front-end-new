@@ -14,7 +14,9 @@ import {
   Truck,
   XCircle,
   AlertCircle,
+  Download,
 } from "lucide-react";
+import api from "@/api/axios";
 import { formatWeight } from "@/lib/utils";
 import { getOrderDetailsAPI, Order } from "@/api/order.service";
 import { format } from "date-fns";
@@ -26,6 +28,30 @@ const OrderDetailsPage = () => {
   const navigate = useNavigate();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadInvoice = async () => {
+    if (!order) return;
+    setIsDownloading(true);
+    try {
+      const response = await api.get(`/checkout/order/${order.id}/invoice`, {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Invoice_${order.order_number || order.id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success("Invoice downloaded successfully!");
+    } catch (error) {
+      console.error("Invoice download failed:", error);
+      toast.error("Failed to download invoice. Please try again later.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -107,13 +133,28 @@ const OrderDetailsPage = () => {
               {format(new Date(order.created_at), "MMMM dd, yyyy 'at' hh:mm a")}
             </p>
           </div>
-          <Badge
-            variant="outline"
-            className={`h-10 px-5 gap-2 text-sm font-bold rounded-full capitalize ${statusColors[getStatusKey(order.status || (order as any).STATUS)]}`}
-          >
-            {statusIcons[getStatusKey(order.status || (order as any).STATUS)]}
-            {order.status || (order as any).STATUS || "Pending"}
-          </Badge>
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={handleDownloadInvoice}
+              disabled={isDownloading}
+              variant="outline"
+              className="gap-2 border-primary text-primary hover:bg-primary hover:text-white"
+            >
+              {isDownloading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              {isDownloading ? "Downloading..." : "Download Invoice"}
+            </Button>
+            <Badge
+              variant="outline"
+              className={`h-10 px-5 gap-2 text-sm font-bold rounded-full capitalize ${statusColors[getStatusKey(order.status || (order as any).STATUS)]}`}
+            >
+              {statusIcons[getStatusKey(order.status || (order as any).STATUS)]}
+              {order.status || (order as any).STATUS || "Pending"}
+            </Badge>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

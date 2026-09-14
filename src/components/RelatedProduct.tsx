@@ -126,7 +126,7 @@ const ProductCard = ({ product }: { product: Product }) => {
         navigate(`/product/${product.id}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }}
-      className="w-[290px] h-[448px] cursor-pointer bg-popover border border-border rounded-[20px] overflow-visible
+      className="w-[290px] h-full min-h-[448px] cursor-pointer bg-popover border border-border rounded-[20px] overflow-visible
  group hover:shadow-card transition-all duration-300 p-[20px] flex flex-col gap-[10px]"
     >
       <div className="relative">

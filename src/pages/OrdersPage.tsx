@@ -15,7 +15,9 @@ import {
   XCircle,
   AlertCircle,
   ExternalLink,
+  Download,
 } from "lucide-react";
+import api from "@/api/axios";
 import { formatWeight } from "@/lib/utils";
 import {
   getMyOrdersAPI,
@@ -35,6 +37,9 @@ const OrdersPage = () => {
     Record<number | string, any>
   >({});
   const [trackingLoading, setTrackingLoading] = useState<
+    Record<number | string, boolean>
+  >({});
+  const [downloadingInvoice, setDownloadingInvoice] = useState<
     Record<number | string, boolean>
   >({});
 
@@ -82,6 +87,29 @@ const OrdersPage = () => {
       toast.error("Error connecting to tracking service");
     } finally {
       setTrackingLoading((prev) => ({ ...prev, [orderId]: false }));
+    }
+  };
+
+  const handleDownloadInvoice = async (order: Order) => {
+    if (!order) return;
+    setDownloadingInvoice((prev) => ({ ...prev, [order.id]: true }));
+    try {
+      const response = await api.get(`/checkout/order/${order.id}/invoice`, {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Invoice_${order.order_number || order.id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success("Invoice downloaded successfully!");
+    } catch (error) {
+      console.error("Invoice download failed:", error);
+      toast.error("Failed to download invoice. Please try again later.");
+    } finally {
+      setDownloadingInvoice((prev) => ({ ...prev, [order.id]: false }));
     }
   };
 
@@ -340,6 +368,21 @@ const OrdersPage = () => {
                         {trackingInfo[order.id]
                           ? "Hide Tracking"
                           : "Track Order"}
+                      </Button>
+                      <Button
+                        aria-label="Download Invoice"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDownloadInvoice(order)}
+                        disabled={downloadingInvoice[order.id]}
+                        className="font-bold gap-1 border-primary text-primary hover:bg-primary/5 rounded-lg"
+                      >
+                        {downloadingInvoice[order.id] ? (
+                          <Loader2 size={16} className="animate-spin" />
+                        ) : (
+                          <Download size={16} />
+                        )}
+                        Invoice
                       </Button>
                       <Button
                         aria-label="View order details"

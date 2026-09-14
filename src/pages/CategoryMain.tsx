@@ -201,7 +201,7 @@ const ProductCard = ({ product }: { product: Product }) => {
     <div
       onClick={() => navigate(`/product/${product.id}`)}
       className="w-full lg:w-[290px] overflow-visible cursor-pointer
- h-auto lg:min-h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col gap-2 group bg-white"
+ h-auto lg:min-h-full min-h-[448px] border border-[hsl(140,40%,80%)] rounded-2xl p-3 hover:shadow-md transition-shadow flex flex-col gap-2 group bg-white"
     >
       {/* Image Wrap */}
       <div className="relative mb-2">

@@ -146,8 +146,8 @@ const ProductCard = ({ product }: { product: Product }) => {
       className="
         w-full
         lg:w-[290px]
-        h-auto
-        lg:min-h-[448px]
+        h-full
+        min-h-full min-h-[448px]
         cursor-pointer
         bg-popover
         border
