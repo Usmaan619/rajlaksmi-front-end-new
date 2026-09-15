@@ -369,6 +369,7 @@ const OrdersPage = () => {
                           ? "Hide Tracking"
                           : "Track Order"}
                       </Button>
+                      {(order.isPaymentPaid === "1" || String((order as any).isPaymentPaid) === "1") && (
                       <Button
                         aria-label="Download Invoice"
                         variant="outline"
@@ -384,6 +385,7 @@ const OrdersPage = () => {
                         )}
                         Invoice
                       </Button>
+                      )}
                       <Button
                         aria-label="View order details"
                         variant="ghost"

@@ -22,6 +22,7 @@ export interface Order {
   shipping_charge?: number;
   gst_amount?: number;
   platform_fee?: number;
+  isPaymentPaid?: string;
 }
 
 /* GET ALL ORDERS FOR USER */

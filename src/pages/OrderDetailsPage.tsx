@@ -134,6 +134,7 @@ const OrderDetailsPage = () => {
             </p>
           </div>
           <div className="flex items-center gap-4">
+            {((order as any).isPaymentPaid === "1" || String((order as any).isPaymentPaid) === "1") && (
             <Button
               onClick={handleDownloadInvoice}
               disabled={isDownloading}
@@ -147,6 +148,7 @@ const OrderDetailsPage = () => {
               )}
               {isDownloading ? "Downloading..." : "Download Invoice"}
             </Button>
+            )}
             <Badge
               variant="outline"
               className={`h-10 px-5 gap-2 text-sm font-bold rounded-full capitalize ${statusColors[getStatusKey(order.status || (order as any).STATUS)]}`}
