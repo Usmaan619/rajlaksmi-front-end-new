@@ -28,6 +28,8 @@ import {
   getWeightValue,
   parseProductWeights,
   getDisplayWeight,
+  getMockRating,
+  getMockReviewCount,
 } from "@/lib/utils";
 
 import Seo from "@/components/Seo";
@@ -266,7 +268,8 @@ const ProductCard = ({ product }: { product: Product }) => {
           </div>
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs sm:text-sm">{product.rating || "4.5"}</span>
+            <span className="text-xs sm:text-sm">{getMockRating(product.id)}</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground">({getMockReviewCount(product.id)})</span>
           </div>
         </div>
 

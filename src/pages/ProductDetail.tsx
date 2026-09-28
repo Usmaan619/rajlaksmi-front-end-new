@@ -128,6 +128,8 @@ import {
   getWeightMultiplier,
   parseProductWeights,
   getDisplayWeight,
+  getMockRating,
+  getMockReviewCount,
 } from "@/lib/utils";
 
 const ProductDetail = () => {
@@ -200,11 +202,11 @@ const ProductDetail = () => {
     loadData();
   }, [id]);
 
-  // Calculate dynamic stats or use fake defaults
+  // Calculate dynamic stats or use mock defaults so it doesn't look empty
   const dynamicRating =
-    reviewStats.totalReviews > 0 ? Number(reviewStats.averageRating) || 0 : 0;
+    reviewStats.totalReviews > 0 ? Number(reviewStats.averageRating) || 0 : getMockRating(id || "default");
   const dynamicReviewCount =
-    reviewStats.totalReviews > 0 ? reviewStats.totalReviews : 0;
+    reviewStats.totalReviews > 0 ? reviewStats.totalReviews : getMockReviewCount(id || "default");
 
   const product = apiProduct
     ? {

@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
-import { getWeightMultiplier, parseProductWeights, getDisplayWeight } from "@/lib/utils";
+import { getWeightMultiplier, parseProductWeights, getDisplayWeight, getMockRating, getMockReviewCount } from "@/lib/utils";
 import seeds from "@/assets/category/seeds.webp";
 
 // Reuse the ProductCard style from BestSellersSection
@@ -168,7 +168,8 @@ const ProductCard = ({ product }: { product: any }) => {
           </div>
           <div className="flex flex-wrap items-center gap-1">
             <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-yellow-400 text-yellow-400" />
-            <span className="text-xs sm:text-sm text-primary/70 font-semibold block break-words whitespace-normal leading-tight">4.5</span>
+            <span className="text-xs sm:text-sm text-primary/70 font-semibold block break-words whitespace-normal leading-tight">{getMockRating(product.id)}</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground">({getMockReviewCount(product.id)})</span>
           </div>
         </div>
       </div>

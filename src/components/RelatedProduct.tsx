@@ -29,6 +29,8 @@ import {
   getWeightMultiplier,
   parseProductWeights,
   getDisplayWeight,
+  getMockRating,
+  getMockReviewCount,
 } from "@/lib/utils";
 
 const getFirstImage = (images: any, thumbnail?: string) => {
@@ -63,7 +65,8 @@ const ProductCard = ({ product }: { product: Product }) => {
       : (product as any).mrp,
   );
   const pDiscount = product.discount || 0;
-  const pRating = product.rating || "4.5";
+  const pRating = product.rating || getMockRating(product.id);
+  const pReviewCount = getMockReviewCount(product.id);
 
   const productImage = getFirstImage(product.product_images, (product as any).product_thumbnail);
   const weights = parseProductWeights(
@@ -228,6 +231,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-golden text-golden" />
             <span className="text-xs sm:text-sm">{pRating}</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground">({pReviewCount})</span>
           </div>
         </div>
 

@@ -48,7 +48,8 @@ const products = [
     price: 899,
     originalPrice: 1800,
     discount: "50%OFF",
-    rating: 4.5,
+    rating: 4.7,
+    reviews: 34,
     unit: "1000gm",
   },
   {
@@ -58,7 +59,8 @@ const products = [
     price: 899,
     originalPrice: 1800,
     discount: "50%OFF",
-    rating: 4.5,
+    rating: 4.3,
+    reviews: 18,
     unit: "1000gm",
   },
   {
@@ -68,7 +70,8 @@ const products = [
     price: 899,
     originalPrice: 1800,
     discount: "50%OFF",
-    rating: 4.5,
+    rating: 4.8,
+    reviews: 42,
     unit: "1000gm",
   },
   {
@@ -78,7 +81,8 @@ const products = [
     price: 899,
     originalPrice: 1800,
     discount: "50%OFF",
-    rating: 4.5,
+    rating: 4.1,
+    reviews: 11,
     unit: "1000gm",
   },
   {
@@ -88,7 +92,8 @@ const products = [
     price: 899,
     originalPrice: 1800,
     discount: "50%OFF",
-    rating: 4.5,
+    rating: 4.6,
+    reviews: 27,
     unit: "1000gm",
   },
 ];
@@ -222,6 +227,7 @@ const ProductCard = ({ product }: { product: (typeof products)[0] }) => {
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-golden text-golden" />
             <span className="text-xs sm:text-sm">{product.rating}</span>
+            <span className="text-[10px] sm:text-xs text-muted-foreground">({product.reviews})</span>
           </div>
         </div>
 

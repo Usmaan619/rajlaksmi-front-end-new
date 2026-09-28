@@ -205,3 +205,33 @@ export function getDisplayWeight(weight: any): string {
 
   return weightStr;
 }
+
+/**
+ * Generate a deterministic "mock" rating for a product based on its ID.
+ * Returns a value between 4.0 and 4.9 (one decimal place).
+ * The same ID always produces the same rating so it doesn't jump on re-render.
+ */
+export function getMockRating(productId: string | number): number {
+  const str = String(productId);
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 31 + str.charCodeAt(i)) | 0;
+  }
+  // Map to 4.0 – 4.9
+  const ratings = [4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9];
+  return ratings[Math.abs(hash) % ratings.length];
+}
+
+/**
+ * Generate a deterministic "mock" review count for a product based on its ID.
+ * Returns a number between 8 and 47 so it looks realistic.
+ */
+export function getMockReviewCount(productId: string | number): number {
+  const str = String(productId);
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 37 + str.charCodeAt(i)) | 0;
+  }
+  // Map to 8 – 47
+  return 8 + (Math.abs(hash) % 40);
+}
