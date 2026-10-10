@@ -31,6 +31,7 @@ import {
   getDisplayWeight,
   getMockRating,
   getMockReviewCount,
+  calculateProperDelPrice,
 } from "@/lib/utils";
 
 const getFirstImage = (images: any, thumbnail?: string) => {
@@ -84,14 +85,20 @@ const ProductCard = ({ product }: { product: Product }) => {
     (selectedWeightObj.price ? Number(selectedWeightObj.price) : pPrice) *
     weightMultiplier;
 
-  const currentDelPrice = pDelPrice * weightMultiplier;
+  const currentDelPrice = calculateProperDelPrice(
+    currentPrice,
+    selectedWeightObj.del_price ? Number(selectedWeightObj.del_price) * weightMultiplier : pDelPrice * weightMultiplier,
+    selectedWeightObj.weight,
+    weights,
+    Number(product.product_del_price) || 0
+  );
 
   let currentDiscount = pDiscount;
-  if (selectedWeightObj.price && pDelPrice > currentPrice) {
+  if (currentDelPrice > currentPrice) {
     currentDiscount = Math.round(
-      ((pDelPrice - currentPrice) / pDelPrice) * 100,
+      ((currentDelPrice - currentPrice) / currentDelPrice) * 100,
     );
-  } else if (currentPrice >= pDelPrice) {
+  } else if (currentPrice >= currentDelPrice) {
     currentDiscount = 0;
   }
 
@@ -167,11 +174,10 @@ const ProductCard = ({ product }: { product: Product }) => {
           className="absolute top-2 right-2 w-8 h-8 rounded-full bg-popover shadow-soft flex items-center justify-center hover:scale-110 transition-transform"
         >
           <Heart
-            className={`h-4 w-4 ${
-              isFavorite
+            className={`h-4 w-4 ${isFavorite
                 ? "fill-destructive text-destructive"
                 : "text-muted-foreground"
-            }`}
+              }`}
           />
         </button>
       </div>

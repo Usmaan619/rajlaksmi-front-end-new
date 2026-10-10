@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 import { toast } from "sonner";
-import { getWeightMultiplier, parseProductWeights, getDisplayWeight, getMockRating, getMockReviewCount } from "@/lib/utils";
+import { getWeightMultiplier, parseProductWeights, getDisplayWeight, getMockRating, getMockReviewCount, calculateProperDelPrice } from "@/lib/utils";
 import seeds from "@/assets/category/seeds.webp";
 
 // Reuse the ProductCard style from BestSellersSection
@@ -28,10 +28,15 @@ const ProductCard = ({ product }: { product: any }) => {
       ? Number(selectedUnit.price)
       : Number(product.product_price)) * weightMultiplier;
 
-  const currentDelPrice =
+  const currentDelPrice = calculateProperDelPrice(
+    currentPrice,
     (typeof selectedUnit === "object" && selectedUnit.del_price
       ? Number(selectedUnit.del_price)
-      : Number(product.product_del_price)) * weightMultiplier;
+      : Number(product.product_del_price)) * weightMultiplier,
+    selectedUnitWeight,
+    weights,
+    Number(product.product_del_price) || 0
+  );
 
   let currentDiscount = product.discount || 0;
   if (currentDelPrice > currentPrice) {

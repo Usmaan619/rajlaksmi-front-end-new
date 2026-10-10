@@ -130,6 +130,7 @@ import {
   getDisplayWeight,
   getMockRating,
   getMockReviewCount,
+  calculateProperDelPrice,
 } from "@/lib/utils";
 
 const ProductDetail = () => {
@@ -210,67 +211,67 @@ const ProductDetail = () => {
 
   const product = apiProduct
     ? {
-        ...DEFAULT_PRODUCT,
-        id: apiProduct.id,
-        name: apiProduct.product_name || DEFAULT_PRODUCT.name,
-        subtitle:
-          apiProduct.product_subtitle ||
-          apiProduct.short_description ||
-          DEFAULT_PRODUCT.subtitle,
-        description: apiProduct.full_description || DEFAULT_PRODUCT.description,
-        healthBenefits: apiProduct.health_benefits
-          ? apiProduct.health_benefits.split("\n").filter(Boolean)
-          : DEFAULT_PRODUCT.healthBenefits,
-        ingredients: apiProduct.ingredients || DEFAULT_PRODUCT.ingredients,
-        whyChoose: apiProduct.why_choose
-          ? apiProduct.why_choose.split("\n").filter(Boolean)
-          : [],
-        storageInstructions: apiProduct.storage_instructions || "",
-        commonUses: apiProduct.common_uses
-          ? apiProduct.common_uses.split("\n").filter(Boolean)
-          : [],
-        longDescription:
-          apiProduct.full_description || DEFAULT_PRODUCT.longDescription,
-        images: apiProduct.product_images?.length
-          ? apiProduct.product_images
-          : DEFAULT_PRODUCT.images,
-        sizes: (() => {
-          const mapped = parseProductWeights(apiProduct.product_weight);
-          return mapped.sort(
-            (a, b) => getWeightValue(a.weight) - getWeightValue(b.weight),
-          );
-        })(),
-        price: Number(apiProduct.product_price) || DEFAULT_PRODUCT.price,
-        originalPrice:
-          Number(apiProduct.product_del_price) || DEFAULT_PRODUCT.originalPrice,
-        discount: Number(apiProduct.discount) || DEFAULT_PRODUCT.discount,
-        category: apiProduct.category_name || DEFAULT_PRODUCT.category,
-        categoryId: apiProduct.category_id,
-        rating: dynamicRating,
-        reviews: dynamicReviewCount,
-        stock: apiProduct.product_stock ?? 0,
-        isFeatured: !!apiProduct.is_featured,
-        bestSeller: !!apiProduct.best_saller,
-        createdAt: apiProduct.created_at,
-        updatedAt: apiProduct.updated_at,
-        purchasePrice: apiProduct.product_purchase_price, // internal but mapping it
-        productVideo: apiProduct.product_video,
-        gst_percent: apiProduct.gst_percent || 0,
-      }
+      ...DEFAULT_PRODUCT,
+      id: apiProduct.id,
+      name: apiProduct.product_name || DEFAULT_PRODUCT.name,
+      subtitle:
+        apiProduct.product_subtitle ||
+        apiProduct.short_description ||
+        DEFAULT_PRODUCT.subtitle,
+      description: apiProduct.full_description || DEFAULT_PRODUCT.description,
+      healthBenefits: apiProduct.health_benefits
+        ? apiProduct.health_benefits.split("\n").filter(Boolean)
+        : DEFAULT_PRODUCT.healthBenefits,
+      ingredients: apiProduct.ingredients || DEFAULT_PRODUCT.ingredients,
+      whyChoose: apiProduct.why_choose
+        ? apiProduct.why_choose.split("\n").filter(Boolean)
+        : [],
+      storageInstructions: apiProduct.storage_instructions || "",
+      commonUses: apiProduct.common_uses
+        ? apiProduct.common_uses.split("\n").filter(Boolean)
+        : [],
+      longDescription:
+        apiProduct.full_description || DEFAULT_PRODUCT.longDescription,
+      images: apiProduct.product_images?.length
+        ? apiProduct.product_images
+        : DEFAULT_PRODUCT.images,
+      sizes: (() => {
+        const mapped = parseProductWeights(apiProduct.product_weight);
+        return mapped.sort(
+          (a, b) => getWeightValue(a.weight) - getWeightValue(b.weight),
+        );
+      })(),
+      price: Number(apiProduct.product_price) || DEFAULT_PRODUCT.price,
+      originalPrice:
+        Number(apiProduct.product_del_price) || DEFAULT_PRODUCT.originalPrice,
+      discount: Number(apiProduct.discount) || DEFAULT_PRODUCT.discount,
+      category: apiProduct.category_name || DEFAULT_PRODUCT.category,
+      categoryId: apiProduct.category_id,
+      rating: dynamicRating,
+      reviews: dynamicReviewCount,
+      stock: apiProduct.product_stock ?? 0,
+      isFeatured: !!apiProduct.is_featured,
+      bestSeller: !!apiProduct.best_saller,
+      createdAt: apiProduct.created_at,
+      updatedAt: apiProduct.updated_at,
+      purchasePrice: apiProduct.product_purchase_price, // internal but mapping it
+      productVideo: apiProduct.product_video,
+      gst_percent: apiProduct.gst_percent || 0,
+    }
     : {
-        ...DEFAULT_PRODUCT,
-        id: "",
-        categoryId: "",
-        createdAt: "",
-        updatedAt: "",
-        rating: dynamicRating,
-        reviews: dynamicReviewCount,
-        stock: 0,
-        isFeatured: false,
-        bestSeller: false,
-        productVideo: null,
-        gst_percent: 0,
-      };
+      ...DEFAULT_PRODUCT,
+      id: "",
+      categoryId: "",
+      createdAt: "",
+      updatedAt: "",
+      rating: dynamicRating,
+      reviews: dynamicReviewCount,
+      stock: 0,
+      isFeatured: false,
+      bestSeller: false,
+      productVideo: null,
+      gst_percent: 0,
+    };
 
   const handleShare = async () => {
     const shareData = {
@@ -347,13 +348,13 @@ const ProductDetail = () => {
       : getCalculatedPrice(selectedSizeInfo.weight, product.price);
 
   const currentPrice = finalBasePrice;
-  const currentDelPrice =
-    selectedSizeInfo.del_price > 0
-      ? selectedSizeInfo.del_price
-      : selectedSizeInfo.price > 0
-        ? selectedSizeInfo.price * 1.5
-        : product.originalPrice *
-          (getWeightValue(selectedSizeInfo.weight) / 1000);
+  const currentDelPrice = calculateProperDelPrice(
+    currentPrice,
+    selectedSizeInfo.del_price,
+    selectedSizeInfo.weight,
+    product.sizes,
+    product.originalPrice
+  );
 
   const getUnitInfo = (weightStr: string) => {
     if (!weightStr || weightStr === "N/A") return { unit: "unit", value: 1 };
@@ -572,12 +573,12 @@ const ProductDetail = () => {
             },
             ...(reviewStats.totalReviews > 0
               ? {
-                  aggregateRating: {
-                    "@type": "AggregateRating",
-                    ratingValue: reviewStats.averageRating,
-                    reviewCount: reviewStats.totalReviews,
-                  },
-                }
+                aggregateRating: {
+                  "@type": "AggregateRating",
+                  ratingValue: reviewStats.averageRating,
+                  reviewCount: reviewStats.totalReviews,
+                },
+              }
               : {}),
           })}
         </script>
@@ -619,7 +620,7 @@ const ProductDetail = () => {
               <div className="relative aspect-square rounded-2xl overflow-hidden bg-muted mb-4">
                 {showVideo && product.productVideo ? (
                   product.productVideo.includes("youtube.com") ||
-                  product.productVideo.includes("youtu.be") ? (
+                    product.productVideo.includes("youtu.be") ? (
                     <div className="absolute inset-0">
                       <iframe
                         className="w-full h-full rounded-2xl"
@@ -682,11 +683,10 @@ const ProductDetail = () => {
                       setSelectedIndex(index);
                       setShowVideo(false);
                     }}
-                    className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${
-                      !showVideo && selectedIndex === index
+                    className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${!showVideo && selectedIndex === index
                         ? "border-primary"
                         : "border-border"
-                    }`}
+                      }`}
                   >
                     <img
                       src={img}
@@ -701,15 +701,14 @@ const ProductDetail = () => {
                   <button
                     aria-label="Thumbnail video"
                     onClick={() => setShowVideo(true)}
-                    className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors relative ${
-                      showVideo ? "border-primary" : "border-border"
-                    }`}
+                    className={`w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors relative ${showVideo ? "border-primary" : "border-border"
+                      }`}
                   >
                     <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                       <div className="w-8 h-8 rounded-full bg-primary/90 flex items-center justify-center">
                         {product.productVideo &&
-                        (product.productVideo.includes("youtube.com") ||
-                          product.productVideo.includes("youtu.be")) ? (
+                          (product.productVideo.includes("youtube.com") ||
+                            product.productVideo.includes("youtu.be")) ? (
                           <i className="bi bi-youtube text-white text-lg"></i>
                         ) : (
                           <svg
@@ -887,11 +886,10 @@ const ProductDetail = () => {
                         setSelectedSizeIdx(idx);
                         setShowCustomInput(false);
                       }}
-                      className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200 ${
-                        selectedSizeIdx === idx && !showCustomInput
+                      className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200 ${selectedSizeIdx === idx && !showCustomInput
                           ? "bg-primary text-primary-foreground border-primary shadow-md transform scale-105"
                           : "border-border text-foreground hover:border-primary hover:bg-primary/5"
-                      }`}
+                        }`}
                     >
                       {getDisplayWeight(sizeObj.weight)}
                     </button>
@@ -903,11 +901,10 @@ const ProductDetail = () => {
                       setShowCustomInput(!showCustomInput);
                       // setSelectedSizeIdx(-1); // Deselect others
                     }}
-                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200 ${
-                      showCustomInput
+                    className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200 ${showCustomInput
                         ? "bg-emerald-600 text-white border-emerald-600 shadow-md transform scale-105"
                         : "border-emerald-200 text-emerald-700 hover:border-emerald-600 hover:bg-emerald-50"
-                    }`}
+                      }`}
                   >
                     Custom Quantity
                   </button>
@@ -942,9 +939,8 @@ const ProductDetail = () => {
               <p className="text-sm">
                 Availability:{" "}
                 <span
-                  className={`font-semibold ${
-                    product.stock > 0 ? "text-primary" : "text-destructive"
-                  }`}
+                  className={`font-semibold ${product.stock > 0 ? "text-primary" : "text-destructive"
+                    }`}
                 >
                   {product.stock > 0 ? `In Stock` : "Out of Stock"}
                 </span>
@@ -1024,8 +1020,8 @@ const ProductDetail = () => {
                               ? "PCS"
                               : unitInfo.unit
                           : /\b(kg|g|gm|ml|ltr|l)\b/i.test(
-                                selectedSizeInfo.weight,
-                              )
+                            selectedSizeInfo.weight,
+                          )
                             ? "kg"
                             : unitInfo.unit}
                       </p>
@@ -1074,20 +1070,20 @@ const ProductDetail = () => {
               {/* Action Buttons */}
               <div className="fixed bottom-0 left-0 right-0 z-[100] bg-white p-3 shadow-[0_-8px_20px_-10px_rgba(0,0,0,0.15)] border-t border-gray-100 md:static md:bg-transparent md:p-0 md:shadow-none md:border-none flex flex-col gap-2 md:block pb-2">
                 <div className="flex gap-3 md:mb-2">
-                <Button
-                  aria-label="Add to cart"
-                  variant="outline"
-                  onClick={handleAddToCart}
-                  disabled={product.stock <= 0}
-                  className="flex-1 bg-white h-12 text-base font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 shadow-sm"
-                >
-                  ADD TO CART
-                </Button>
+                  <Button
+                    aria-label="Add to cart"
+                    variant="outline"
+                    onClick={handleAddToCart}
+                    disabled={product.stock <= 0}
+                    className="flex-1 bg-white h-12 text-base font-bold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 active:scale-95 shadow-sm"
+                  >
+                    ADD TO CART
+                  </Button>
 
-                {/* Custom keyframes for infinite button animations */}
-                <style
-                  dangerouslySetInnerHTML={{
-                    __html: `
+                  {/* Custom keyframes for infinite button animations */}
+                  <style
+                    dangerouslySetInnerHTML={{
+                      __html: `
                   @keyframes continuous-shine {
                     0% { left: -100%; opacity: 0; }
                     10% { opacity: 1; }
@@ -1112,62 +1108,62 @@ const ProductDetail = () => {
                     50% { transform: translateX(4px); }
                   }
                 `,
-                  }}
-                />
+                    }}
+                  />
 
-                <button
-                  aria-label="Buy now"
-                  onClick={handleBuyNow}
-                  disabled={product.stock <= 0}
-                  className="
+                  <button
+                    aria-label="Buy now"
+                    onClick={handleBuyNow}
+                    disabled={product.stock <= 0}
+                    className="
                     flex-1 h-12 text-base font-bold text-white rounded-xl relative overflow-hidden group
                     active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
                     bg-gradient-to-r from-primary to-[#187a3e] glow-button
                     hover:bg-gradient-to-r hover:from-[#187a3e] hover:to-primary
                   "
-                >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    <span className="tracking-wide">BUY NOW</span>
-                    <svg
-                      className="w-4 h-4 arrow-pulse"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2.5}
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      />
-                    </svg>
-                  </span>
-
-                  {/* Automatic Shine Effect */}
-                  <div className="absolute top-0 -left-[100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] shine-effect" />
-                </button>
-              </div>
-
-              {/* Wholesale / Bulk Inquiry Button */}
-              <div className="md:pt-2">
-                <a
-                  href={`https://wa.me/918769215905?text=${encodeURIComponent(
-                    `Hello Rajlakshmi Javik, I'm interested in bulk quantities of ${product.name} (${selectedSizeInfo.weight}). Kindly share your best wholesale rates.`,
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 h-12 bg-[#25D366] text-white font-bold rounded-xl hover:bg-[#128C7E] transition-all duration-300 shadow-md transform hover:-translate-y-1"
-                >
-                  <svg
-                    className="w-5 h-5 fill-white"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.67-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                  </svg>
-                  WHATSAPP FOR WHOLESALE
-                </a>
-              </div>
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      <span className="tracking-wide">BUY NOW</span>
+                      <svg
+                        className="w-4 h-4 arrow-pulse"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2.5}
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        />
+                      </svg>
+                    </span>
+
+                    {/* Automatic Shine Effect */}
+                    <div className="absolute top-0 -left-[100%] w-[50%] h-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-25deg] shine-effect" />
+                  </button>
+                </div>
+
+                {/* Wholesale / Bulk Inquiry Button */}
+                <div className="md:pt-2">
+                  <a
+                    href={`https://wa.me/918769215905?text=${encodeURIComponent(
+                      `Hello Rajlakshmi Javik, I'm interested in bulk quantities of ${product.name} (${selectedSizeInfo.weight}). Kindly share your best wholesale rates.`,
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 h-12 bg-[#25D366] text-white font-bold rounded-xl hover:bg-[#128C7E] transition-all duration-300 shadow-md transform hover:-translate-y-1"
+                  >
+                    <svg
+                      className="w-5 h-5 fill-white"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.67-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                    </svg>
+                    WHATSAPP FOR WHOLESALE
+                  </a>
+                </div>
               </div>
 
               <div className="mt-5 pt-4 border-t border-border">
@@ -1348,8 +1344,8 @@ const ProductDetail = () => {
                       </AccordionContent>
                     </AccordionItem>
                   )}
-                  <AccordionItem 
-                    value="item-4" 
+                  <AccordionItem
+                    value="item-4"
                     className="border border-[hsl(120,20%,85%)] mb-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden animate-fade-up opacity-0"
                     style={{ animationDelay: `700ms` }}
                   >
@@ -1445,7 +1441,7 @@ const ProductDetail = () => {
                     {[5, 4, 3, 2, 1].map((star) => {
                       const count =
                         (reviewStats.ratingsBreakdown as any)[
-                          star.toString()
+                        star.toString()
                         ] || 0;
                       const percentage =
                         reviewStats.totalReviews > 0

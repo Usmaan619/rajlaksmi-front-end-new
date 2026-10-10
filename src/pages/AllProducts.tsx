@@ -28,6 +28,7 @@ import {
   getWeightValue,
   parseProductWeights,
   getDisplayWeight,
+  calculateProperDelPrice,
   getMockRating,
   getMockReviewCount,
 } from "@/lib/utils";
@@ -103,10 +104,17 @@ const ProductCard = ({ product }: { product: Product }) => {
   const currentPrice =
     Number(selectedWeightObj.price ? selectedWeightObj.price : product.price) ||
     0;
-  const pDelPrice = Number(product.product_del_price) || 0;
+    
+  const pDelPrice = calculateProperDelPrice(
+    currentPrice,
+    Number(selectedWeightObj.del_price ? selectedWeightObj.del_price : product.product_del_price) || 0,
+    selectedWeightObj.weight,
+    weights,
+    Number(product.product_del_price) || 0
+  );
 
   let currentDiscount = product.discount || 0;
-  if (selectedWeightObj.price && pDelPrice > currentPrice) {
+  if (pDelPrice > currentPrice) {
     currentDiscount = Math.round(
       ((pDelPrice - currentPrice) / pDelPrice) * 100,
     );
@@ -199,11 +207,10 @@ const ProductCard = ({ product }: { product: Product }) => {
           className="absolute top-2 right-2 w-8 h-8 rounded-full bg-popover shadow-soft flex items-center justify-center hover:scale-110 transition-transform"
         >
           <Heart
-            className={`h-4 w-4 ${
-              isFavorite
+            className={`h-4 w-4 ${isFavorite
                 ? "fill-destructive text-destructive"
                 : "text-muted-foreground"
-            }`}
+              }`}
           />
         </button>
       </div>
@@ -378,11 +385,10 @@ const FilterContent = ({
             params.set("page", "1");
             setSearchParams(params);
           }}
-          className={`text-left px-3 py-2 rounded-lg text-sm transition-all ${
-            selectedCategory === "all"
+          className={`text-left px-3 py-2 rounded-lg text-sm transition-all ${selectedCategory === "all"
               ? "bg-primary text-white font-bold shadow-sm"
               : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          }`}
+            }`}
         >
           All Products
         </button>
@@ -396,11 +402,10 @@ const FilterContent = ({
               params.set("page", "1");
               setSearchParams(params);
             }}
-            className={`text-left px-3 py-2 rounded-lg text-sm transition-all ${
-              selectedCategory === cat.category_name
+            className={`text-left px-3 py-2 rounded-lg text-sm transition-all ${selectedCategory === cat.category_name
                 ? "bg-primary text-white font-bold shadow-sm"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            }`}
+              }`}
           >
             {cat.category_name}
           </button>
@@ -431,11 +436,10 @@ const FilterContent = ({
               params.set("page", "1");
               setSearchParams(params);
             }}
-            className={`text-left px-3 py-2 rounded-lg text-sm transition-all ${
-              selectedPriceRange === range.value
+            className={`text-left px-3 py-2 rounded-lg text-sm transition-all ${selectedPriceRange === range.value
                 ? "bg-primary/10 text-primary font-bold border border-primary/20"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground border border-transparent"
-            }`}
+              }`}
           >
             {range.label}
           </button>

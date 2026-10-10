@@ -235,3 +235,48 @@ export function getMockReviewCount(productId: string | number): number {
   // Map to 8 – 47
   return 8 + (Math.abs(hash) % 40);
 }
+
+export function calculateProperDelPrice(
+  currentPrice: number,
+  originalDelPriceFromApi: number,
+  weightStr: string,
+  allWeights: any[],
+  baseProductOriginalPrice: number
+) {
+  let trueMrpPerKg = 0;
+
+  if (allWeights && allWeights.length > 0) {
+    const validSizes = [...allWeights].filter(
+      (s) => s.del_price > 0 && getWeightValue(s.weight) > 0
+    );
+    if (validSizes.length > 0) {
+      validSizes.sort(
+        (a, b) => getWeightValue(a.weight) - getWeightValue(b.weight)
+      );
+      const smallest = validSizes[0];
+      trueMrpPerKg = smallest.del_price / (getWeightValue(smallest.weight) / 1000);
+    }
+  }
+
+  if (trueMrpPerKg === 0 && baseProductOriginalPrice > 0) {
+     let baseWeightKg = 1;
+     if (allWeights && allWeights.length > 0) {
+        const sorted = [...allWeights].sort((a, b) => getWeightValue(a.weight) - getWeightValue(b.weight));
+        if (sorted[0] && getWeightValue(sorted[0].weight) > 0) {
+           baseWeightKg = getWeightValue(sorted[0].weight) / 1000;
+        }
+     }
+     trueMrpPerKg = baseProductOriginalPrice / baseWeightKg;
+  }
+
+  const weightInKg = getWeightValue(weightStr) / 1000;
+  const trueBulkMrp = trueMrpPerKg > 0 && weightInKg > 0 ? trueMrpPerKg * weightInKg : 0;
+
+  let finalDelPrice = originalDelPriceFromApi > 0 ? originalDelPriceFromApi : (currentPrice > 0 ? currentPrice * 1.5 : 0);
+  
+  if (trueBulkMrp > finalDelPrice && finalDelPrice > 0) {
+      return trueBulkMrp;
+  }
+  
+  return finalDelPrice;
+}

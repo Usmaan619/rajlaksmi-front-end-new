@@ -13,6 +13,7 @@ import {
   getDisplayWeight,
   getMockRating,
   getMockReviewCount,
+  calculateProperDelPrice,
 } from "@/lib/utils";
 
 const ProductCard = ({ product }: { product: any }) => {
@@ -31,10 +32,15 @@ const ProductCard = ({ product }: { product: any }) => {
       ? Number(selectedUnit.price)
       : Number(product.product_price)) * weightMultiplier;
 
-  const currentDelPrice =
+  const currentDelPrice = calculateProperDelPrice(
+    currentPrice,
     (typeof selectedUnit === "object" && selectedUnit.del_price
       ? Number(selectedUnit.del_price)
-      : Number(product.product_del_price)) * weightMultiplier;
+      : Number(product.product_del_price)) * weightMultiplier,
+    selectedUnitWeight,
+    weights,
+    Number(product.product_del_price) || 0
+  );
 
   let currentDiscount = product.discount || 0;
   if (currentDelPrice > currentPrice) {
@@ -130,9 +136,8 @@ const ProductCard = ({ product }: { product: any }) => {
           className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center hover:scale-110 transition-transform"
         >
           <Heart
-            className={`h-4 w-4 ${
-              isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
-            }`}
+            className={`h-4 w-4 ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
+              }`}
           />
         </button>
       </div>
@@ -282,14 +287,14 @@ const BestSellersSection = () => {
         >
           {isLoading
             ? Array.from({ length: 5 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="w-full aspect-[2/3] p-4 bg-muted animate-pulse rounded-2xl"
-                />
-              ))
+              <div
+                key={i}
+                className="w-full aspect-[2/3] p-4 bg-muted animate-pulse rounded-2xl"
+              />
+            ))
             : products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+              <ProductCard key={product.id} product={product} />
+            ))}
         </div>
       </div>
     </section>

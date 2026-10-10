@@ -27,6 +27,7 @@ import {
   getDisplayWeight,
   getMockRating,
   getMockReviewCount,
+  calculateProperDelPrice,
 } from "@/lib/utils";
 import Seo from "@/components/Seo";
 
@@ -163,12 +164,20 @@ const ProductCard = ({ product }: { product: Product }) => {
     ? Number(selectedWeightObj.price)
     : pPrice;
 
+  const currentDelPrice = calculateProperDelPrice(
+    currentPrice,
+    Number(selectedWeightObj.del_price ? selectedWeightObj.del_price : pDelPrice) || 0,
+    selectedWeightObj.weight,
+    weights,
+    Number(product.product_del_price) || 0
+  );
+
   let currentDiscount = pDiscount;
-  if (selectedWeightObj.price && pDelPrice > currentPrice) {
+  if (currentDelPrice > currentPrice) {
     currentDiscount = Math.round(
-      ((pDelPrice - currentPrice) / pDelPrice) * 100,
+      ((currentDelPrice - currentPrice) / currentDelPrice) * 100,
     );
-  } else if (currentPrice >= pDelPrice) {
+  } else if (currentPrice >= currentDelPrice) {
     currentDiscount = 0;
   }
 
@@ -259,9 +268,9 @@ const ProductCard = ({ product }: { product: Product }) => {
           <span className="text-[hsl(140,60%,30%)] font-bold text-sm">
             ₹{currentPrice.toFixed(2)}
           </span>
-          {pDelPrice > currentPrice && (
+          {currentDelPrice > currentPrice && (
             <span className="text-muted-foreground line-through text-xs">
-              ₹{pDelPrice.toFixed(2)}
+              ₹{currentDelPrice.toFixed(2)}
             </span>
           )}
         </div>
